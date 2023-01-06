@@ -25,6 +25,12 @@
     <Filter Include="Fichiers d%27en-tête\MathEngine">
       <UniqueIdentifier>{025e5474-4b22-4e34-aab6-9bf5eeddc585}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\MainEngine">
+      <UniqueIdentifier>{253cabbb-7aa0-4681-8a2d-69b0f9a2e54e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\MainEngine">
+      <UniqueIdentifier>{50541b70-3388-4e33-890c-aafc9f50d33f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -38,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Vec2D.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

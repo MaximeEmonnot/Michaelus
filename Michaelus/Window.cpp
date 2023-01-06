@@ -68,6 +68,7 @@ bool Window::ProcessMessages()
 {
 	MSG msg;
 	KBD.PopLastEvents();
+	MOUSE.PopLastEvent();
 	ZeroMemory(&msg, sizeof(MSG));
 	while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
