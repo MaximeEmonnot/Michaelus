@@ -13,10 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\DebugEngine">
+      <UniqueIdentifier>{abe37f5b-45a9-4aac-9771-9e406f279ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\CoreEngine">
+      <UniqueIdentifier>{8f06b3a6-919a-48ac-8cef-afde24ca7ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\CoreEngine">
+      <UniqueIdentifier>{e456e693-f011-4afc-8f15-6852c1d779fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window.h">
+      <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
