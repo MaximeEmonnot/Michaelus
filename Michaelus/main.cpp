@@ -2,22 +2,27 @@
 #include <vulkan/vulkan.h>
 #include <iostream>
 
+#include "EngineException.h"
+#include "Window.h"
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	VkApplicationInfo appInfo = {};
-	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appInfo.pApplicationName = "Test";
-	appInfo.pEngineName = "MichaelusEngine";
-
-	VkInstanceCreateInfo instanceInfo = {};
-	instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	instanceInfo.pApplicationInfo = &appInfo;
-
-	VkInstance instance;
-
-	VkResult result = vkCreateInstance(&instanceInfo, 0, &instance);
-	if (result == VK_SUCCESS)
-		OutputDebugStringA("Vulkan works!\n");
+	try
+	{
+		while (WND.ProcessMessages());
+	}
+	catch(EngineException& e)
+	{
+		SHOW_MESSAGE("Vulkan 3D Engine - Engine Exception", e.what())
+	}
+	catch(std::exception& e)
+	{
+		SHOW_MESSAGE("Vulkan 3D Engine - Standard Library Exception", e.what())
+	}
+	catch(...)
+	{
+		SHOW_MESSAGE("Vulkan 3D Engine - Unknown Exception", "An unknown exception has been caught.");
+	}
 
 	return 0;
 }
