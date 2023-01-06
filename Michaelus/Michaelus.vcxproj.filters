@@ -30,6 +30,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="EngineException.h">
       <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

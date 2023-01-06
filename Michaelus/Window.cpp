@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "Keyboard.h"
+
 std::unique_ptr<Window> Window::pInstance = nullptr;
 
 HINSTANCE Window::hInstance;
@@ -64,7 +66,7 @@ Window& Window::GetInstance()
 bool Window::ProcessMessages()
 {
 	MSG msg;
-
+	KBD.PopLastEvents();
 	ZeroMemory(&msg, sizeof(MSG));
 	while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
@@ -92,10 +94,19 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KEYDOWN:
+		{
+		KBD.OnKeyPressed(static_cast<unsigned char>(wParam));
+		}
 		break;
 	case WM_KEYUP:
+		{
+		KBD.OnKeyReleased(static_cast<unsigned char>(wParam));
+		}
 		break;
 	case WM_CHAR:
+		{
+		KBD.OnChar(static_cast<char>(wParam));
+		}
 		break;
 
 	case WM_MOUSEMOVE:
