@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "Keyboard.h"
+#include "Mouse.h"
 
 std::unique_ptr<Window> Window::pInstance = nullptr;
 
@@ -110,20 +111,47 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_MOUSEMOVE:
+		{
+		const int x = LOWORD(lParam);
+		const int y = HIWORD(lParam);
+		MOUSE.OnMouseMove(x, y);
+		}
 		break;
 	case WM_LBUTTONDOWN:
+		{
+		MOUSE.OnLeftPressed();
+		}
 		break;
 	case WM_LBUTTONUP:
+		{
+		MOUSE.OnLeftReleased();
+		}
 		break;
 	case WM_MBUTTONDOWN:
+		{
+		MOUSE.OnMiddlePressed();
+		}
 		break;
 	case WM_MBUTTONUP:
+		{
+		MOUSE.OnMiddleReleased();
+		}
 		break;
 	case WM_RBUTTONDOWN:
+		{
+		MOUSE.OnRightPressed();
+		}
 		break;
 	case WM_RBUTTONUP:
+		{
+		MOUSE.OnRightReleased();
+		}
 		break;
-	case WM_MOUSEWHEEL:
+	case WM_MOUSEWHEEL: 
+		{
+		if (GET_WHEEL_DELTA_WPARAM(wParam) >= 0) MOUSE.OnWheelUp();
+		else MOUSE.OnWheelDown();
+		}
 		break;
 
 	default:

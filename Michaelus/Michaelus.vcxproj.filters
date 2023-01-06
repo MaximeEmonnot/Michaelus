@@ -22,6 +22,9 @@
     <Filter Include="Fichiers sources\CoreEngine">
       <UniqueIdentifier>{e456e693-f011-4afc-8f15-6852c1d779fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\MathEngine">
+      <UniqueIdentifier>{025e5474-4b22-4e34-aab6-9bf5eeddc585}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -31,6 +34,9 @@
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
+      <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="Keyboard.h">
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2D.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
