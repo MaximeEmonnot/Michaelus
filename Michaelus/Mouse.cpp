@@ -2,6 +2,11 @@
 
 std::unique_ptr<Mouse> Mouse::pInstance = nullptr;
 
+Mouse::~Mouse()
+{
+    FlushBuffer();
+}
+
 Mouse& Mouse::GetInstance()
 {
     if (!pInstance)

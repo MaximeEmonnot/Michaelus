@@ -1,7 +1,10 @@
 #include "Game.h"
 
+#include "Graphics.h"
+
 Game::Game()
 {
+	GFX;
 }
 
 void Game::Go()

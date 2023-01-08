@@ -31,6 +31,12 @@
     <Filter Include="Fichiers sources\MainEngine">
       <UniqueIdentifier>{50541b70-3388-4e33-890c-aafc9f50d33f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\GraphicsEngine">
+      <UniqueIdentifier>{c1e9e56e-8859-4ccc-b220-3f4fc40a7f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\GraphicsEngine">
+      <UniqueIdentifier>{9f35637a-bfd0-41c0-b7d6-e9c94a7bb856}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -47,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Fichiers sources\MainEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Fichiers d%27en-tête\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
