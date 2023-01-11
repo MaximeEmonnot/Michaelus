@@ -10,10 +10,13 @@ Graphics::Graphics()
     CreateInstance();
     SetupDebugMessenger();
     PickPhysicalDevice();
+    CreateLogicalDevice();
 }
 
 Graphics::~Graphics()
 {
+    vkDestroyDevice(vkDevice, nullptr);
+
     if (bEnableValidationLayers)
        DestroyDebugUtilsMessengerEXT(vkInstance, vkDebugMessenger, nullptr);
 
@@ -122,6 +125,40 @@ bool Graphics::IsDeviceSuitable(VkPhysicalDevice device)
     QueueFamilyIndices indices = FindQueueFamilies(device);
 
     return indices.IsComplete();
+}
+
+void Graphics::CreateLogicalDevice()
+{
+    QueueFamilyIndices indices = FindQueueFamilies(vkPhysicalDevice);
+
+    float queuePriority = 1.f;
+
+    VkDeviceQueueCreateInfo queueCreateInfo{};
+    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+    queueCreateInfo.queueCount = 1;
+    queueCreateInfo.pQueuePriorities = &queuePriority;
+
+    VkPhysicalDeviceFeatures deviceFeatures{};
+
+    VkDeviceCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pQueueCreateInfos = &queueCreateInfo;
+    createInfo.queueCreateInfoCount = 1;
+    createInfo.pEnabledFeatures = &deviceFeatures;
+
+    createInfo.enabledExtensionCount = 0;
+    if (bEnableValidationLayers)
+    {
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(validationLayers.size());
+        createInfo.ppEnabledLayerNames = validationLayers.data();
+    }
+    else createInfo.enabledLayerCount = 0;
+
+    if (FAILED(vkCreateDevice(vkPhysicalDevice, &createInfo, nullptr, &vkDevice)))
+        throw GFX_EXCEPTION("Failed to create logical device!");
+
+    vkGetDeviceQueue(vkDevice, indices.graphicsFamily.value(), 0, &vkGraphicsQueue);
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
