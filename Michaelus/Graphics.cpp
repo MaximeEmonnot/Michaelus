@@ -6,16 +6,16 @@ std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
 Graphics::Graphics()
 {
-    VkResult result = VK_SUCCESS;
-
     // Vulkan Instance Creation
     CreateInstance();
+    SetupDebugMessenger();
+    PickPhysicalDevice();
 }
 
 Graphics::~Graphics()
 {
     if (bEnableValidationLayers)
-        DestroyDebugUtilsMessengerEXT(vkInstance, vkDebugMessenger, nullptr);
+       DestroyDebugUtilsMessengerEXT(vkInstance, vkDebugMessenger, nullptr);
 
     vkDestroyInstance(vkInstance, nullptr);
 }
@@ -93,6 +93,35 @@ void Graphics::SetupDebugMessenger()
 
     if (FAILED(CreateDebugUtilsMessengerEXT(vkInstance, &debugInfos, nullptr, &vkDebugMessenger)))
         throw GFX_EXCEPTION("An exception has been caught during the Debug Messenger Creation");
+}
+
+void Graphics::PickPhysicalDevice()
+{
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(vkInstance, &deviceCount, nullptr);
+    if (deviceCount == 0)
+        throw GFX_EXCEPTION("Failed to find GPUs with Vulkan support!");
+
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    vkEnumeratePhysicalDevices(vkInstance, &deviceCount, devices.data());
+
+    for (const auto& device : devices)
+    {
+        if (IsDeviceSuitable(device)) {
+            vkPhysicalDevice = device;
+            break;
+        }
+    }
+
+    if (vkPhysicalDevice == VK_NULL_HANDLE)
+        throw GFX_EXCEPTION("Failed to find a suitable GPU!");
+}
+
+bool Graphics::IsDeviceSuitable(VkPhysicalDevice device)
+{
+    QueueFamilyIndices indices = FindQueueFamilies(device);
+
+    return indices.IsComplete();
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

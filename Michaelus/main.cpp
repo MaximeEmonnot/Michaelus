@@ -3,13 +3,15 @@
 #include <iostream>
 
 #include "EngineException.h"
+#include "Game.h"
 #include "Window.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	try
 	{
-		while (WND.ProcessMessages());
+		Game theGame;
+		while (WND.ProcessMessages()) theGame.Go();
 	}
 	catch(EngineException& e)
 	{

@@ -21,6 +21,8 @@ private:
 	void CreateInstance();
 	bool CheckValidationLayerSupport();
 	void SetupDebugMessenger();
+	void PickPhysicalDevice();
+	bool IsDeviceSuitable(VkPhysicalDevice device);
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -43,10 +45,10 @@ private:
 
 	VkInstance vkInstance;
 	VkDebugUtilsMessengerEXT vkDebugMessenger;
+	VkPhysicalDevice vkPhysicalDevice = VK_NULL_HANDLE;
 
 	VkSurfaceKHR vkSurface;
 	VkSurfaceFormatKHR vkSurfaceFormat;
-	VkPhysicalDevice vkGPU;
 	VkDevice vkDevice;
 	VkQueue vkGraphicsQueue;
 	VkSwapchainKHR vkSwapchain;

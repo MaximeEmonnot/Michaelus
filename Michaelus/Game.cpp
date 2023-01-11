@@ -4,11 +4,11 @@
 
 Game::Game()
 {
-	GFX;
 }
 
 void Game::Go()
 {
+	GFX
 	UpdateFrame();
 	RenderFrame();
 }
