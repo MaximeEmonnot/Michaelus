@@ -84,6 +84,16 @@ HWND Window::GetHWND() const
 	return hWnd;
 }
 
+int Window::GetWidth() const
+{
+	return width;
+}
+
+int Window::GetHeight() const
+{
+	return height;
+}
+
 LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)

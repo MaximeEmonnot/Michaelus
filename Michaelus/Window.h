@@ -8,7 +8,7 @@
 class Window
 {
 private:
-
+	friend class Graphics;
 public:
 	Window() noexcept;
 	~Window();
@@ -23,6 +23,9 @@ public:
 	bool ProcessMessages();
 
 	HWND GetHWND() const;
+
+	int GetWidth() const;
+	int GetHeight() const;
 
 private:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

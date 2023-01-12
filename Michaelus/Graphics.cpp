@@ -1,5 +1,7 @@
 #include "Graphics.h"
 
+#include <set>
+
 #include "Window.h"
 
 std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
@@ -9,17 +11,21 @@ Graphics::Graphics()
     // Vulkan Instance Creation
     CreateInstance();
     SetupDebugMessenger();
+    CreateSurface();
     PickPhysicalDevice();
     CreateLogicalDevice();
+    CreateSwapChain();
 }
 
 Graphics::~Graphics()
 {
+    vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
     vkDestroyDevice(vkDevice, nullptr);
 
     if (bEnableValidationLayers)
        DestroyDebugUtilsMessengerEXT(vkInstance, vkDebugMessenger, nullptr);
 
+    vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
     vkDestroyInstance(vkInstance, nullptr);
 }
 
@@ -83,6 +89,21 @@ bool Graphics::CheckValidationLayerSupport()
     return layerFound;
 }
 
+bool Graphics::CheckDeviceExtensionSupport(VkPhysicalDevice device)
+{
+    uint32_t extensionCount;
+    vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+    std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+    vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+    std::set<std::string> requiredExtension(deviceExtensions.begin(), deviceExtensions.end());
+
+    for (const auto& extension : availableExtensions) requiredExtension.erase(extension.extensionName);
+
+    return requiredExtension.empty();
+}
+
 void Graphics::SetupDebugMessenger()
 {
     if (!bEnableValidationLayers) return;
@@ -94,7 +115,7 @@ void Graphics::SetupDebugMessenger()
     debugInfos.pfnUserCallback = DebugCallback;
     debugInfos.pUserData = nullptr;
 
-    if (FAILED(CreateDebugUtilsMessengerEXT(vkInstance, &debugInfos, nullptr, &vkDebugMessenger)))
+    if (VK_FAILED(CreateDebugUtilsMessengerEXT(vkInstance, &debugInfos, nullptr, &vkDebugMessenger)))
         throw GFX_EXCEPTION("An exception has been caught during the Debug Messenger Creation");
 }
 
@@ -122,43 +143,119 @@ void Graphics::PickPhysicalDevice()
 
 bool Graphics::IsDeviceSuitable(VkPhysicalDevice device)
 {
-    QueueFamilyIndices indices = FindQueueFamilies(device);
+    const QueueFamilyIndices indices = FindQueueFamilies(device, vkSurface);
 
-    return indices.IsComplete();
+    const bool bExtensionsSupported = CheckDeviceExtensionSupport(device);
+
+    bool bSwapChainAdequate = false;
+    if (bExtensionsSupported)
+    {
+        const SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device, vkSurface);
+        bSwapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+    }
+
+    return indices.IsComplete() && bExtensionsSupported && bSwapChainAdequate;
 }
 
 void Graphics::CreateLogicalDevice()
 {
-    QueueFamilyIndices indices = FindQueueFamilies(vkPhysicalDevice);
+    QueueFamilyIndices indices = FindQueueFamilies(vkPhysicalDevice, vkSurface);
 
+    std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+    std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
     float queuePriority = 1.f;
-
-    VkDeviceQueueCreateInfo queueCreateInfo{};
-    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
-    queueCreateInfo.queueCount = 1;
-    queueCreateInfo.pQueuePriorities = &queuePriority;
+    for (uint32_t queueFamily : uniqueQueueFamilies)
+    {
+        VkDeviceQueueCreateInfo queueCreateInfo{};
+        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.queueFamilyIndex = queueFamily;
+        queueCreateInfo.queueCount = 1;
+        queueCreateInfo.pQueuePriorities = &queuePriority;
+        queueCreateInfos.push_back(queueCreateInfo);
+    }
 
     VkPhysicalDeviceFeatures deviceFeatures{};
 
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pQueueCreateInfos = &queueCreateInfo;
-    createInfo.queueCreateInfoCount = 1;
+    createInfo.pQueueCreateInfos = queueCreateInfos.data();
+    createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     createInfo.pEnabledFeatures = &deviceFeatures;
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+    createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-    createInfo.enabledExtensionCount = 0;
-    if (bEnableValidationLayers)
-    {
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(validationLayers.size());
-        createInfo.ppEnabledLayerNames = validationLayers.data();
-    }
-    else createInfo.enabledLayerCount = 0;
-
-    if (FAILED(vkCreateDevice(vkPhysicalDevice, &createInfo, nullptr, &vkDevice)))
+    if (VK_FAILED(vkCreateDevice(vkPhysicalDevice, &createInfo, nullptr, &vkDevice)))
         throw GFX_EXCEPTION("Failed to create logical device!");
 
     vkGetDeviceQueue(vkDevice, indices.graphicsFamily.value(), 0, &vkGraphicsQueue);
+    vkGetDeviceQueue(vkDevice, indices.presentFamily.value(), 0, &vkPresentQueue);
+}
+
+void Graphics::CreateSurface()
+{
+    VkWin32SurfaceCreateInfoKHR createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    createInfo.hwnd = WND.GetHWND();
+    createInfo.hinstance = WND.hInstance;
+
+    if (VK_FAILED(vkCreateWin32SurfaceKHR(vkInstance, &createInfo, nullptr, &vkSurface)))
+        throw GFX_EXCEPTION("Failed to create window surface!");
+}
+
+void Graphics::CreateSwapChain()
+{
+    SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(vkPhysicalDevice, vkSurface);
+
+    VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
+    VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
+    VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
+
+    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+
+    if (swapChainSupport.capabilities.minImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+        imageCount = swapChainSupport.capabilities.maxImageCount;
+
+    VkSwapchainCreateInfoKHR createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    createInfo.surface = vkSurface;
+    createInfo.minImageCount = imageCount;
+    createInfo.imageFormat = surfaceFormat.format;
+    createInfo.imageColorSpace = surfaceFormat.colorSpace;
+    createInfo.imageExtent = extent;
+    createInfo.imageArrayLayers = 1;
+    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    QueueFamilyIndices indices = FindQueueFamilies(vkPhysicalDevice, vkSurface);
+    uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+
+    if (indices.graphicsFamily != indices.presentFamily)
+    {
+        createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        createInfo.queueFamilyIndexCount = 2;
+        createInfo.pQueueFamilyIndices = queueFamilyIndices;
+    }
+    else
+    {
+        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        createInfo.queueFamilyIndexCount = 0;
+        createInfo.pQueueFamilyIndices = nullptr;
+    }
+
+    createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    createInfo.presentMode = presentMode;
+    createInfo.clipped = VK_TRUE;
+    createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+    if (VK_FAILED(vkCreateSwapchainKHR(vkDevice, &createInfo, nullptr, &vkSwapChain)))
+        throw GFX_EXCEPTION("Failed to create swap chain!");
+
+    vkGetSwapchainImagesKHR(vkDevice, vkSwapChain, &imageCount, nullptr);
+    vkSwapChainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(vkDevice, vkSwapChain, &imageCount, vkSwapChainImages.data());
+
+    vkSwapChainImageFormat = surfaceFormat.format;
+    vkSwapChainExtent = extent;
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
