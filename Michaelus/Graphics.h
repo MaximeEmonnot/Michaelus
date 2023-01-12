@@ -27,6 +27,7 @@ private:
 	void CreateLogicalDevice();
 	void CreateSurface();
 	void CreateSwapChain();
+	void CreateImageViews();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -64,6 +65,7 @@ private:
 	std::vector<VkImage> vkSwapChainImages;
 	VkFormat vkSwapChainImageFormat;
 	VkExtent2D vkSwapChainExtent;
+	std::vector<VkImageView> vkSwapChainImageViews;
 
 	VkCommandPool vkCommandPool;
 

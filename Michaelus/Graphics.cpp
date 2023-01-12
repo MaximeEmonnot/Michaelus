@@ -15,10 +15,14 @@ Graphics::Graphics()
     PickPhysicalDevice();
     CreateLogicalDevice();
     CreateSwapChain();
+    CreateImageViews();
 }
 
 Graphics::~Graphics()
 {
+    for (const auto imageView : vkSwapChainImageViews)
+        vkDestroyImageView(vkDevice, imageView, nullptr);
+
     vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
     vkDestroyDevice(vkDevice, nullptr);
 
@@ -256,6 +260,32 @@ void Graphics::CreateSwapChain()
 
     vkSwapChainImageFormat = surfaceFormat.format;
     vkSwapChainExtent = extent;
+}
+
+void Graphics::CreateImageViews()
+{
+    vkSwapChainImageViews.resize(vkSwapChainImages.size());
+
+    for (size_t i = 0; i < vkSwapChainImages.size(); i++)
+    {
+        VkImageViewCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        createInfo.image = vkSwapChainImages.at(i);
+        createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.format = vkSwapChainImageFormat;
+        createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        createInfo.subresourceRange.baseMipLevel = 0;
+        createInfo.subresourceRange.levelCount = 1;
+        createInfo.subresourceRange.baseArrayLayer = 0;
+        createInfo.subresourceRange.layerCount = 1;
+
+        if (VK_FAILED(vkCreateImageView(vkDevice, &createInfo, nullptr, &vkSwapChainImageViews[i])))
+            throw GFX_EXCEPTION("Failed to create image views!");
+    }
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
