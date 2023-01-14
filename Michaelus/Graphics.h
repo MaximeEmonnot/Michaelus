@@ -74,5 +74,6 @@ private:
 
 	VkRenderPass vkRenderPass;
 	VkPipelineLayout vkPipelineLayout;
+	VkPipeline vkGraphicsPipeline;
 };
 
