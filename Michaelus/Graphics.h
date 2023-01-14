@@ -33,6 +33,7 @@ private:
 	void CreateSwapChain();
 	void CreateImageViews();
 	void CreateGraphicsPipeline();
+	void CreateRenderPass();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -71,6 +72,7 @@ private:
 	VkExtent2D vkSwapChainExtent;
 	std::vector<VkImageView> vkSwapChainImageViews;
 
+	VkRenderPass vkRenderPass;
 	VkPipelineLayout vkPipelineLayout;
 };
 

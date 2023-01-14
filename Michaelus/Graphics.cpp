@@ -16,12 +16,14 @@ Graphics::Graphics()
     CreateLogicalDevice();
     CreateSwapChain();
     CreateImageViews();
+    CreateRenderPass();
     CreateGraphicsPipeline();
 }
 
 Graphics::~Graphics()
 {
     vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
+    vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
 
     for (const auto imageView : vkSwapChainImageViews)
         vkDestroyImageView(vkDevice, imageView, nullptr);
@@ -409,6 +411,36 @@ void Graphics::CreateGraphicsPipeline()
 
     vkDestroyShaderModule(vkDevice, fragmentShaderModule, nullptr);
     vkDestroyShaderModule(vkDevice, vertexShaderModule, nullptr);
+}
+
+void Graphics::CreateRenderPass()
+{
+    VkAttachmentDescription colorAttachment{};
+    colorAttachment.format = vkSwapChainImageFormat;
+    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference colorAttachmentRef{};
+    colorAttachmentRef.attachment = 0;
+    colorAttachmentRef.attachment = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass{};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorAttachmentRef;
+
+    VkRenderPassCreateInfo renderPassInfo{};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.attachmentCount = 1;
+    renderPassInfo.pAttachments = &colorAttachment;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpass;
+
+    if (VK_FAILED(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass)))
+        throw GFX_EXCEPTION("Failed to create Render Pass!");
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
