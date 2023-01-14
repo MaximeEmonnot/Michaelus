@@ -34,6 +34,7 @@ private:
 	void CreateImageViews();
 	void CreateGraphicsPipeline();
 	void CreateRenderPass();
+	void CreateFrameBuffers();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -75,5 +76,7 @@ private:
 	VkRenderPass vkRenderPass;
 	VkPipelineLayout vkPipelineLayout;
 	VkPipeline vkGraphicsPipeline;
+
+	std::vector<VkFramebuffer> vkSwapChainFrameBuffers;
 };
 
