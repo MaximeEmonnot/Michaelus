@@ -8,7 +8,6 @@ std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
 Graphics::Graphics()
 {
-    // Vulkan Instance Creation
     CreateInstance();
     SetupDebugMessenger();
     CreateSurface();
@@ -18,10 +17,14 @@ Graphics::Graphics()
     CreateImageViews();
     CreateRenderPass();
     CreateGraphicsPipeline();
+    CreateFrameBuffers();
 }
 
 Graphics::~Graphics()
 {
+    for (auto vkFramebuffer : vkSwapChainFrameBuffers)
+        vkDestroyFramebuffer(vkDevice, vkFramebuffer, nullptr);
+
     vkDestroyPipeline(vkDevice, vkGraphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
     vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
@@ -463,6 +466,30 @@ void Graphics::CreateRenderPass()
 
     if (VK_FAILED(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass)))
         throw GFX_EXCEPTION("Failed to create Render Pass!");
+}
+
+void Graphics::CreateFrameBuffers()
+{
+    vkSwapChainFrameBuffers.resize(vkSwapChainImageViews.size());
+
+    for (size_t i = 0; i < vkSwapChainImageViews.size(); i++)
+    {
+        VkImageView attachments[] = {
+            vkSwapChainImageViews[i]
+        };
+
+        VkFramebufferCreateInfo framebufferInfo{};
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.renderPass = vkRenderPass;
+        framebufferInfo.attachmentCount = 1;
+        framebufferInfo.pAttachments = attachments;
+        framebufferInfo.width = vkSwapChainExtent.width;
+        framebufferInfo.height = vkSwapChainExtent.height;
+        framebufferInfo.layers = 1;
+
+        if (VK_FAILED(vkCreateFramebuffer(vkDevice, &framebufferInfo, nullptr, &vkSwapChainFrameBuffers[i])))
+            throw GFX_EXCEPTION("Failed to create Framebuffer!");
+    }
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
