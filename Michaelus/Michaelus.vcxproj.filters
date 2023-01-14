@@ -84,4 +84,12 @@
       <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vert">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="shader.frag">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+  </ItemGroup>
 </Project>

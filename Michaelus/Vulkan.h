@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <fstream>
+#include <ios>
 
 #include "Window.h"
 
@@ -127,4 +129,35 @@ static VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 	actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
 	return actualExtent;
+}
+
+static std::vector<char> ReadShaderFile(const std::string& filename)
+{
+	std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+	if (!file.is_open()) throw std::runtime_error("Failed to open file!");
+
+	const size_t fileSize = file.tellg();
+	std::vector<char> buffer(fileSize);
+
+	file.seekg(0);
+	file.read(buffer.data(), fileSize);
+	file.close();
+
+	return buffer;
+}
+
+static VkShaderModule CreateShaderModule(const std::vector<char>& code, VkDevice device)
+{
+	VkShaderModuleCreateInfo createInfo{};
+
+	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	createInfo.codeSize = code.size();
+	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+	VkShaderModule shaderModule;
+	if (VK_FAILED(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule)))
+		throw std::runtime_error("Failed to create shader module!");
+
+	return shaderModule;
 }

@@ -14,6 +14,10 @@ class Graphics
 public:
 	Graphics();
 	~Graphics();
+	Graphics(const Graphics&) = delete;
+	Graphics& operator=(const Graphics&) = delete;
+	Graphics(Graphics&&) = delete;
+	Graphics& operator=(Graphics&&) = delete;
 
 	static Graphics& GetInstance();
 
@@ -28,6 +32,7 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
+	void CreateGraphicsPipeline();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -57,7 +62,6 @@ private:
 	VkPhysicalDevice vkPhysicalDevice = VK_NULL_HANDLE;
 
 	VkSurfaceKHR vkSurface;
-	VkSurfaceFormatKHR vkSurfaceFormat;
 	VkDevice vkDevice;
 	VkQueue vkGraphicsQueue;
 	VkQueue vkPresentQueue;
@@ -67,10 +71,6 @@ private:
 	VkExtent2D vkSwapChainExtent;
 	std::vector<VkImageView> vkSwapChainImageViews;
 
-	VkCommandPool vkCommandPool;
-
-	VkSemaphore vkAquireSemaphore;
-	VkSemaphore vkSubmitSemaphore;
-
+	VkPipelineLayout vkPipelineLayout;
 };
 
