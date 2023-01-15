@@ -35,6 +35,9 @@ private:
 	void CreateGraphicsPipeline();
 	void CreateRenderPass();
 	void CreateFrameBuffers();
+	void CreateCommandPool();
+	void CreateCommandBuffer();
+	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -78,5 +81,8 @@ private:
 	VkPipeline vkGraphicsPipeline;
 
 	std::vector<VkFramebuffer> vkSwapChainFrameBuffers;
+
+	VkCommandPool vkCommandPool;
+	std::vector<VkCommandBuffer> vkCommandBuffers;
 };
 
