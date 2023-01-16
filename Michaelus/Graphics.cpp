@@ -68,8 +68,8 @@ void Graphics::Draw()
     uint32_t imageIndex;
     vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 
-    //vkResetCommandBuffer(vkCommandBuffer, 0);
-    //RecordCommandBuffer(vkCommandBuffer, imageIndex);
+    vkResetCommandBuffer(vkCommandBuffer, 0);
+    RecordCommandBuffer(vkCommandBuffer, imageIndex);
 
     VkSemaphore signalSemaphores[] = { vkRenderFinishedSemaphore };
     VkSemaphore waitSemaphores[] = { vkImageAvailableSemaphore };
@@ -87,22 +87,6 @@ void Graphics::Draw()
 
     if (VK_FAILED(vkQueueSubmit(vkGraphicsQueue, 1, &submitInfo, vkInFlightFence)))
         throw GFX_EXCEPTION("Failed to submit Draw Command Buffer!");
-
-    VkSubpassDependency dependency{};
-    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.dstSubpass = 0;
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.srcAccessMask = 0;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-    VkRenderPassCreateInfo renderPassInfo{};
-    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassInfo.dependencyCount = 1;
-    renderPassInfo.pDependencies = &dependency;
-
-    if (VK_FAILED(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass)))
-        throw GFX_EXCEPTION("Failed to create Render Pass!");
 
     VkSwapchainKHR swapChains[] = { vkSwapChain };
 
@@ -158,7 +142,7 @@ bool Graphics::CheckValidationLayerSupport()
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
 	bool layerFound = false;
-    for (const char* layerName : validationLayers)
+    for (const std::string layerName : validationLayers)
     {
         for (const auto& layerProperties : availableLayers)
         {
@@ -515,24 +499,35 @@ void Graphics::CreateRenderPass()
     colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
     colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
     VkAttachmentReference colorAttachmentRef{};
     colorAttachmentRef.attachment = 0;
-    colorAttachmentRef.attachment = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    VkSubpassDescription subpass{};
-    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments = &colorAttachmentRef;
+    VkSubpassDescription subPass{};
+    subPass.colorAttachmentCount = 1;
+    subPass.pColorAttachments = &colorAttachmentRef;
+
+    VkSubpassDependency dependency{};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = 1;
     renderPassInfo.pAttachments = &colorAttachment;
     renderPassInfo.subpassCount = 1;
-    renderPassInfo.pSubpasses = &subpass;
+    renderPassInfo.pSubpasses = &subPass;
+    renderPassInfo.dependencyCount = 1;
+    renderPassInfo.pDependencies = &dependency;
 
     if (VK_FAILED(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass)))
         throw GFX_EXCEPTION("Failed to create Render Pass!");
@@ -585,8 +580,6 @@ void Graphics::CreateCommandBuffer()
 
     if (VK_FAILED(vkAllocateCommandBuffers(vkDevice, &allocInfo, &vkCommandBuffer)))
         throw GFX_EXCEPTION("Failed to allocate command buffers!");
-
-    RecordCommandBuffer(vkCommandBuffer, 0);
 }
 
 void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
