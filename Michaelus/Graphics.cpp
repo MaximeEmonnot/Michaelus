@@ -20,10 +20,17 @@ Graphics::Graphics()
     CreateFrameBuffers();
     CreateCommandPool();
     CreateCommandBuffer();
+    CreateSynchronizationObjects();
 }
 
 Graphics::~Graphics()
 {
+    vkDeviceWaitIdle(vkDevice);
+
+    vkDestroyFence(vkDevice, vkInFlightFence, nullptr);
+    vkDestroySemaphore(vkDevice, vkRenderFinishedSemaphore, nullptr);
+    vkDestroySemaphore(vkDevice, vkImageAvailableSemaphore, nullptr);
+
     vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 
     for (auto vkFramebuffer : vkSwapChainFrameBuffers)
@@ -39,7 +46,7 @@ Graphics::~Graphics()
     vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
     vkDestroyDevice(vkDevice, nullptr);
 
-    if (bEnableValidationLayers)
+	if (bEnableValidationLayers)
        DestroyDebugUtilsMessengerEXT(vkInstance, vkDebugMessenger, nullptr);
 
     vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
@@ -52,6 +59,65 @@ Graphics& Graphics::GetInstance()
     return *pInstance;
 }
 
+void Graphics::Draw()
+{
+    vkWaitForFences(vkDevice, 1, &vkInFlightFence, VK_TRUE, UINT64_MAX);
+
+    vkResetFences(vkDevice, 1, &vkInFlightFence);
+
+    uint32_t imageIndex;
+    vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+
+    //vkResetCommandBuffer(vkCommandBuffer, 0);
+    //RecordCommandBuffer(vkCommandBuffer, imageIndex);
+
+    VkSemaphore signalSemaphores[] = { vkRenderFinishedSemaphore };
+    VkSemaphore waitSemaphores[] = { vkImageAvailableSemaphore };
+    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
+    VkSubmitInfo submitInfo{};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &vkCommandBuffer;
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    if (VK_FAILED(vkQueueSubmit(vkGraphicsQueue, 1, &submitInfo, vkInFlightFence)))
+        throw GFX_EXCEPTION("Failed to submit Draw Command Buffer!");
+
+    VkSubpassDependency dependency{};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    VkRenderPassCreateInfo renderPassInfo{};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.dependencyCount = 1;
+    renderPassInfo.pDependencies = &dependency;
+
+    if (VK_FAILED(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass)))
+        throw GFX_EXCEPTION("Failed to create Render Pass!");
+
+    VkSwapchainKHR swapChains[] = { vkSwapChain };
+
+    VkPresentInfoKHR presentInfo{};
+    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = signalSemaphores;
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = swapChains;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr;
+
+    vkQueuePresentKHR(vkPresentQueue, &presentInfo);
+}
+
 void Graphics::CreateInstance()
 {
     VkApplicationInfo appInfo{};
@@ -60,7 +126,7 @@ void Graphics::CreateInstance()
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.pEngineName = "Vulkan 3D Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion = VK_API_VERSION_1_0;
+    appInfo.apiVersion = VK_API_VERSION_1_1;
 
     const char* extensions[] = {
     VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
@@ -511,19 +577,16 @@ void Graphics::CreateCommandPool()
 
 void Graphics::CreateCommandBuffer()
 {
-    vkCommandBuffers.resize(vkSwapChainFrameBuffers.size());
-
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.commandPool = vkCommandPool;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = static_cast<uint32_t>(vkCommandBuffers.size());
+    allocInfo.commandBufferCount = 1;
 
-    if (VK_FAILED(vkAllocateCommandBuffers(vkDevice, &allocInfo, vkCommandBuffers.data())))
+    if (VK_FAILED(vkAllocateCommandBuffers(vkDevice, &allocInfo, &vkCommandBuffer)))
         throw GFX_EXCEPTION("Failed to allocate command buffers!");
 
-    for (size_t i = 0; i < vkCommandBuffers.size(); i++)
-		RecordCommandBuffer(vkCommandBuffers.at(i), 0);
+    RecordCommandBuffer(vkCommandBuffer, 0);
 }
 
 void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
@@ -549,7 +612,7 @@ void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkGraphicsPipeline);
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkGraphicsPipeline);
 
     VkViewport viewport{};
     viewport.x = 0.f;
@@ -571,6 +634,21 @@ void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
     if (VK_FAILED(vkEndCommandBuffer(commandBuffer)))
         throw GFX_EXCEPTION("Failed to record Command Buffer!");
+}
+
+void Graphics::CreateSynchronizationObjects()
+{
+    VkSemaphoreCreateInfo semaphoreInfo{};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    if (VK_FAILED(vkCreateSemaphore(vkDevice, &semaphoreInfo, nullptr, &vkImageAvailableSemaphore)) ||
+        VK_FAILED(vkCreateSemaphore(vkDevice, &semaphoreInfo, nullptr, &vkRenderFinishedSemaphore)) ||
+        VK_FAILED(vkCreateFence(vkDevice, &fenceInfo, nullptr, &vkInFlightFence)))
+        throw GFX_EXCEPTION("Failed to create semaphores!");
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

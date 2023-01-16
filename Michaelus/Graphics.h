@@ -6,7 +6,7 @@
 
 #include "EngineException.h"
 
-#define GFX Graphics::GetInstance();
+#define GFX Graphics::GetInstance()
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
 
 class Graphics
@@ -20,6 +20,8 @@ public:
 	Graphics& operator=(Graphics&&) = delete;
 
 	static Graphics& GetInstance();
+
+	void Draw();
 
 private:
 	void CreateInstance();
@@ -38,6 +40,7 @@ private:
 	void CreateCommandPool();
 	void CreateCommandBuffer();
 	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+	void CreateSynchronizationObjects();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -53,7 +56,8 @@ private:
 	};
 
 	const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME
 	};
 
 #ifdef NDEBUG
@@ -83,6 +87,10 @@ private:
 	std::vector<VkFramebuffer> vkSwapChainFrameBuffers;
 
 	VkCommandPool vkCommandPool;
-	std::vector<VkCommandBuffer> vkCommandBuffers;
+	VkCommandBuffer vkCommandBuffer;
+
+	VkSemaphore vkImageAvailableSemaphore;
+	VkSemaphore vkRenderFinishedSemaphore;
+	VkFence vkInFlightFence;
 };
 
