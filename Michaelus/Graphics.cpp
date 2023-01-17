@@ -19,6 +19,7 @@ Graphics::Graphics()
     CreateGraphicsPipeline();
     CreateFrameBuffers();
     CreateCommandPool();
+    CreateVertexBuffer();
     CreateCommandBuffers();
     CreateSynchronizationObjects();
 }
@@ -28,6 +29,9 @@ Graphics::~Graphics()
     vkDeviceWaitIdle(vkDevice);
 
     CleanUpSwapChain();
+
+    vkDestroyBuffer(vkDevice, vkVertexBuffer, nullptr);
+    vkFreeMemory(vkDevice, vkVertexBufferMemory, nullptr);
 
     vkDestroyPipeline(vkDevice, vkGraphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
@@ -107,8 +111,8 @@ void Graphics::Draw()
 
     result = vkQueuePresentKHR(vkPresentQueue, &presentInfo);
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || bFrameBufferResized) {
-        RecreateSwapChain();
-        bFrameBufferResized = false;
+       RecreateSwapChain();
+    	bFrameBufferResized = false;
     }
     else if (VK_FAILED(result))
         throw GFX_EXCEPTION("Failed to present Swap Chain Image !");
@@ -631,6 +635,10 @@ void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkGraphicsPipeline);
 
+    VkBuffer vertexBuffers[] = { vkVertexBuffer };
+    VkDeviceSize offsets[] = { 0 };
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+
     VkViewport viewport{};
     viewport.x = 0.f;
     viewport.y = 0.f;
@@ -645,7 +653,7 @@ void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     scissor.extent = vkSwapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-    vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+    vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
 
     vkCmdEndRenderPass(commandBuffer);
 
@@ -694,6 +702,49 @@ void Graphics::CleanUpSwapChain()
         vkDestroyImageView(vkDevice, imageView, nullptr);
 
     vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
+}
+
+void Graphics::CreateVertexBuffer()
+{
+    VkBufferCreateInfo bufferInfo{};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.size = sizeof(vertices[0]) * vertices.size();
+    bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    if (VK_FAILED(vkCreateBuffer(vkDevice, &bufferInfo, nullptr, &vkVertexBuffer)))
+        throw GFX_EXCEPTION("Failed to create Vertex Buffer!");
+
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(vkDevice, vkVertexBuffer, &memoryRequirements);
+
+    VkMemoryAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.allocationSize = memoryRequirements.size;
+    allocInfo.memoryTypeIndex = FindMemoryType(memoryRequirements.memoryTypeBits,
+        static_cast<VkMemoryPropertyFlagBits>(VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+
+    if (VK_FAILED(vkAllocateMemory(vkDevice, &allocInfo, nullptr, &vkVertexBufferMemory)))
+        throw GFX_EXCEPTION("Failed to allocate Vertex Buffer Memory!");
+
+    vkBindBufferMemory(vkDevice, vkVertexBuffer, vkVertexBufferMemory, 0);
+
+    void* data;
+    vkMapMemory(vkDevice, vkVertexBufferMemory, 0, bufferInfo.size, 0, &data);
+    memcpy(data, vertices.data(), (size_t)bufferInfo.size);
+    vkUnmapMemory(vkDevice, vkVertexBufferMemory);
+}
+
+uint32_t Graphics::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlagBits properties)
+{
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(vkPhysicalDevice, &memoryProperties);
+
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
+    {
+        if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties) return i;
+    }
+    throw GFX_EXCEPTION("Failed to find suitable Memory Type!");
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

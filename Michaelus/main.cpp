@@ -10,6 +10,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	try
 	{
+		WND;
 		Game theGame;
 		while (WND.ProcessMessages()) theGame.Go();
 	}

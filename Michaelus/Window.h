@@ -1,4 +1,7 @@
 #pragma once
+
+#define NOMINMAX
+
 #include <memory>
 #include <string>
 #include <Windows.h>
@@ -34,7 +37,7 @@ private:
 
 	static std::unique_ptr<Window> pInstance;
 
-	HWND hWnd;
+	static HWND hWnd;
 	static HINSTANCE hInstance;
 	static std::wstring className;
 

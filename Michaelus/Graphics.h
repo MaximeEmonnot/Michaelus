@@ -1,5 +1,7 @@
 #pragma once
 
+#define NOMINMAX
+
 #include <array>
 #include <vector>
 
@@ -85,6 +87,9 @@ private:
 	void RecreateSwapChain();
 	void CleanUpSwapChain();
 
+	void CreateVertexBuffer();
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlagBits properties);
+
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -141,9 +146,12 @@ private:
 	uint32_t currentFrame = 0;
 
 	const std::vector<Vertex> vertices = {
-		{{0.f, -0.5f}, {1.f, 0.f, 0.f}},
-		{{0.5f, 0.5f}, {0.f, 1.f, 0.f}},
-		{{-0.5f, 0.5f}, {0.f, 0.f, 1.f}}
+		{{0.f, -0.5f}, {1.f, 1.f, 0.f}},
+		{{0.5f, 0.5f}, {0.f, 1.f, 1.f}},
+		{{-0.5f, 0.5f}, {1.f, 0.f, 1.f}}
 	};
+
+	VkBuffer vkVertexBuffer;
+	VkDeviceMemory vkVertexBufferMemory;
 };
 

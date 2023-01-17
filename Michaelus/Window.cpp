@@ -1,11 +1,11 @@
 #include "Window.h"
 
-#include "Graphics.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
 std::unique_ptr<Window> Window::pInstance = nullptr;
 
+HWND Window::hWnd;
 HINSTANCE Window::hInstance;
 std::wstring Window::className;
 
@@ -60,8 +60,7 @@ Window::~Window()
 
 Window& Window::GetInstance()
 {
-	if (!pInstance)
-		pInstance = std::make_unique<Window>();
+	if (!pInstance) pInstance = std::make_unique<Window>();
 	return *pInstance;
 }
 
@@ -104,10 +103,6 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 	case WM_MOVING:
-		break;
-
-	case WM_SIZE:
-		GFX.SetFrameBufferResize();
 		break;
 
 	case WM_KEYDOWN:
