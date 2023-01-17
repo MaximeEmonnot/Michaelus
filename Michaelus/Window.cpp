@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include "Graphics.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -103,6 +104,10 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 	case WM_MOVING:
+		break;
+
+	case WM_SIZE:
+		GFX.SetFrameBufferResize();
 		break;
 
 	case WM_KEYDOWN:

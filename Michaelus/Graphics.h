@@ -25,6 +25,8 @@ public:
 
 	void Draw();
 
+	void SetFrameBufferResize();
+
 private:
 	void CreateInstance();
 	bool CheckValidationLayerSupport();
@@ -43,6 +45,9 @@ private:
 	void CreateCommandBuffers();
 	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 	void CreateSynchronizationObjects();
+
+	void RecreateSwapChain();
+	void CleanUpSwapChain();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -94,6 +99,8 @@ private:
 	std::vector<VkSemaphore> vkImageAvailableSemaphores;
 	std::vector<VkSemaphore> vkRenderFinishedSemaphores;
 	std::vector<VkFence> vkInFlightFences;
+
+	bool bFrameBufferResized = false;
 
 	uint32_t currentFrame = 0;
 };

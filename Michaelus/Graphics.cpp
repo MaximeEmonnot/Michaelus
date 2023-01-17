@@ -27,6 +27,12 @@ Graphics::~Graphics()
 {
     vkDeviceWaitIdle(vkDevice);
 
+    CleanUpSwapChain();
+
+    vkDestroyPipeline(vkDevice, vkGraphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
+    vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
         vkDestroyFence(vkDevice, vkInFlightFences[i], nullptr);
@@ -36,17 +42,6 @@ Graphics::~Graphics()
 
     vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 
-    for (auto vkFramebuffer : vkSwapChainFrameBuffers)
-        vkDestroyFramebuffer(vkDevice, vkFramebuffer, nullptr);
-
-    vkDestroyPipeline(vkDevice, vkGraphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
-    vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
-
-    for (const auto imageView : vkSwapChainImageViews)
-        vkDestroyImageView(vkDevice, imageView, nullptr);
-
-    vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
     vkDestroyDevice(vkDevice, nullptr);
 
 	if (bEnableValidationLayers)
@@ -66,12 +61,20 @@ void Graphics::Draw()
 {
     vkWaitForFences(vkDevice, 1, &vkInFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
-    vkResetFences(vkDevice, 1, &vkInFlightFences[currentFrame]);
 
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR)
+    {
+        RecreateSwapChain();
+        return;
+    }
+    if (VK_FAILED(result) && result != VK_SUBOPTIMAL_KHR)
+        throw GFX_EXCEPTION("Failed to acquire Swap Chain Image!");
 
-    vkResetCommandBuffer(vkCommandBuffers[currentFrame], 0);
+    vkResetFences(vkDevice, 1, &vkInFlightFences[currentFrame]);
+
+	vkResetCommandBuffer(vkCommandBuffers[currentFrame], 0);
     RecordCommandBuffer(vkCommandBuffers[currentFrame], imageIndex);
 
     VkSemaphore signalSemaphores[] = { vkRenderFinishedSemaphores[currentFrame] };
@@ -102,9 +105,20 @@ void Graphics::Draw()
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(vkPresentQueue, &presentInfo);
+    result = vkQueuePresentKHR(vkPresentQueue, &presentInfo);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || bFrameBufferResized) {
+        RecreateSwapChain();
+        bFrameBufferResized = false;
+    }
+    else if (VK_FAILED(result))
+        throw GFX_EXCEPTION("Failed to present Swap Chain Image !");
 
     currentFrame = (++currentFrame) % MAX_FRAMES_IN_FLIGHT;
+}
+
+void Graphics::SetFrameBufferResize()
+{
+    bFrameBufferResized = true;
 }
 
 void Graphics::CreateInstance()
@@ -655,6 +669,28 @@ void Graphics::CreateSynchronizationObjects()
             VK_FAILED(vkCreateFence(vkDevice, &fenceInfo, nullptr, &vkInFlightFences[i])))
             throw GFX_EXCEPTION("Failed to create semaphores!");
     }
+}
+
+void Graphics::RecreateSwapChain()
+{
+    vkDeviceWaitIdle(vkDevice);
+
+    CleanUpSwapChain();
+
+    CreateSwapChain();
+    CreateImageViews();
+    CreateFrameBuffers();
+}
+
+void Graphics::CleanUpSwapChain()
+{
+    for (auto vkFramebuffer : vkSwapChainFrameBuffers)
+        vkDestroyFramebuffer(vkDevice, vkFramebuffer, nullptr);
+
+    for (const auto imageView : vkSwapChainImageViews)
+        vkDestroyImageView(vkDevice, imageView, nullptr);
+
+    vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
