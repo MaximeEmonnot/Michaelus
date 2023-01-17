@@ -1,10 +1,13 @@
 #pragma once
 
+#include <array>
 #include <vector>
 
 #include "Vulkan.h"
 
 #include "EngineException.h"
+#include "Vec2D.h"
+#include "Vec3D.h"
 
 #define GFX Graphics::GetInstance()
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
@@ -13,6 +16,39 @@
 
 class Graphics
 {
+private:
+	struct Vertex
+	{
+		static VkVertexInputBindingDescription GetBindingDescription()
+		{
+			VkVertexInputBindingDescription bindingDescription{};
+			bindingDescription.binding = 0;
+			bindingDescription.stride = sizeof(Vertex);
+			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+			return bindingDescription;
+		}
+
+		static std::array<VkVertexInputAttributeDescription, 2> GetAttributeDescription()
+		{
+			std::array<VkVertexInputAttributeDescription, 2> attributeDescription{};
+
+			// Position
+			attributeDescription[0].binding = 0;
+			attributeDescription[0].location = 0;
+			attributeDescription[0].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescription[0].offset = offsetof(Vertex, pos);
+			// Color
+			attributeDescription[1].binding = 0;
+			attributeDescription[1].location = 1;
+			attributeDescription[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescription[1].offset = offsetof(Vertex, color);
+
+			return attributeDescription;
+		}
+		FVec2D pos;
+		FVec3D color;
+	};
+
 public:
 	Graphics();
 	~Graphics();
@@ -103,5 +139,11 @@ private:
 	bool bFrameBufferResized = false;
 
 	uint32_t currentFrame = 0;
+
+	const std::vector<Vertex> vertices = {
+		{{0.f, -0.5f}, {1.f, 0.f, 0.f}},
+		{{0.5f, 0.5f}, {0.f, 1.f, 0.f}},
+		{{-0.5f, 0.5f}, {0.f, 0.f, 1.f}}
+	};
 };
 

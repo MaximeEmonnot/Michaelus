@@ -161,6 +161,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Vec2D.h" />
+    <ClInclude Include="Vec3D.h" />
     <ClInclude Include="Vulkan.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

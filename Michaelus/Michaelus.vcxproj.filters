@@ -83,6 +83,9 @@
     <ClInclude Include="Vulkan.h">
       <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Vec3D.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vert">
