@@ -90,6 +90,7 @@ private:
 	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	void CreateVertexBuffer();
+	void CreateIndexBuffer();
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
@@ -148,12 +149,19 @@ private:
 	uint32_t currentFrame = 0;
 
 	const std::vector<Vertex> vertices = {
-		{{0.f, -0.5f}, {1.f, 1.f, 0.f}},
-		{{0.5f, 0.5f}, {0.f, 1.f, 1.f}},
-		{{-0.5f, 0.5f}, {1.f, 0.f, 1.f}}
+		{{-0.5f, -0.5f}, {1.f, 1.f, 0.f}},
+		{{0.5f, -0.5f}, {0.f, 1.f, 1.f}},
+		{{0.5f, 0.5f}, {1.f, 0.f, 1.f}},
+		{{-0.5f, 0.5f}, {1.f, 1.f, 1.f}}
+	};
+
+	const std::vector<uint16_t> indices = {
+		0, 1, 2, 2, 3, 0
 	};
 
 	VkBuffer vkVertexBuffer;
 	VkDeviceMemory vkVertexBufferMemory;
+	VkBuffer vkIndexBuffer;
+	VkDeviceMemory vkIndexBufferMemory;
 };
 
