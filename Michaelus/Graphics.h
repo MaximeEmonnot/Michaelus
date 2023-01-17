@@ -9,6 +9,8 @@
 #define GFX Graphics::GetInstance()
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
 
+#define MAX_FRAMES_IN_FLIGHT 2
+
 class Graphics
 {
 public:
@@ -38,7 +40,7 @@ private:
 	void CreateRenderPass();
 	void CreateFrameBuffers();
 	void CreateCommandPool();
-	void CreateCommandBuffer();
+	void CreateCommandBuffers();
 	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 	void CreateSynchronizationObjects();
 
@@ -87,10 +89,12 @@ private:
 	std::vector<VkFramebuffer> vkSwapChainFrameBuffers;
 
 	VkCommandPool vkCommandPool;
-	VkCommandBuffer vkCommandBuffer;
+	std::vector<VkCommandBuffer> vkCommandBuffers;
 
-	VkSemaphore vkImageAvailableSemaphore;
-	VkSemaphore vkRenderFinishedSemaphore;
-	VkFence vkInFlightFence;
+	std::vector<VkSemaphore> vkImageAvailableSemaphores;
+	std::vector<VkSemaphore> vkRenderFinishedSemaphores;
+	std::vector<VkFence> vkInFlightFences;
+
+	uint32_t currentFrame = 0;
 };
 
