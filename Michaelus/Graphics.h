@@ -1,8 +1,8 @@
 #pragma once
 
 #define NOMINMAX
-
 #define GLM_FORCE_RADIANS
+
 
 #include <array>
 #include <vector>
@@ -111,6 +111,14 @@ private:
 	void CreateDescriptorPool();
 	void CreateDescriptorSets();
 
+	void CreateTextureImage();
+	void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+
+	VkCommandBuffer BeginSingleTimeCommands();
+	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+	void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -189,5 +197,10 @@ private:
 
 	VkDescriptorPool vkDescriptorPool;
 	std::vector<VkDescriptorSet> vkDescriptorSets;
+
+	VkBuffer vkStagingBuffer;
+	VkDeviceMemory vkStagingBufferMemory;
+	VkImage vkTextureImage;
+	VkDeviceMemory vkTextureImageMemory;
 };
 

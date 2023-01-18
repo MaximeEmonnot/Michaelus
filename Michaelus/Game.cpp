@@ -4,14 +4,13 @@
 
 Game::Game()
 {
-	GFX;
+	GFX.Draw();
 }
 
 void Game::Go()
 {
 	UpdateFrame();
 	RenderFrame();
-	GFX.Draw();
 }
 
 void Game::UpdateFrame() const
