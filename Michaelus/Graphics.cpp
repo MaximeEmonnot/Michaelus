@@ -3,6 +3,7 @@
 #include <set>
 
 #include "Window.h"
+#include <chrono>
 
 std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
@@ -16,6 +17,7 @@ Graphics::Graphics()
     CreateSwapChain();
     CreateImageViews();
     CreateRenderPass();
+    CreateDescriptorSetLayout();
     CreateGraphicsPipeline();
     CreateFrameBuffers();
     CreateCommandPool();
@@ -30,6 +32,14 @@ Graphics::~Graphics()
     vkDeviceWaitIdle(vkDevice);
 
     CleanUpSwapChain();
+
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    {
+        vkDestroyBuffer(vkDevice, vkUniformBuffers[i], nullptr);
+        vkFreeMemory(vkDevice, vkUniformBuffersMemory[i], nullptr);
+    }
+
+    vkDestroyDescriptorSetLayout(vkDevice, vkDescriptorSetLayout, nullptr);
 
     vkDestroyBuffer(vkDevice, vkIndexBuffer, nullptr);
     vkFreeMemory(vkDevice, vkIndexBufferMemory, nullptr);
@@ -88,6 +98,8 @@ void Graphics::Draw()
     VkSemaphore signalSemaphores[] = { vkRenderFinishedSemaphores[currentFrame] };
     VkSemaphore waitSemaphores[] = { vkImageAvailableSemaphores[currentFrame] };
     VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
+    UpdateUniformBuffer(currentFrame);
 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -489,8 +501,8 @@ void Graphics::CreateGraphicsPipeline()
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 0;
-    pipelineLayoutInfo.pSetLayouts = nullptr;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &vkDescriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -824,6 +836,57 @@ uint32_t Graphics::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
         if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties) return i;
     }
     throw GFX_EXCEPTION("Failed to find suitable Memory Type!");
+}
+
+void Graphics::CreateDescriptorSetLayout()
+{
+    VkDescriptorSetLayoutBinding uboLayoutBinding{};
+    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uboLayoutBinding.descriptorCount = 1;
+    uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    uboLayoutBinding.pImmutableSamplers = nullptr;
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
+    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &uboLayoutBinding;
+
+    if (VK_FAILED(vkCreateDescriptorSetLayout(vkDevice, &layoutInfo, nullptr, &vkDescriptorSetLayout)))
+        throw GFX_EXCEPTION("Failed to create Descriptor Set Layout!");
+}
+
+void Graphics::CreateUniformBuffers()
+{
+    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    vkUniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+    vkUniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+    vkUniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
+
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    {
+        CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+            vkUniformBuffers[i], vkUniformBuffersMemory[i]);
+        vkMapMemory(vkDevice, vkUniformBuffersMemory[i], 0, bufferSize, 0, &vkUniformBuffersMapped[i]);
+    }
+}
+
+void Graphics::UpdateUniformBuffer(uint32_t currentImage)
+{
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    UniformBufferObject ubo{};
+    ubo.model = FMat4::Rotate(FMat4(1.f), time * MMath::Rad(90.f), FVec3D(0.f, 0.f, 1.f));
+    ubo.view = FMat4::LookAt(FVec3D(2.f, 2.f, 2.f), FVec3D(0.f, 0.f, 0.f), FVec3D(0.f, 0.f, 1.f));
+    ubo.projection = FMat4::Perspective(MMath::Rad(45.f), vkSwapChainExtent.width / static_cast<float>(vkSwapChainExtent.height), 0.1f, 10.f);
+
+    ubo.projection.mArray[1][1] *= -1;
+
+    memcpy(vkUniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

@@ -3,6 +3,8 @@
 #include <functional>
 #include <string>
 
+#include "Math.h"
+
 template <typename T>
 class Vec3D {
 public:
@@ -96,7 +98,7 @@ public:
 	}
 
 	float GetLength() const {
-		return sqrtf(x * x + y * y + z * z);
+		return MMath::Sqrt(x * x + y * y + z * z);
 	}
 
 	Vec3D GetNormalized() const {
@@ -115,11 +117,24 @@ public:
 		*this = GetNormalized();
 	}
 
-	float DotProduct(const Vec3D& rhs) {
+	float Dot(const Vec3D& rhs) {
 		Vec3D v0 = GetNormalized();
 		Vec3D v1 = rhs.GetNormalized();
 
 		return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
+	}
+
+	Vec3D Cross(const Vec3D& rhs)
+	{
+		Vec3D a = GetNormalized();
+		Vec3D b = rhs.GetNormalized();
+
+		Vec3D out;
+		out.x = a.y * b.z - a.z * b.y;
+		out.y = a.x * b.z - a.z * b.x;
+		out.z = a.x * b.y - a.y * b.x;
+
+		return out;
 	}
 
 	std::string ToString() const

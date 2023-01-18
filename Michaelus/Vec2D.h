@@ -107,11 +107,16 @@ public:
 		*this = GetNormalized();
 	}
 
-	float DotProduct(const Vec2D& rhs) {
+	float Dot(const Vec2D& rhs) {
 		Vec2D v0 = GetNormalized();
 		Vec2D v1 = rhs.GetNormalized();
 
 		return v0.x * v1.x + v0.y * v1.y;
+	}
+
+	static float DotProduct(const Vec2D& lhs, const Vec2D& rhs)
+	{
+		return lhs.Dot(rhs);
 	}
 
 	std::string ToString() const

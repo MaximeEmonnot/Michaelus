@@ -10,6 +10,7 @@
 #include "EngineException.h"
 #include "Vec2D.h"
 #include "Vec3D.h"
+#include "Mat4.h"
 
 #define GFX Graphics::GetInstance()
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
@@ -49,6 +50,13 @@ private:
 		}
 		FVec2D pos;
 		FVec3D color;
+	};
+
+	struct UniformBufferObject
+	{
+		FMat4 model;
+		FMat4 view;
+		FMat4 projection;
 	};
 
 public:
@@ -93,6 +101,10 @@ private:
 	void CreateIndexBuffer();
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
+	void CreateDescriptorSetLayout();
+	void CreateUniformBuffers();
+	void UpdateUniformBuffer(uint32_t currentImage);
+
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -132,6 +144,7 @@ private:
 	std::vector<VkImageView> vkSwapChainImageViews;
 
 	VkRenderPass vkRenderPass;
+	VkDescriptorSetLayout vkDescriptorSetLayout;
 	VkPipelineLayout vkPipelineLayout;
 	VkPipeline vkGraphicsPipeline;
 
@@ -163,5 +176,9 @@ private:
 	VkDeviceMemory vkVertexBufferMemory;
 	VkBuffer vkIndexBuffer;
 	VkDeviceMemory vkIndexBufferMemory;
+
+	std::vector<VkBuffer> vkUniformBuffers;
+	std::vector<VkDeviceMemory> vkUniformBuffersMemory;
+	std::vector<void*> vkUniformBuffersMapped;
 };
 
