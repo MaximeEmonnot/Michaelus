@@ -119,6 +119,10 @@ private:
 	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 	void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
+	void CreateTextureImageView();
+	VkImageView CreateImageView(VkImage image, VkFormat format);
+	void CreateTextureSampler();
+
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -202,5 +206,7 @@ private:
 	VkDeviceMemory vkStagingBufferMemory;
 	VkImage vkTextureImage;
 	VkDeviceMemory vkTextureImageMemory;
+	VkImageView vkTextureImageView;
+	VkSampler vkTextureSampler;
 };
 
