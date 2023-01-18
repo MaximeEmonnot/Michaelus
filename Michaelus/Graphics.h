@@ -35,25 +35,30 @@ private:
 			return bindingDescription;
 		}
 
-		static std::array<VkVertexInputAttributeDescription, 2> GetAttributeDescription()
+		static std::array<VkVertexInputAttributeDescription, 3> GetAttributeDescription()
 		{
-			std::array<VkVertexInputAttributeDescription, 2> attributeDescription{};
+			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
-			// Position
-			attributeDescription[0].binding = 0;
-			attributeDescription[0].location = 0;
-			attributeDescription[0].format = VK_FORMAT_R32G32_SFLOAT;
-			attributeDescription[0].offset = offsetof(Vertex, pos);
-			// Color
-			attributeDescription[1].binding = 0;
-			attributeDescription[1].location = 1;
-			attributeDescription[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescription[1].offset = offsetof(Vertex, color);
+			attributeDescriptions[0].binding = 0;
+			attributeDescriptions[0].location = 0;
+			attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[0].offset = offsetof(Vertex, pos);
 
-			return attributeDescription;
+			attributeDescriptions[1].binding = 0;
+			attributeDescriptions[1].location = 1;
+			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+			attributeDescriptions[2].binding = 0;
+			attributeDescriptions[2].location = 2;
+			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
+			return attributeDescriptions;
 		}
-		FVec2D pos;
-		FVec3D color;
+		glm::vec2 pos;
+		glm::vec3 color;
+		glm::vec2 texCoord;
 	};
 
 	struct UniformBufferObject
@@ -180,10 +185,10 @@ private:
 	uint32_t currentFrame = 0;
 
 	const std::vector<Vertex> vertices = {
-		{{-0.5f, -0.5f}, {1.f, 1.f, 0.f}},
-		{{0.5f, -0.5f}, {0.f, 1.f, 1.f}},
-		{{0.5f, 0.5f}, {1.f, 0.f, 1.f}},
-		{{-0.5f, 0.5f}, {1.f, 1.f, 1.f}}
+		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
 	};
 
 	const std::vector<uint16_t> indices = {
