@@ -1,7 +1,6 @@
 #include "Graphics.h"
 
 #include <set>
-
 #include "Window.h"
 #include <chrono>
 
@@ -23,6 +22,9 @@ Graphics::Graphics()
     CreateCommandPool();
     CreateVertexBuffer();
     CreateIndexBuffer();
+    CreateUniformBuffers();
+    CreateDescriptorPool();
+    CreateDescriptorSets();
     CreateCommandBuffers();
     CreateSynchronizationObjects();
 }
@@ -38,6 +40,8 @@ Graphics::~Graphics()
         vkDestroyBuffer(vkDevice, vkUniformBuffers[i], nullptr);
         vkFreeMemory(vkDevice, vkUniformBuffersMemory[i], nullptr);
     }
+
+    vkDestroyDescriptorPool(vkDevice, vkDescriptorPool, nullptr);
 
     vkDestroyDescriptorSetLayout(vkDevice, vkDescriptorSetLayout, nullptr);
 
@@ -463,7 +467,7 @@ void Graphics::CreateGraphicsPipeline()
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.f;
     rasterizer.depthBiasClamp = 0.f;
@@ -473,7 +477,7 @@ void Graphics::CreateGraphicsPipeline()
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     multisampling.sampleShadingEnable = VK_FALSE;
     multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-    multisampling.minSampleShading = 1.f;
+    multisampling.minSampleShading = 1.f;   
     multisampling.pSampleMask = nullptr;
     multisampling.alphaToCoverageEnable = VK_FALSE;
     multisampling.alphaToOneEnable = VK_FALSE;
@@ -671,6 +675,7 @@ void Graphics::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
     scissor.extent = vkSwapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipelineLayout, 0, 1, &vkDescriptorSets[currentFrame], 0, nullptr);
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
     vkCmdEndRenderPass(commandBuffer);
@@ -880,13 +885,66 @@ void Graphics::UpdateUniformBuffer(uint32_t currentImage)
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     UniformBufferObject ubo{};
-    ubo.model = FMat4::Rotate(FMat4(1.f), time * MMath::Rad(90.f), FVec3D(0.f, 0.f, 1.f));
-    ubo.view = FMat4::LookAt(FVec3D(2.f, 2.f, 2.f), FVec3D(0.f, 0.f, 0.f), FVec3D(0.f, 0.f, 1.f));
-    ubo.projection = FMat4::Perspective(MMath::Rad(45.f), vkSwapChainExtent.width / static_cast<float>(vkSwapChainExtent.height), 0.1f, 10.f);
+    ubo.model = glm::rotate(glm::mat4(1.f), MMath::Rad(30.f), glm::vec3(0.f, 0.f, 1.f));
+    ubo.view = glm::lookAt(glm::vec3(2.f, 2.f, 2.f), glm::vec3(0.f ,0.f ,0.f), glm::vec3(0.f ,0.f,1.f));
+    ubo.projection = glm::perspective(MMath::Rad(45.f), static_cast<float>(vkSwapChainExtent.width) / static_cast<float>(vkSwapChainExtent.height), 0.1f, 10.f);
 
-    ubo.projection.mArray[1][1] *= -1;
+    ubo.projection[1][1] *= -1.f;
 
     memcpy(vkUniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+}
+
+void Graphics::CreateDescriptorPool()
+{
+    VkDescriptorPoolSize poolSize{};
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+    VkDescriptorPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+    if (VK_FAILED(vkCreateDescriptorPool(vkDevice, &poolInfo, nullptr, &vkDescriptorPool)))
+        throw GFX_EXCEPTION("Failed to create Descriptor Pool!");
+}
+
+void Graphics::CreateDescriptorSets()
+{
+    std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, vkDescriptorSetLayout);
+    VkDescriptorSetAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = vkDescriptorPool;
+    allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+    allocInfo.pSetLayouts = layouts.data();
+
+    vkDescriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+
+    if (VK_FAILED(vkAllocateDescriptorSets(vkDevice, &allocInfo, vkDescriptorSets.data())))
+        throw GFX_EXCEPTION("Failed to allocate Descriptor Sets!");
+
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    {
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = vkUniformBuffers[i];
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(UniformBufferObject);
+
+        VkWriteDescriptorSet descriptorWrite{};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = vkDescriptorSets[i];
+        descriptorWrite.dstBinding = 0;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
+        descriptorWrite.pImageInfo = nullptr;
+        descriptorWrite.pTexelBufferView = nullptr;
+
+        vkUpdateDescriptorSets(vkDevice, 1, &descriptorWrite, 0, nullptr);
+    }
+
 }
 
 VkBool32 Graphics::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

@@ -86,9 +86,6 @@
     <ClInclude Include="Vec3D.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Mat4.h">
-      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>

@@ -2,15 +2,19 @@
 
 #define NOMINMAX
 
+#define GLM_FORCE_RADIANS
+
 #include <array>
 #include <vector>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Vulkan.h"
 
 #include "EngineException.h"
 #include "Vec2D.h"
 #include "Vec3D.h"
-#include "Mat4.h"
 
 #define GFX Graphics::GetInstance()
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
@@ -54,9 +58,9 @@ private:
 
 	struct UniformBufferObject
 	{
-		FMat4 model;
-		FMat4 view;
-		FMat4 projection;
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 projection;
 	};
 
 public:
@@ -104,6 +108,8 @@ private:
 	void CreateDescriptorSetLayout();
 	void CreateUniformBuffers();
 	void UpdateUniformBuffer(uint32_t currentImage);
+	void CreateDescriptorPool();
+	void CreateDescriptorSets();
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -180,5 +186,8 @@ private:
 	std::vector<VkBuffer> vkUniformBuffers;
 	std::vector<VkDeviceMemory> vkUniformBuffersMemory;
 	std::vector<void*> vkUniformBuffersMapped;
+
+	VkDescriptorPool vkDescriptorPool;
+	std::vector<VkDescriptorSet> vkDescriptorSets;
 };
 
