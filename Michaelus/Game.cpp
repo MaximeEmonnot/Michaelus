@@ -11,6 +11,7 @@ void Game::Go()
 {
 	UpdateFrame();
 	RenderFrame();
+	GFX.Draw();
 }
 
 void Game::UpdateFrame() const

@@ -911,7 +911,7 @@ void Graphics::UpdateUniformBuffer(uint32_t currentImage)
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     UniformBufferObject ubo{};
-    ubo.model = glm::rotate(glm::mat4(1.f), time * MMath::Rad(30.f), glm::vec3(0.f, 0.f, 1.f));
+    ubo.model = glm::rotate(glm::mat4(1.f), time * MMath::Rad(90.f), glm::vec3(0.f, 0.f, 1.f));
     ubo.view = glm::lookAt(glm::vec3(2.f, 2.f, 2.f), glm::vec3(0.f ,0.f ,0.f), glm::vec3(0.f ,0.f,1.f));
     ubo.projection = glm::perspective(MMath::Rad(45.f), static_cast<float>(vkSwapChainExtent.width) / static_cast<float>(vkSwapChainExtent.height), 0.1f, 10.f);
 
