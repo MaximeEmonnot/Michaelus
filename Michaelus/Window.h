@@ -1,10 +1,9 @@
 #pragma once
 
-#define NOMINMAX
+#include "Vulkan.h"
 
 #include <memory>
 #include <string>
-#include <Windows.h>
 
 #define WND Window::GetInstance()
 
@@ -26,6 +25,7 @@ public:
 	bool ProcessMessages();
 
 	HWND GetHWND() const;
+	HINSTANCE GetHInstance() const;
 
 	int GetWidth() const;
 	int GetHeight() const;

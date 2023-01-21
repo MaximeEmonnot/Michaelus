@@ -1,17 +1,20 @@
 #include "Game.h"
 
 #include "Graphics.h"
+#include "VKDevice.h"
 
 Game::Game()
 {
-	GFX.Draw();
+	VK_DEVICE;
+	GFX;
 }
 
 void Game::Go()
 {
+	GFX.BeginDraw();
 	UpdateFrame();
 	RenderFrame();
-	GFX.Draw();
+	GFX.EndDraw();
 }
 
 void Game::UpdateFrame() const

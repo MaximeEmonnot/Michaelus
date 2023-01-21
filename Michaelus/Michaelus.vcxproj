@@ -153,6 +153,13 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="VKDescriptor.cpp" />
+    <ClCompile Include="VKDevice.cpp" />
+    <ClCompile Include="VKModel.cpp" />
+    <ClCompile Include="VKPipeLine.cpp" />
+    <ClCompile Include="VKSwapChain.cpp" />
+    <ClCompile Include="VKTexture.cpp" />
+    <ClCompile Include="VKUniformBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +171,13 @@
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Vec2D.h" />
     <ClInclude Include="Vec3D.h" />
+    <ClInclude Include="VKDescriptor.h" />
+    <ClInclude Include="VKDevice.h" />
+    <ClInclude Include="VKModel.h" />
+    <ClInclude Include="VKPipeLine.h" />
+    <ClInclude Include="VKSwapChain.h" />
+    <ClInclude Include="VKTexture.h" />
+    <ClInclude Include="VKUniformBuffer.h" />
     <ClInclude Include="Vulkan.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

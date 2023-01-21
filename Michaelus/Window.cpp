@@ -84,6 +84,11 @@ HWND Window::GetHWND() const
 	return hWnd;
 }
 
+HINSTANCE Window::GetHInstance() const
+{
+	return hInstance;
+}
+
 int Window::GetWidth() const
 {
 	return width;
