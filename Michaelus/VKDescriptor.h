@@ -12,6 +12,8 @@ public:
 	VKDescriptor(const VKTexture& texture, const VKUniformBuffer& uniformBuffer);
 	~VKDescriptor();
 
+	void Destroy();
+
 	VkDescriptorSetLayout* GetDescriptorSetLayout();
 	std::vector<VkDescriptorSet> GetDescriptorSets() const;
 

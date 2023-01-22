@@ -9,6 +9,8 @@ public:
 	VKTexture(const std::string& texturePath);
 	~VKTexture();
 
+	void Destroy();
+
 	VkImage GetTextureImage() const;
 	VkImageView GetTextureImageView() const;
 	VkSampler GetTextureSampler() const;

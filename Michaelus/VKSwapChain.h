@@ -23,6 +23,8 @@ public:
 	VKSwapChain(VKSwapChain&&) = delete;
 	VKSwapChain& operator= (VKSwapChain&&) = delete;
 
+	void Destroy();
+
 	VkFramebuffer GetFrameBuffer(int index) const;
 	VkRenderPass GetRenderPass() const;
 	VkImageView GetImageView(int index) const;

@@ -14,7 +14,12 @@ VKPipeLine::VKPipeLine(const std::string& vertexFilePath, const std::string& fra
 
 VKPipeLine::~VKPipeLine()
 {
-	vkDestroyPipeline(VK_DEVICE.GetDevice(), vkGraphicsPipeline, nullptr);
+
+}
+
+void VKPipeLine::Destroy()
+{
+    vkDestroyPipeline(VK_DEVICE.GetDevice(), vkGraphicsPipeline, nullptr);
     vkDestroyPipelineLayout(VK_DEVICE.GetDevice(), vkPipelineLayout, nullptr);
 }
 

@@ -18,10 +18,25 @@ Graphics::Graphics()
     CreateCommandBuffers();
 }
 
+Graphics::~Graphics()
+{
+}
+
 Graphics& Graphics::GetInstance()
 {
     if (!pInstance) pInstance = std::make_unique<Graphics>();
     return *pInstance;
+}
+
+void Graphics::Destroy()
+{
+    swapChain.Destroy();
+    uniformBufferTEST.Destroy();
+    textureTEST.Destroy();
+    modelTEST.Destroy();
+    descriptorTEST.Destroy();
+    pipeline.Destroy();
+    VK_DEVICE.Destroy();
 }
 
 void Graphics::BeginDraw()

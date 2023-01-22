@@ -16,12 +16,15 @@ class Graphics
 {
 public:
 	Graphics();
+	~Graphics();
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	Graphics(Graphics&&) = delete;
 	Graphics& operator=(Graphics&&) = delete;
 
 	static Graphics& GetInstance();
+
+	void Destroy();
 
 	void BeginDraw();
 	void EndDraw();

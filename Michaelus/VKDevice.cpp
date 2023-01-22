@@ -34,7 +34,17 @@ VKDevice::VKDevice()
 
 VKDevice::~VKDevice()
 {
+}
 
+VKDevice& VKDevice::GetInstance()
+{
+	if (!pInstance)
+		pInstance = std::make_unique<VKDevice>();
+	return *pInstance;
+}
+
+void VKDevice::Destroy()
+{
     vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 
     vkDestroyDevice(vkDevice, nullptr);
@@ -44,13 +54,6 @@ VKDevice::~VKDevice()
 
     vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
     vkDestroyInstance(vkInstance, nullptr);
-}
-
-VKDevice& VKDevice::GetInstance()
-{
-	if (!pInstance)
-		pInstance = std::make_unique<VKDevice>();
-	return *pInstance;
 }
 
 VkDevice VKDevice::GetDevice() const
@@ -659,8 +662,11 @@ VkBool32 VKDevice::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 	VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData)
 {
-    if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-        throw GFX_EXCEPTION(pCallbackData->pMessage);
+    if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+        const char* message = pCallbackData->pMessage;
+        OutputDebugStringA(message);
+        throw GFX_EXCEPTION(message);
+    }
 
     return VK_FALSE;
 }

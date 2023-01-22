@@ -14,11 +14,16 @@ VKUniformBuffer::VKUniformBuffer()
 
 VKUniformBuffer::~VKUniformBuffer()
 {
+}
+
+void VKUniformBuffer::Destroy()
+{
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
         vkDestroyBuffer(VK_DEVICE.GetDevice(), vkUniformBuffers[i], nullptr);
         vkFreeMemory(VK_DEVICE.GetDevice(), vkUniformBuffersMemory[i], nullptr);
-    }}
+    }
+}
 
 void VKUniformBuffer::Update(UniformBufferObject ubo, uint32_t currentImage)
 {

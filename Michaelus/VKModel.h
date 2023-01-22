@@ -65,6 +65,8 @@ public:
 	VKModel(const std::string& modelPath);
 	~VKModel();
 
+	void Destroy();
+
 	void Bind(VkCommandBuffer commandBuffer) const;
 	void Draw(VkCommandBuffer commandBuffer) const;
 

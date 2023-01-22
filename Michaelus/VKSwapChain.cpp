@@ -21,6 +21,11 @@ VKSwapChain::VKSwapChain()
 
 VKSwapChain::~VKSwapChain()
 {
+    
+}
+
+void VKSwapChain::Destroy()
+{
     vkDeviceWaitIdle(VK_DEVICE.GetDevice());
 
     CleanUpSwapChain();

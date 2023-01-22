@@ -40,6 +40,8 @@ public:
 
 	static VKDevice& GetInstance();
 
+	void Destroy();
+
 	VkDevice GetDevice() const;
 	VkPhysicalDevice GetPhysicalDevice() const;
 	VkSurfaceKHR GetSurface() const;

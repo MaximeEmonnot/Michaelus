@@ -18,6 +18,10 @@ VKDescriptor::VKDescriptor(const VKTexture& texture, const VKUniformBuffer& unif
 
 VKDescriptor::~VKDescriptor()
 {
+}
+
+void VKDescriptor::Destroy()
+{
     vkDestroyDescriptorPool(VK_DEVICE.GetDevice(), vkDescriptorPool, nullptr);
     vkDestroyDescriptorSetLayout(VK_DEVICE.GetDevice(), vkDescriptorSetLayout, nullptr);
 }

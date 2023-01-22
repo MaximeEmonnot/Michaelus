@@ -19,6 +19,8 @@ public:
 	VKUniformBuffer();
 	~VKUniformBuffer();
 
+	void Destroy();
+
 	void Update(UniformBufferObject ubo, uint32_t currentImage);
 
 	std::vector<VkBuffer> GetUniformBuffers() const;

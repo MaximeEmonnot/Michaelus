@@ -5,7 +5,6 @@
 
 Game::Game()
 {
-	VK_DEVICE;
 	GFX;
 }
 

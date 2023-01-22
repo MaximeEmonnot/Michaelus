@@ -14,6 +14,11 @@ VKTexture::VKTexture(const std::string& texturePath)
 
 VKTexture::~VKTexture()
 {
+
+}
+
+void VKTexture::Destroy()
+{
     vkDestroySampler(VK_DEVICE.GetDevice(), vkTextureSampler, nullptr);
     vkDestroyImageView(VK_DEVICE.GetDevice(), vkTextureImageView, nullptr);
     vkDestroyImage(VK_DEVICE.GetDevice(), vkTextureImage, nullptr);

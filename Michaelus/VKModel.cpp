@@ -14,6 +14,11 @@ VKModel::VKModel(const std::string& modelPath)
 
 VKModel::~VKModel()
 {
+
+}
+
+void VKModel::Destroy()
+{
     vkDestroyBuffer(VK_DEVICE.GetDevice(), vkIndexBuffer, nullptr);
     vkFreeMemory(VK_DEVICE.GetDevice(), vkIndexBufferMemory, nullptr);
     vkDestroyBuffer(VK_DEVICE.GetDevice(), vkVertexBuffer, nullptr);

@@ -18,6 +18,8 @@ public:
 	VKPipeLine(VKPipeLine&&) = delete;
 	VKPipeLine& operator= (VKPipeLine&&) = delete;
 
+	void Destroy();
+
 	void Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame, VKDescriptor& descriptor) const;
 
 private:
