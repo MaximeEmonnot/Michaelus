@@ -132,6 +132,9 @@
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Fichiers sources\MainEngine\Components</Filter>
     </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Fichiers sources\MainEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -210,16 +213,25 @@
       <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="SceneComponent.h">
-      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+      <Filter>Fichiers d%27en-tête\MainEngine\Components</Filter>
     </ClInclude>
     <ClInclude Include="MeshComponent.h">
-      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+      <Filter>Fichiers d%27en-tête\MainEngine\Components</Filter>
     </ClInclude>
     <ClInclude Include="ColliderComponent.h">
-      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+      <Filter>Fichiers d%27en-tête\MainEngine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Fichiers d%27en-tête\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotator.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

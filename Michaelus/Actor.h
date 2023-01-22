@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "Transform.h"
+
 class Component;
 
 class Actor
@@ -24,11 +26,18 @@ public:
 	template <class T>
 	std::vector<std::shared_ptr<T>> GetComponentsByClass() const;
 
+	void SetActorLocation(const FVec3D& newLocation);
+	void SetActorRotation(const FRotator& newRotation);
+	void AddActorLocation(const FVec3D& offsetLocation);
+	void AddActorRotation(const FRotator& offsetRotation);
+	FVec3D GetActorLocation() const;
+	FRotator GetActorRotation() const;
+
 protected:
 	std::shared_ptr<Component> pRootComponent;
 private:
 	std::string name;
-
 	std::vector<std::shared_ptr<Component>> components;
+	FTransform transform;
 };
 

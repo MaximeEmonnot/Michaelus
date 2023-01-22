@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "Transform.h"
+
 class Material;
 class VKModel;
 
@@ -19,6 +21,7 @@ public:
 	void SetMaterial(std::shared_ptr<Material> pNewMaterial);
 	std::shared_ptr<Material> GetMaterial() const;
 
+	void Update(const FTransform& transform);
 	void Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
 private:

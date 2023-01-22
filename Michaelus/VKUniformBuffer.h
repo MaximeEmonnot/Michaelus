@@ -5,6 +5,9 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
+#include "Transform.h"
 
 struct UniformBufferObject
 {
@@ -21,14 +24,12 @@ public:
 
 	void Destroy();
 
-	void Update(UniformBufferObject ubo, uint32_t currentImage);
+	void Update(const FTransform& modelTransform);
 
 	std::vector<VkBuffer> GetUniformBuffers() const;
 	std::vector<void*> GetUniformBuffersMapped() const;
 private:
 	void CreateUniformBuffers();
-
-	void InitializeUniformlBuffers();
 
 private:
 	std::vector<VkBuffer> vkUniformBuffers;

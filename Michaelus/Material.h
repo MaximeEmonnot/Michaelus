@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include "Transform.h"
+
 class VKPipeLine;
 class VKDescriptor;
 class VKUniformBuffer;
@@ -26,6 +28,8 @@ public:
 	VKUniformBuffer& GetUniformBuffer() const;
 	VKDescriptor& GetDescriptor() const;
 	VKPipeLine& GetPipeline() const;
+
+	void UpdateUniformBuffer(const FTransform& transform);
 
 	void Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 

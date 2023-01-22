@@ -1,15 +1,16 @@
 #include "VKUniformBuffer.h"
 
+#include "CameraComponent.h"
+#include "CameraManager.h"
 #include "Math.h"
 #include "VKDevice.h"
 #include "VKSwapChain.h"
 #include "Window.h"
 
+
 VKUniformBuffer::VKUniformBuffer()
 {
     CreateUniformBuffers();
-
-    InitializeUniformlBuffers();
 }
 
 VKUniformBuffer::~VKUniformBuffer()
@@ -25,10 +26,21 @@ void VKUniformBuffer::Destroy()
     }
 }
 
-void VKUniformBuffer::Update(UniformBufferObject ubo, uint32_t currentImage)
+void VKUniformBuffer::Update(const FTransform& modelTransform)
 {
+    const FVec3D cameraLocation = CAMERA.GetActiveCamera()->GetWorldLocation();
+    const FRotator cameraRotation = CAMERA.GetActiveCamera()->GetWorldRotation();
+
+    UniformBufferObject ubo{};
+
+    ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelTransform.location.x, modelTransform.location.y, modelTransform.location.z)) *
+        glm::eulerAngleXYX(modelTransform.rotation.roll, modelTransform.rotation.pitch, modelTransform.rotation.yaw);
+    ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z)) *
+        glm::eulerAngleXYX(cameraRotation.roll, cameraRotation.pitch, cameraRotation.yaw);
+    ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 10.f);
     ubo.projection[1][1] *= -1.f;
-    memcpy(vkUniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+        memcpy(vkUniformBuffersMapped[i], &ubo, sizeof(ubo));
 }
 
 std::vector<VkBuffer> VKUniformBuffer::GetUniformBuffers() const
@@ -55,15 +67,4 @@ void VKUniformBuffer::CreateUniformBuffers()
             vkUniformBuffers[i], vkUniformBuffersMemory[i]);
         vkMapMemory(VK_DEVICE.GetDevice(), vkUniformBuffersMemory[i], 0, bufferSize, 0, &vkUniformBuffersMapped[i]);
     }
-}
-
-void VKUniformBuffer::InitializeUniformlBuffers()
-{
-    UniformBufferObject ubo{};
-    ubo.model = glm::rotate(glm::mat4(1.f), MMath::Rad(90.f), glm::vec3(0.f, 0.f, 1.f));
-    ubo.view = glm::lookAt(glm::vec3(2.f, 2.f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
-    ubo.projection = glm::perspective(MMath::Rad(45.f), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 10.f);
-
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
-        Update(ubo, i);
 }

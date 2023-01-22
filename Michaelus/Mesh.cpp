@@ -34,6 +34,11 @@ std::shared_ptr<Material> Mesh::GetMaterial() const
 	return pMaterial;
 }
 
+void Mesh::Update(const FTransform& transform)
+{
+	pMaterial->UpdateUniformBuffer(transform);
+}
+
 void Mesh::Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
 	rModel.Bind(commandBuffer);

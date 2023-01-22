@@ -44,6 +44,11 @@ VKPipeLine& Material::GetPipeline() const
 	return *pPipeline;
 }
 
+void Material::UpdateUniformBuffer(const FTransform& transform)
+{
+	pUniformBuffer->Update(transform);
+}
+
 void Material::Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
 	pPipeline->Bind(commandBuffer, currentFrame, *pDescriptor);
