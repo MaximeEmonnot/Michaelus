@@ -17,6 +17,7 @@ public:
 	Mesh(const std::string& meshPath, std::shared_ptr<Material> pMaterial);
 
 	~Mesh();
+	void Destroy();
 
 	void SetMaterial(std::shared_ptr<Material> pNewMaterial);
 	std::shared_ptr<Material> GetMaterial() const;

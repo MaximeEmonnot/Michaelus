@@ -1,8 +1,8 @@
 #include "SceneComponent.h"
 
-SceneComponent::SceneComponent(std::weak_ptr<Actor> pOwner)
+SceneComponent::SceneComponent(Actor& rOwner)
 	:
-	Component(pOwner)
+	Component(rOwner)
 {
 }
 

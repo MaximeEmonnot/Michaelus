@@ -24,6 +24,10 @@ Mesh::~Mesh()
 	//pMaterial->Destroy();
 }
 
+void Mesh::Destroy()
+{
+}
+
 void Mesh::SetMaterial(std::shared_ptr<Material> pNewMaterial)
 {
 	pMaterial = pNewMaterial;

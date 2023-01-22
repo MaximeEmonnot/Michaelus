@@ -5,6 +5,8 @@
 
 #include "VKDevice.h"
 #include "VKSwapChain.h"
+#include "Mesh.h"
+#include "MeshComponent.h"
 
 std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
@@ -28,6 +30,7 @@ Graphics& Graphics::GetInstance()
 void Graphics::Destroy()
 {
     pSwapChain->Destroy();
+    meshes.clear();
     //for (std::shared_ptr<Mesh> mesh : meshes) mesh->Destroy();
     VK_DEVICE.Destroy();
 }
@@ -39,7 +42,16 @@ void Graphics::BeginDraw()
 
 void Graphics::EndDraw()
 {
-    pSwapChain->EndDraw(vkCommandBuffers.data(), meshes);
+    std::vector<std::shared_ptr<Mesh>> meshList;
+    for (auto mesh : meshes)
+    	if (auto sharedMesh = mesh.lock())meshList.emplace_back(sharedMesh->GetMesh());
+
+    pSwapChain->EndDraw(vkCommandBuffers.data(), meshList);
+}
+
+void Graphics::AddMesh(std::weak_ptr<MeshComponent> mesh)
+{
+    meshes.emplace_back(mesh);
 }
 
 VKSwapChain& Graphics::GetSwapChain()

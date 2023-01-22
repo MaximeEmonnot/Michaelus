@@ -4,7 +4,7 @@ class CameraComponent :
     public Component
 {
 public:
-	CameraComponent(std::weak_ptr<Actor> pOwner);
+	CameraComponent(Actor& rOwner);
 
     virtual void Update() override;
 

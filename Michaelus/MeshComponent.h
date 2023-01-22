@@ -6,7 +6,7 @@ class MeshComponent :
     public Component
 {
 public:
-    MeshComponent(std::weak_ptr<Actor> pOwner);
+    MeshComponent(Actor& rOwner);
 
     virtual void Update() override;
 

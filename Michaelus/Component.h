@@ -7,14 +7,14 @@ class Actor;
 class Component
 {
 public:
-	Component(std::weak_ptr<Actor> pOwner);
+	Component(Actor& rOwner);
 
 	virtual void Update() = 0;
 
 	void AttachTo(std::shared_ptr<Component> pNewParentComponent);
 	void Detach();
 
-	std::shared_ptr<Actor> GetOwner() const;
+	Actor& GetOwner();
 
 	void AddRelativeLocation(const FVec3D& offsetLocation);
 	void AddRelativeRotation(const FRotator& offsetRotation);
@@ -27,7 +27,7 @@ public:
 	FTransform GetTransform() const;
 
 private:
-	std::weak_ptr<Actor> pOwner;
+	Actor& rOwner;
 
 	std::shared_ptr<Component> pParentComponent;
 

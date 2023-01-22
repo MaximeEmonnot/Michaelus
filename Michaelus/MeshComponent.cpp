@@ -1,16 +1,18 @@
 #include "MeshComponent.h"
 
+#include "Actor.h"
 #include "Mesh.h"
+#include "Graphics.h"
 
-MeshComponent::MeshComponent(std::weak_ptr<Actor> pOwner)
+MeshComponent::MeshComponent(Actor& rOwner)
 	:
-	Component(pOwner)
+	Component(rOwner)
 {
 }
 
 void MeshComponent::Update()
 {
-	pMesh->Update(GetTransform());
+	pMesh->Update(GetOwner().GetActorTransform());
 }
 
 void MeshComponent::SetMesh(std::shared_ptr<Mesh> pNewMesh)

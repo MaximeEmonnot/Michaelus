@@ -1,4 +1,9 @@
 #pragma once
+#include <memory>
+
+class TestPawn;
+class TestActor;
+
 class Game
 {
 public:
@@ -8,6 +13,10 @@ public:
 
 private:
 	void UpdateFrame() const;
-	void RenderFrame() const;
+
+private:
+	std::shared_ptr<TestActor> pTestActor;
+	std::shared_ptr<TestActor> pTestActor2;
+	std::shared_ptr<TestPawn> pTestPawn;
 };
 

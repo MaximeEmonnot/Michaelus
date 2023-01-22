@@ -2,9 +2,9 @@
 
 #include "Actor.h"
 
-Component::Component(std::weak_ptr<Actor> pOwner)
+Component::Component(Actor& rOwner)
 	:
-	pOwner(pOwner)
+	rOwner(rOwner)
 {
 }
 
@@ -18,9 +18,9 @@ void Component::Detach()
 	pParentComponent = nullptr;
 }
 
-std::shared_ptr<Actor> Component::GetOwner() const
+Actor& Component::GetOwner()
 {
-	return pOwner.lock();
+	return rOwner;
 }
 
 void Component::AddRelativeLocation(const FVec3D& offsetLocation)
@@ -46,13 +46,13 @@ FRotator Component::GetRelativeRotation() const
 FVec3D Component::GetWorldLocation() const
 {
 	if (pParentComponent) return pParentComponent->GetRelativeLocation() + transform.location;
-	return GetOwner()->GetActorLocation() + transform.location;
+	return rOwner.GetActorLocation() + transform.location;
 }
 
 FRotator Component::GetWorldRotation() const
 {
 	if (pParentComponent) return pParentComponent->GetRelativeRotation() + transform.rotation;
-	return GetOwner()->GetActorRotation() + transform.rotation;
+	return rOwner.GetActorRotation() + transform.rotation;
 }
 
 FTransform Component::GetTransform() const

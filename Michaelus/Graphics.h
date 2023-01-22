@@ -12,7 +12,7 @@
 
 #define GFX Graphics::GetInstance()
 
-class Mesh;
+class MeshComponent;
 
 class Graphics
 {
@@ -31,6 +31,8 @@ public:
 	void BeginDraw();
 	void EndDraw();
 
+	void AddMesh(std::weak_ptr<MeshComponent> mesh);
+
 	VKSwapChain& GetSwapChain();
 private:
 	void CreateCommandBuffers();
@@ -42,6 +44,6 @@ private:
 
 	std::unique_ptr<VKSwapChain> pSwapChain;
 
-	std::vector<std::shared_ptr<Mesh>> meshes;
+	std::vector<std::weak_ptr<MeshComponent>> meshes;
 };
 

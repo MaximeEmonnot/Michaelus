@@ -4,7 +4,7 @@ class SceneComponent :
     public Component
 {
 public:
-    SceneComponent(std::weak_ptr<Actor> pOwner);
+    SceneComponent(Actor& rOwner);
 
     virtual void Update() override;
 };

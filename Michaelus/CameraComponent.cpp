@@ -1,9 +1,8 @@
 #include "CameraComponent.h"
 
-CameraComponent::CameraComponent(std::weak_ptr<Actor> pOwner)
+CameraComponent::CameraComponent(Actor& rOwner)
 	:
-	Component(pOwner),
-	fieldOfView(90.f)
+	Component(rOwner)
 {
 }
 
