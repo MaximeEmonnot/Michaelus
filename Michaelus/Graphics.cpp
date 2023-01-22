@@ -10,10 +10,7 @@ std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
 Graphics::Graphics()
 	:
-	textureTEST("Textures/viking_room.png"),
-	modelTEST("Meshes/viking_room.obj"),
-	descriptorTEST(textureTEST, uniformBufferTEST),
-	pipeline("vert.spv","frag.spv", swapChain, descriptorTEST)
+	pSwapChain(std::make_unique<VKSwapChain>())
 {
     CreateCommandBuffers();
 }
@@ -30,23 +27,24 @@ Graphics& Graphics::GetInstance()
 
 void Graphics::Destroy()
 {
-    swapChain.Destroy();
-    uniformBufferTEST.Destroy();
-    textureTEST.Destroy();
-    modelTEST.Destroy();
-    descriptorTEST.Destroy();
-    pipeline.Destroy();
+    pSwapChain->Destroy();
+    //for (std::shared_ptr<Mesh> mesh : meshes) mesh->Destroy();
     VK_DEVICE.Destroy();
 }
 
 void Graphics::BeginDraw()
 {
-    swapChain.BeginDraw();
+    pSwapChain->BeginDraw();
 }
 
 void Graphics::EndDraw()
 {
-    swapChain.EndDraw(vkCommandBuffers.data(), pipeline, modelTEST, descriptorTEST);
+    pSwapChain->EndDraw(vkCommandBuffers.data(), meshes);
+}
+
+VKSwapChain& Graphics::GetSwapChain()
+{
+    return *pSwapChain;
 }
 
 void Graphics::CreateCommandBuffers()

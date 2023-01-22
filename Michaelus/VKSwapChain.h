@@ -7,6 +7,7 @@
 
 #define MAX_FRAMES_IN_FLIGHT 2
 
+class Mesh;
 class VKDescriptor;
 class VKModel;
 class VKPipeLine;
@@ -39,8 +40,8 @@ public:
 	VkFormat FindDepthFormat();
 
 	void BeginDraw();
-	void EndDraw(VkCommandBuffer* commandBuffers, const VKPipeLine& pipeline, const VKModel& model, VKDescriptor& descriptor);
-	void RecordCommandBuffer(VkCommandBuffer commandBuffer, const VKPipeLine& pipeline, const VKModel& model, VKDescriptor& descriptor);
+	void EndDraw(VkCommandBuffer* commandBuffers, std::vector<std::shared_ptr<Mesh>> meshes);
+	void RecordCommandBuffer(VkCommandBuffer commandBuffer, std::vector<std::shared_ptr<Mesh>> meshes);
 	void SubmitCommandBuffers(const VkCommandBuffer* pCommandBuffers);
 	bool operator== (const VKSwapChain& rhs) const;
 

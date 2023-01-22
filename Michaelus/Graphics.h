@@ -12,6 +12,8 @@
 
 #define GFX Graphics::GetInstance()
 
+class Mesh;
+
 class Graphics
 {
 public:
@@ -29,6 +31,7 @@ public:
 	void BeginDraw();
 	void EndDraw();
 
+	VKSwapChain& GetSwapChain();
 private:
 	void CreateCommandBuffers();
 
@@ -37,11 +40,8 @@ private:
 
 	std::vector<VkCommandBuffer> vkCommandBuffers;
 
-	VKSwapChain swapChain;
-	VKTexture textureTEST;
-	VKModel modelTEST;
-	VKUniformBuffer uniformBufferTEST;
-	VKDescriptor descriptorTEST;
-	VKPipeLine pipeline;
+	std::unique_ptr<VKSwapChain> pSwapChain;
+
+	std::vector<std::shared_ptr<Mesh>> meshes;
 };
 

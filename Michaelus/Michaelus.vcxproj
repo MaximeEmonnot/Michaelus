@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
     </ClCompile>
@@ -148,11 +148,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="ColliderComponent.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshComponent.cpp" />
+    <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="SceneComponent.cpp" />
+    <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="VKDescriptor.cpp" />
     <ClCompile Include="VKDevice.cpp" />
     <ClCompile Include="VKModel.cpp" />
@@ -163,12 +175,24 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="ColliderComponent.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="EngineException.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="ModelFactory.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Pawn.h" />
+    <ClInclude Include="SceneComponent.h" />
+    <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="Vec2D.h" />
     <ClInclude Include="Vec3D.h" />
     <ClInclude Include="VKDescriptor.h" />

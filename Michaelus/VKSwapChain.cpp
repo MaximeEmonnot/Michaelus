@@ -4,6 +4,7 @@
 #include <array>
 
 #include "Graphics.h"
+#include "Mesh.h"
 #include "VKDevice.h"
 #include "Vulkan.h"
 #include "Window.h"
@@ -105,19 +106,18 @@ void VKSwapChain::BeginDraw()
         throw GFX_EXCEPTION("Failed to acquire Swap Chain Image!");
 }
 
-void VKSwapChain::EndDraw(VkCommandBuffer* commandBuffers, const VKPipeLine& pipeline,
-	const VKModel& model, VKDescriptor& descriptor)
+void VKSwapChain::EndDraw(VkCommandBuffer* commandBuffers, std::vector<std::shared_ptr<Mesh>> meshes)
 {
     vkResetFences(VK_DEVICE.GetDevice(), 1, &vkInFlightFences[currentFrame]);
 
     vkResetCommandBuffer(commandBuffers[currentFrame], 0);
 
-    RecordCommandBuffer(commandBuffers[currentFrame], pipeline, model, descriptor);
+    RecordCommandBuffer(commandBuffers[currentFrame], meshes);
 
     SubmitCommandBuffers(commandBuffers);
 }
 
-void VKSwapChain::RecordCommandBuffer(VkCommandBuffer commandBuffer, const VKPipeLine& pipeline, const VKModel& model, VKDescriptor& descriptor)
+void VKSwapChain::RecordCommandBuffer(VkCommandBuffer commandBuffer, std::vector<std::shared_ptr<Mesh>> meshes)
 {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -157,9 +157,7 @@ void VKSwapChain::RecordCommandBuffer(VkCommandBuffer commandBuffer, const VKPip
     scissor.extent = GetSwapChainExtent();
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-    model.Bind(commandBuffer);
-    pipeline.Bind(commandBuffer, currentFrame, descriptor);
-	model.Draw(commandBuffer);
+    for (std::shared_ptr<Mesh> mesh : meshes) mesh->Draw(commandBuffer, currentFrame);
 
     vkCmdEndRenderPass(commandBuffer);
 

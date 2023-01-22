@@ -14,6 +14,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		WND;
 		Game theGame;
 		while (WND.ProcessMessages()) theGame.Go();
+		GFX.Destroy();
 	}
 	catch(EngineException& e)
 	{
@@ -27,8 +28,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		SHOW_MESSAGE("Vulkan 3D Engine - Unknown Exception", "An unknown exception has been caught.");
 	}
-
-	GFX.Destroy();
 
 	return 0;
 }

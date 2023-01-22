@@ -37,6 +37,24 @@
     <Filter Include="Fichiers sources\GraphicsEngine">
       <UniqueIdentifier>{9f35637a-bfd0-41c0-b7d6-e9c94a7bb856}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\MainEngine\Actors">
+      <UniqueIdentifier>{a3ffccab-2694-44c3-bf02-17a6a4565356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\MainEngine\Components">
+      <UniqueIdentifier>{79af6be3-2d19-4db6-97db-c4167a7b26dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\MainEngine\Controllers">
+      <UniqueIdentifier>{64b609af-6415-4fe8-b9dd-91ff6515c7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\MainEngine\Actors">
+      <UniqueIdentifier>{97d24a92-9e85-4020-94ab-9b0e496f2e0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\MainEngine\Components">
+      <UniqueIdentifier>{a8d7f96d-79bf-4176-a76e-b60b1b0a51e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\MainEngine\Controllers">
+      <UniqueIdentifier>{5ec9ae51-cf15-42dc-8d7d-369ed8e8b517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -77,6 +95,42 @@
     </ClCompile>
     <ClCompile Include="VKUniformBuffer.cpp">
       <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFactory.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelFactory.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Fichiers sources\MainEngine\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Fichiers sources\MainEngine\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Fichiers sources\MainEngine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Fichiers sources\MainEngine\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent.cpp">
+      <Filter>Fichiers sources\MainEngine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Fichiers sources\MainEngine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>Fichiers sources\MainEngine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Fichiers sources\MainEngine\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +184,42 @@
     </ClInclude>
     <ClInclude Include="VKUniformBuffer.h">
       <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFactory.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelFactory.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Fichiers d%27en-tête\MainEngine\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
