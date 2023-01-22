@@ -1,7 +1,11 @@
 #include "Actor.h"
 
+#include "CameraComponent.h"
+#include "CameraManager.h"
 #include "Component.h"
 #include "EngineException.h"
+#include "Graphics.h"
+#include "MeshComponent.h"
 
 Actor::Actor(const std::string& name)
 	:

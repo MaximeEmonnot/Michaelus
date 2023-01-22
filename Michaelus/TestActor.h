@@ -13,5 +13,7 @@ public:
 
 private:
 	std::shared_ptr<MeshComponent> pMeshComponent;
+
+	float angle = 0.f;
 };
 

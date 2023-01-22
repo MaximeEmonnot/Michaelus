@@ -3,7 +3,10 @@
 #include <string>
 #include <vector>
 
+#include "CameraComponent.h"
+#include "CameraManager.h"
 #include "EngineException.h"
+#include "Graphics.h"
 #include "Transform.h"
 #include "MeshComponent.h"
 
@@ -22,6 +25,12 @@ public:
 	{
 		std::shared_ptr<Component> newComponent = std::make_shared<T>(*this);
 		components.emplace_back(newComponent);
+
+		if (auto newCamera = std::dynamic_pointer_cast<CameraComponent>(newComponent))
+			CAMERA.AddCamera(newCamera);
+		if (auto newMesh = std::dynamic_pointer_cast<MeshComponent>(newComponent))
+			GFX.AddMesh(newMesh);
+
 		return std::dynamic_pointer_cast<T>(newComponent);
 	}
 

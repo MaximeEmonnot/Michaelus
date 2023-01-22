@@ -41,6 +41,20 @@ public:
 		*this = *this + rhs;
 	}
 
+	Rotator operator*(T scale) const
+	{
+		Rotator out = *this;
+		out.roll *= scale;
+		out.pitch *= scale;
+		out.yaw *= scale;
+
+		return out;
+	}
+	void operator*=(T scale)
+	{
+		*this = *this * scale;
+	}
+
 public:
 	T roll = static_cast<T>(0);
 	T pitch = static_cast<T>(0);

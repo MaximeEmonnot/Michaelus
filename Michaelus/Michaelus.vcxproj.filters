@@ -55,6 +55,12 @@
     <Filter Include="Fichiers sources\MainEngine\Controllers">
       <UniqueIdentifier>{5ec9ae51-cf15-42dc-8d7d-369ed8e8b517}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Test">
+      <UniqueIdentifier>{c393fc0d-195a-4eee-bc1b-677851cac466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Test">
+      <UniqueIdentifier>{11ab1183-1089-4198-b435-c9359706ed6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -135,11 +141,14 @@
     <ClCompile Include="CameraManager.cpp">
       <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
-    <ClCompile Include="TestActor.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
     <ClCompile Include="TestPawn.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TestActor.cpp">
+      <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,11 +248,14 @@
     <ClInclude Include="Transform.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
-    <ClInclude Include="TestActor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Timer.h">
+      <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
     <ClInclude Include="TestPawn.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestActor.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
