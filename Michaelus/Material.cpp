@@ -16,9 +16,30 @@ Material::Material(const std::string& texturePath, EShadingModel shadingModel)
 {
 }
 
+Material::Material(const Material& copy)
+	:
+	rTexture(copy.rTexture)
+{
+	*this = copy;
+}
+
+Material& Material::operator=(const Material& rhs)
+{
+	rTexture = rhs.rTexture;
+	pUniformBuffer = std::make_unique<VKUniformBuffer>(*rhs.pUniformBuffer);
+	pDescriptor = std::make_unique<VKDescriptor>(*rhs.pDescriptor);
+	pPipeline = std::make_unique<VKPipeLine>(*rhs.pPipeline);
+
+	return *this;
+}
+
 Material::~Material()
 {
-	//rTexture.Destroy();
+
+}
+
+void Material::Clear()
+{
 	pUniformBuffer->Destroy();
 	pDescriptor->Destroy();
 	pPipeline->Destroy();

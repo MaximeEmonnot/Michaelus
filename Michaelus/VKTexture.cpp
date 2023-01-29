@@ -14,7 +14,7 @@ VKTexture::VKTexture(const std::string& texturePath)
 
 VKTexture::~VKTexture()
 {
-
+    OutputDebugStringA("Texture Destroyed!\n");
 }
 
 void VKTexture::Destroy()

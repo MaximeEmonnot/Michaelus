@@ -6,8 +6,7 @@ std::unique_ptr<TextureFactory> TextureFactory::pInstance = nullptr;
 
 TextureFactory::~TextureFactory()
 {
-	for (auto& entry : textures)
-		entry.second.Destroy();
+
 }
 
 TextureFactory& TextureFactory::GetInstance()
@@ -17,9 +16,16 @@ TextureFactory& TextureFactory::GetInstance()
 	return *pInstance;
 }
 
+void TextureFactory::Clear()
+{
+	for (auto& entry : textures)
+		entry.second->Destroy();
+	textures.clear();
+}
+
 VKTexture& TextureFactory::GetTexture(const std::string& path)
 {
 	if (!textures.contains(path))
-		textures.emplace(path, VKTexture(path));
-	return textures.at(path);
+		textures.emplace(path, std::make_shared<VKTexture>(path));
+	return *textures.at(path);
 }

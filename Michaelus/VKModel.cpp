@@ -14,7 +14,7 @@ VKModel::VKModel(const std::string& modelPath)
 
 VKModel::~VKModel()
 {
-
+    OutputDebugStringA("Model destroyed!\n");
 }
 
 void VKModel::Destroy()

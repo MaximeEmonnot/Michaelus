@@ -1,6 +1,7 @@
 #include "TestActor.h"
 
 #include "Material.h"
+#include "MaterialFactory.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
 #include "Mouse.h"
@@ -13,9 +14,7 @@ TestActor::TestActor(const std::string& name)
 	pMeshComponent = CreateComponent<MeshComponent>();
 	pRootComponent = pMeshComponent;
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/viking_room.obj");
-	mesh->SetMaterial(std::make_shared<Material>("Textures/viking_room.png", EShadingModel::Unlit));
-
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/viking_room.obj", MATERIAL("Textures/viking_room.png", EShadingModel::Unlit));
 	pMeshComponent->SetMesh(mesh);
 }
 

@@ -17,6 +17,13 @@ VKPipeLine::~VKPipeLine()
 
 }
 
+VKPipeLine::VKPipeLine(const VKPipeLine& copy)
+	:
+	vkGraphicsPipeline(copy.vkGraphicsPipeline),
+	vkPipelineLayout(copy.vkPipelineLayout)
+{
+}
+
 void VKPipeLine::Destroy()
 {
     vkDestroyPipeline(VK_DEVICE.GetDevice(), vkGraphicsPipeline, nullptr);

@@ -6,8 +6,7 @@ std::unique_ptr<ModelFactory> ModelFactory::pInstance = nullptr;
 
 ModelFactory::~ModelFactory()
 {
-	for (auto& entry : models)
-		entry.second.Destroy();
+
 }
 
 ModelFactory& ModelFactory::GetInstance()
@@ -17,9 +16,16 @@ ModelFactory& ModelFactory::GetInstance()
 	return *pInstance;
 }
 
+void ModelFactory::Clear()
+{
+	for (auto& entry : models)
+		entry.second->Destroy();
+	models.clear();
+}
+
 VKModel& ModelFactory::GetModel(const std::string& path)
 {
 	if (!models.contains(path))
-		models.emplace(path, VKModel(path));
-	return models.at(path);
+		models.emplace(path, std::make_shared<VKModel>(path));
+	return *models.at(path);
 }

@@ -4,48 +4,32 @@
 #include "ModelFactory.h"
 #include "VKModel.h"
 
-Mesh::Mesh(const std::string& meshPath)
+
+Mesh::Mesh(const std::string& meshPath, const Material& material)
 	:
 	rModel(MODEL(meshPath)),
-	pMaterial(nullptr)
+	material(material)
 {
 }
 
-Mesh::Mesh(const std::string& meshPath, std::shared_ptr<Material> pMaterial)
-	:
-	rModel(MODEL(meshPath)),
-	pMaterial(pMaterial)
+void Mesh::SetMaterial(const Material& newMaterial)
 {
+	material = newMaterial;
 }
 
-Mesh::~Mesh()
+Material Mesh::GetMaterial() const
 {
-	//rModel.Destroy();
-	//pMaterial->Destroy();
-}
-
-void Mesh::Destroy()
-{
-}
-
-void Mesh::SetMaterial(std::shared_ptr<Material> pNewMaterial)
-{
-	pMaterial = pNewMaterial;
-}
-
-std::shared_ptr<Material> Mesh::GetMaterial() const
-{
-	return pMaterial;
+	return material;
 }
 
 void Mesh::Update(const FTransform& transform)
 {
-	pMaterial->UpdateUniformBuffer(transform);
+	material.UpdateUniformBuffer(transform);
 }
 
 void Mesh::Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
 	rModel.Bind(commandBuffer);
-	pMaterial->Bind(commandBuffer, currentFrame);
+	material.Bind(commandBuffer, currentFrame);
 	rModel.Draw(commandBuffer);
 }

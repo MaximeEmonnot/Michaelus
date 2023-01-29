@@ -5,6 +5,7 @@
 
 class VKModel;
 
+#define MODEL_CLEAR ModelFactory::GetInstance().Clear()
 #define MODEL(path) ModelFactory::GetInstance().GetModel(path)
 
 class ModelFactory
@@ -15,11 +16,13 @@ public:
 
 	static ModelFactory& GetInstance();
 
+	void Clear();
+
 	VKModel& GetModel(const std::string& path);
 
 private:
 	static std::unique_ptr<ModelFactory> pInstance;
 
-	std::map<std::string, VKModel> models;
+	std::map<std::string, std::shared_ptr<VKModel>> models;
 };
 

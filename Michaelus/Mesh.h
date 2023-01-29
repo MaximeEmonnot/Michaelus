@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "Material.h"
 #include "Transform.h"
 
 class Material;
@@ -13,20 +14,17 @@ class Mesh
 {
 public:
 	Mesh() = default;
-	Mesh(const std::string& meshPath);
-	Mesh(const std::string& meshPath, std::shared_ptr<Material> pMaterial);
+	Mesh(const std::string& meshPath, const Material& pMaterial);
 
-	~Mesh();
-	void Destroy();
 
-	void SetMaterial(std::shared_ptr<Material> pNewMaterial);
-	std::shared_ptr<Material> GetMaterial() const;
+	void SetMaterial(const Material& material);
+	Material GetMaterial() const;
 
 	void Update(const FTransform& transform);
 	void Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
 private:
 	VKModel& rModel;
-	std::shared_ptr<Material> pMaterial;
+	Material material;
 };
 

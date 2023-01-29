@@ -13,7 +13,7 @@ public:
 	VKPipeLine(const std::string& vertexFilePath, const std::string& fragmentFilePath, const VKSwapChain& swapChain, VKDescriptor& descriptor);
 	~VKPipeLine();
 
-	VKPipeLine(const VKPipeLine&) = delete;
+	VKPipeLine(const VKPipeLine& copy);
 	VKPipeLine& operator= (const VKPipeLine&) = delete;
 	VKPipeLine(VKPipeLine&&) = delete;
 	VKPipeLine& operator= (VKPipeLine&&) = delete;

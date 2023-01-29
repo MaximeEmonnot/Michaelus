@@ -150,6 +150,9 @@
     <ClCompile Include="TestActor.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialFactory.cpp">
+      <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="TestActor.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialFactory.h">
+      <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

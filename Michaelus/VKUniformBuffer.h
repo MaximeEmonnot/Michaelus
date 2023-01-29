@@ -20,6 +20,8 @@ class VKUniformBuffer
 {
 public:
 	VKUniformBuffer();
+	VKUniformBuffer(const VKUniformBuffer& copy);
+
 	~VKUniformBuffer();
 
 	void Destroy();

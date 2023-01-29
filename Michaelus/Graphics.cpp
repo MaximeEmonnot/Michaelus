@@ -3,10 +3,13 @@
 #include <set>
 #include <chrono>
 
+#include "MaterialFactory.h"
 #include "VKDevice.h"
 #include "VKSwapChain.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
+#include "ModelFactory.h"
+#include "TextureFactory.h"
 
 std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
@@ -31,7 +34,9 @@ void Graphics::Destroy()
 {
     pSwapChain->Destroy();
     meshes.clear();
-    //for (std::shared_ptr<Mesh> mesh : meshes) mesh->Destroy();
+    TEXTURE_CLEAR;
+    MATERIAL_CLEAR;
+    MODEL_CLEAR;
     VK_DEVICE.Destroy();
 }
 
