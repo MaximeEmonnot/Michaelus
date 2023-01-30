@@ -16,14 +16,6 @@ VKDescriptor::VKDescriptor(const VKTexture& texture, const VKUniformBuffer& unif
     CreateDescriptorSets(texture, uniformBuffer);
 }
 
-VKDescriptor::VKDescriptor(const VKDescriptor& copy)
-	:
-	vkDescriptorSetLayout(copy.vkDescriptorSetLayout),
-	vkDescriptorPool(copy.vkDescriptorPool),
-	vkDescriptorSets(copy.vkDescriptorSets)
-{
-}
-
 VKDescriptor::~VKDescriptor()
 {
 }

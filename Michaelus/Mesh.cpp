@@ -5,31 +5,31 @@
 #include "VKModel.h"
 
 
-Mesh::Mesh(const std::string& meshPath, const Material& material)
+Mesh::Mesh(const std::string& meshPath, std::shared_ptr<Material> pMaterial)
 	:
 	rModel(MODEL(meshPath)),
-	material(material)
+	pMaterial(pMaterial)
 {
 }
 
-void Mesh::SetMaterial(const Material& newMaterial)
+void Mesh::SetMaterial(std::shared_ptr<Material> pNewMaterial)
 {
-	material = newMaterial;
+	pMaterial = pNewMaterial;
 }
 
-Material Mesh::GetMaterial() const
+std::shared_ptr<Material> Mesh::GetMaterial() const
 {
-	return material;
+	return pMaterial;
 }
 
 void Mesh::Update(const FTransform& transform)
 {
-	material.UpdateUniformBuffer(transform);
+	pMaterial->UpdateUniformBuffer(transform);
 }
 
 void Mesh::Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
 	rModel.Bind(commandBuffer);
-	material.Bind(commandBuffer, currentFrame);
+	pMaterial->Bind(commandBuffer, currentFrame);
 	rModel.Draw(commandBuffer);
 }

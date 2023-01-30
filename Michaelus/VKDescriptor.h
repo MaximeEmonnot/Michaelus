@@ -10,7 +10,6 @@ class VKDescriptor
 {
 public:
 	VKDescriptor(const VKTexture& texture, const VKUniformBuffer& uniformBuffer);
-	VKDescriptor(const VKDescriptor& copy);
 	~VKDescriptor();
 
 	void Destroy();

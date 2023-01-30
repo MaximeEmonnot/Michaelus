@@ -13,13 +13,6 @@ VKUniformBuffer::VKUniformBuffer()
     CreateUniformBuffers();
 }
 
-VKUniformBuffer::VKUniformBuffer(const VKUniformBuffer& copy)
-{
-    vkUniformBuffers = copy.vkUniformBuffers;
-    vkUniformBuffersMapped = copy.vkUniformBuffersMapped;
-    vkUniformBuffersMemory = copy.vkUniformBuffersMemory;
-}
-
 VKUniformBuffer::~VKUniformBuffer()
 {
 }

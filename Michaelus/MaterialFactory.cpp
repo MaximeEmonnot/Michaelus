@@ -14,14 +14,14 @@ MaterialFactory& MaterialFactory::GetInstance()
 void MaterialFactory::Clear()
 {
     for (auto& material : materials)
-        material.second->Clear();
+        material->Clear();
     materials.clear();
 }
 
-Material MaterialFactory::GetMaterial(const std::string& path, EShadingModel shadingModel)
+std::shared_ptr<Material> MaterialFactory::GetMaterial(const std::string& path, EShadingModel shadingModel)
 {
-    SMaterialInformation key = { path, shadingModel };
-    if (!materials.contains(key))
-        materials.emplace(key, std::make_unique<Material>(path, shadingModel));
-	return Material(*materials.at(key).get());
+    std::shared_ptr<Material> newMaterial = std::make_unique<Material>(path, shadingModel);
+    materials.push_back(newMaterial);
+
+    return newMaterial;
 }

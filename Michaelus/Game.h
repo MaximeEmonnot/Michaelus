@@ -16,7 +16,7 @@ private:
 
 private:
 	std::shared_ptr<TestActor> pTestActor;
-	std::shared_ptr<TestActor> pTestActor2;
+	//std::shared_ptr<TestActor> pTestActor2;
 	std::shared_ptr<TestPawn> pTestPawn;
 };
 

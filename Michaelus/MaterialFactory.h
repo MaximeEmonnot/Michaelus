@@ -18,11 +18,11 @@ public:
 
 	void Clear();
 
-	Material GetMaterial(const std::string& path, EShadingModel shadingModel);
+	std::shared_ptr<Material> GetMaterial(const std::string& path, EShadingModel shadingModel);
 
 private:
 	static std::unique_ptr<MaterialFactory> pInstance;
 
-	std::map<SMaterialInformation, std::unique_ptr<Material>, SMaterialInformation::SMaterialInformationCompare> materials;
+	std::vector<std::shared_ptr<Material>> materials;
 };
 
