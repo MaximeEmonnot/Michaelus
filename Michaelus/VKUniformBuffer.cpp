@@ -44,7 +44,7 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     ubo.directionalColor = { 0.7f, 0.5f, 0.2f ,0.f };
     ubo.ambientColor = { 1.f, 1.f, 1.f, 0.02f };
     ubo.pointLight = { 1.f, 1.f, 1.f, 1.f };
-    ubo.pointColor = { 0.f, 0.f, 1.f, 1.f };
+    ubo.pointColor = { 0.5f, 0.5f, 1.f, 0.5f };
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         memcpy(vkUniformBuffersMapped[i], &ubo, sizeof(ubo));
