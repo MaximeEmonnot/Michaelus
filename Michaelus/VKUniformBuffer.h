@@ -14,6 +14,11 @@ struct UniformBufferObject
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
+	glm::vec4 directionalLight;
+	glm::vec4 directionalColor;
+	glm::vec4 ambientColor;
+	glm::vec4 pointLight;
+	glm::vec4 pointColor;
 };
 
 class VKUniformBuffer

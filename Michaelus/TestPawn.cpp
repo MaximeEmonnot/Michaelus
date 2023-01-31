@@ -4,6 +4,9 @@
 #include "CameraComponent.h"
 #include "CameraManager.h"
 #include "Keyboard.h"
+#include "Mouse.h"
+#include "Timer.h"
+#include "Window.h"
 
 TestPawn::TestPawn(const std::string& name)
 	:

@@ -34,11 +34,18 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     UniformBufferObject ubo{};
 
     ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelTransform.location.x, modelTransform.location.y, modelTransform.location.z)) * glm::eulerAngleXYZ(modelTransform.rotation.roll, modelTransform.rotation.pitch, modelTransform.rotation.yaw);
-    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z)) * glm::eulerAngleXYX(cameraRotation.roll, cameraRotation.pitch, cameraRotation.yaw);
+    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z)) * glm::eulerAngleXYZ(cameraRotation.roll, cameraRotation.pitch, cameraRotation.yaw);
     //ubo.model = glm::rotate(glm::mat4(1.f), MMath::Rad(90.f), glm::vec3(0.f, 0.f, 1.f));
     ubo.view = glm::lookAt(glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 10.f);
     ubo.projection[1][1] *= -1.f;
+
+    ubo.directionalLight = { 1.f, -3.f, -1.f, 1.f };
+    ubo.directionalColor = { 0.7f, 0.5f, 0.2f ,0.f };
+    ubo.ambientColor = { 1.f, 1.f, 1.f, 0.02f };
+    ubo.pointLight = { 1.f, 1.f, 1.f, 1.f };
+    ubo.pointColor = { 0.f, 0.f, 1.f, 1.f };
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         memcpy(vkUniformBuffersMapped[i], &ubo, sizeof(ubo));
 }
