@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "MeshComponent.h"
 #include "Mouse.h"
+#include "SoundSystem.h"
 #include "Timer.h"
 
 TestActor::TestActor(const std::string& name)
@@ -26,8 +27,18 @@ void TestActor::Update()
 {
 	Actor::Update();
 
-	if (MOUSE.LeftIsPressed()) angle += 5.f;
-	if (MOUSE.RightIsPressed()) angle -= 5.f;
+	switch(MOUSE.Read())
+	{
+	case Mouse::EventType::LPress:
+		SFX.PlaySoundAtLocation("Sounds/test.wav", FVec3D(5.f, 5.f, 5.f));
+		break;
+	case Mouse::EventType::WheelDown:
+		angle += 5.f;
+		break;
+	case Mouse::EventType::WheelUp:
+		angle -= 5.f;
+		break;
+	}
 
 	AddActorRotation(FRotator(0.f, 0.f, MMath::Rad(angle)) * DELTATIME);
 }

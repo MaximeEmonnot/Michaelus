@@ -37,6 +37,8 @@ public:
 
 	static Mouse& GetInstance();
 
+	Mouse::EventType Read() const;
+
 	FVec2D GetPosition() const;
 
 	bool LeftIsPressed() const;

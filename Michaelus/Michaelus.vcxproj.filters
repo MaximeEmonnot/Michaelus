@@ -153,6 +153,9 @@
     <ClCompile Include="VKUniformBuffer.cpp">
       <Filter>Fichiers sources\MainEngine\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="MaterialFactory.h">
       <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

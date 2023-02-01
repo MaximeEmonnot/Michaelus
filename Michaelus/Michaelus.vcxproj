@@ -117,13 +117,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(OPENAL_SDK)\include;$(FBX_SDK)\include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(OPENAL_SDK)\include;$(FBX_SDK)\include;$(LIBSNDFILE)\include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(OPENAL_SDK)\libs\Win64;$(FBX_SDK)\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;OpenAL32.lib;libfbxsdk.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(OPENAL_SDK)\libs\Win64;$(LIBSNDFILE)\lib;$(FBX_SDK)\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;OpenAL32.lib;libfbxsdk.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(OPENAL_SDK)\include;$(FBX_SDK)\include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(OPENAL_SDK)\include;$(FBX_SDK)\include;$(LIBSNDFILE)\include;./includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -144,8 +144,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(OPENAL_SDK)\libs\Win64;$(FBX_SDK)\lib\vs2019\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;OpenAL32.lib;libfbxsdk.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(OPENAL_SDK)\libs\Win64;$(LIBSNDFILE)\lib;$(FBX_SDK)\lib\vs2019\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;OpenAL32.lib;libfbxsdk.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,6 +167,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="SceneComponent.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="TestActor.cpp" />
     <ClCompile Include="TestPawn.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="SceneComponent.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="TestActor.h" />
     <ClInclude Include="TestPawn.h" />
     <ClInclude Include="TextureFactory.h" />

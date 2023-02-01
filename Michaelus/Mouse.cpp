@@ -14,6 +14,11 @@ Mouse& Mouse::GetInstance()
     return *pInstance;
 }
 
+Mouse::EventType Mouse::Read() const
+{
+    return buffer.empty() ? EventType::None : buffer.front();
+}
+
 FVec2D Mouse::GetPosition() const
 {
     return position;

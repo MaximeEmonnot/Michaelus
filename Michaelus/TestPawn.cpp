@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "SoundSystem.h"
 #include "Timer.h"
 #include "Window.h"
 
