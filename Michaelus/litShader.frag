@@ -14,8 +14,9 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
+	vec4 cameraPosition;
+	vec4 lightIntensities;
     DirectionalLight directional;
-    vec4 ambientColor;
     PointLight pointLights[32];
     int numLights;
 } ubo;
@@ -31,21 +32,34 @@ layout(binding = 1) uniform sampler2D texSampler;
 
 void main(){
 
+	// CONSTANTS
+	const float ambientIntensity = ubo.lightIntensities.x;
+	const float diffuseIntensity = ubo.lightIntensities.y;
+	const float specularIntensity = ubo.lightIntensities.z;
+	const float shininess = ubo.lightIntensities.w;
+
+	// VIEW DIRECTION
+	vec3 viewDirection = normalize(ubo.cameraPosition.xyz - fragPosWorld);
+
     // DIRECTIONNAL
-    vec3 directionnalLightColor = ubo.directional.color.xyz * ubo.directional.color.w;
-    vec3 directionnalLighting = directionnalLightColor * max(dot(normalize(fragNormalWorld), ubo.directional.direction.xyz), 0.0);
+    vec3 directionalLightColor = ubo.directional.color.xyz * ubo.directional.color.w;
+	float directionalNoL = dot(normalize(fragNormalWorld), normalize(ubo.directional.direction.xyz));
+	vec3 reflectionDirectional = 2 * directionalNoL * normalize(fragNormalWorld) - normalize(ubo.directional.direction.xyz);
+    vec3 directionalLighting = directionalLightColor * (diffuseIntensity * max(directionalNoL, 0.0) + specularIntensity * pow(max(dot(normalize(reflectionDirectional), viewDirection), 0.0), shininess));
 
     // POINT LIGHTS
-	vec3 diffusePointLighting = vec3(0.0, 0.0, 0.0);
+	vec3 pointLighting = vec3(0.0, 0.0, 0.0);
 	for (int i = 0; i < ubo.numLights; i++){
     	vec3 directionToPointLight = ubo.pointLights[i].position.xyz - fragPosWorld;
     	float attenuation = 1.0 / dot(directionToPointLight, directionToPointLight);
     	vec3 pointLightColor = ubo.pointLights[i].color.xyz * ubo.pointLights[i].color.w * attenuation;
-    	diffusePointLighting += pointLightColor * max(dot(normalize(fragNormalWorld), normalize(directionToPointLight)), 0.0);
+		float pointNoL = dot(normalize(fragNormalWorld), normalize(directionToPointLight));
+		vec3 reflectionPoint = 2 * pointNoL * normalize(fragNormalWorld) - normalize(directionToPointLight);
+    	pointLighting += pointLightColor * (diffuseIntensity * max(pointNoL, 0.0) + specularIntensity * pow(max(dot(normalize(reflectionPoint), viewDirection), 0.0), shininess));
 	}
 
     // AMBIENT
-    vec3 ambientLighting = ubo.ambientColor.xyz * ubo.ambientColor.w;
+    vec3 ambientLighting = fragColor * ambientIntensity;
 
-	outColor = vec4((directionnalLighting + diffusePointLighting + ambientLighting) * fragColor, 1.0) * texture(texSampler, fragTexCoord);
+	outColor = vec4((directionalLighting + pointLighting + ambientLighting) * fragColor, 1.0) * texture(texSampler, fragTexCoord);
 }

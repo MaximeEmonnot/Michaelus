@@ -39,11 +39,11 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     ubo.view = glm::lookAt(glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 10.f);
     ubo.projection[1][1] *= -1.f;
-
+    ubo.viewPosition = glm::vec4(cameraLocation.x, cameraLocation.y, cameraLocation.z, 0.f);
     ubo.directional.direction = { 1.f, -3.f, -1.f, 1.f };
-    ubo.directional.color = { 0.7f, 0.5f, 0.2f ,0.f };
-    ubo.ambientColor = { 1.f, 1.f, 1.f, 0.02f };
-    ubo.numLights = 3;
+    ubo.directional.color = { 1.f, 1.f, 1.f ,1.0f };
+    ubo.lightIntensities = { 0.02f, 3.f, 5.f, 1.f};
+    ubo.numLights = 0;
     for (int i = 0; i < ubo.numLights; i++)
     {
         ubo.pointLights[i].position = { 5.f / (i + 1), i, 1.f, 1.f };

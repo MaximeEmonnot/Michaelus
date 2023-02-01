@@ -26,8 +26,9 @@ struct UniformBufferObject
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
+	glm::vec4 viewPosition;
+	glm::vec4 lightIntensities;
 	DirectionalLightData directional;
-	glm::vec4 ambientColor;
 	PointLightData pointLights[32];
 	int numLights;
 };
