@@ -5,9 +5,12 @@
 
 #include "VKDevice.h"
 
+FbxManager* VKModel::pFbxManager = nullptr;
+
 VKModel::VKModel(const std::string& modelPath)
 {
-    LoadModel(modelPath);
+    if (modelPath.find(".obj") != std::string::npos) LoadModelOBJ(modelPath);
+    else if (modelPath.find(".fbx") != std::string::npos) LoadModelFBX(modelPath);
     CreateVertexBuffer();
     CreateIndexBuffer();
 }
@@ -39,7 +42,7 @@ void VKModel::Draw(VkCommandBuffer commandBuffer) const
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 }
 
-void VKModel::LoadModel(const std::string& modelPath)
+void VKModel::LoadModelOBJ(const std::string& modelPath)
 {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -76,13 +79,102 @@ void VKModel::LoadModel(const std::string& modelPath)
 
             vertex.color = { 1.0f, 1.0f, 1.0f };
 
-            if (uniqueVertices.count(vertex) == 0)
+            if (!uniqueVertices.contains(vertex))
             {
                 uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
                 vertices.push_back(vertex);
             }
 
             indices.push_back(uniqueVertices[vertex]);
+        }
+    }
+}
+
+void VKModel::LoadModelFBX(const std::string& modelPath)
+{
+    if (!pFbxManager)
+    {
+        pFbxManager = FbxManager::Create();
+        FbxIOSettings* ioSettings = FbxIOSettings::Create(pFbxManager, IOSROOT);
+        pFbxManager->SetIOSettings(ioSettings);
+    }
+
+    FbxImporter* fbxImporter = FbxImporter::Create(pFbxManager, "");
+    FbxScene* fbxScene = FbxScene::Create(pFbxManager, "");
+
+    if (!fbxImporter->Initialize(modelPath.c_str(), -1, pFbxManager->GetIOSettings()))
+        throw GFX_EXCEPTION("Failed to initialize FBX File !");
+
+    if (!fbxImporter->Import(fbxScene))
+        throw GFX_EXCEPTION("Failed to import FBX File !");
+
+    fbxImporter->Destroy();
+
+    FbxNode* fbxNode = fbxScene->GetRootNode();
+
+    for (int i = 0; i< fbxNode->GetChildCount(); i++)
+    {
+        FbxNode* fbxChildNode = fbxNode->GetChild(i);
+
+        if (!fbxChildNode->GetNodeAttribute()) continue;
+
+        FbxNodeAttribute::EType attributeType = fbxChildNode->GetNodeAttribute()->GetAttributeType();
+
+        if (attributeType != FbxNodeAttribute::eMesh) continue;
+
+        FbxMesh* fbxMesh = (FbxMesh*)fbxChildNode->GetNodeAttribute();
+
+        FbxVector4* fbxVertices = fbxMesh->GetControlPoints();
+
+        std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+
+        for (int j = 0; j < fbxMesh->GetPolygonVertexCount(); j++)
+        {
+            const int polygonVertices = fbxMesh->GetPolygonSize(j);
+
+            for (int k = 0; k < polygonVertices; k++)
+            {
+                // Position
+                const int controlPointIndex = fbxMesh->GetPolygonVertex(j, k);
+                // Normal
+                FbxVector4 fbxNormals;
+                fbxMesh->GetPolygonVertexNormal(j, k, fbxNormals);
+                // Texture Coords
+                FbxStringList uvSets;
+                fbxMesh->GetUVSetNames(uvSets);
+                FbxVector2 uvCoordinates;
+                bool hasUV = false;
+                fbxMesh->GetPolygonVertexUV(j, k, uvSets.GetItemAt(0)->mString, uvCoordinates, hasUV);
+
+                Vertex vertex{};
+
+                vertex.position = {
+                    static_cast<float>(fbxVertices[controlPointIndex].mData[0]),
+                    static_cast<float>(fbxVertices[controlPointIndex].mData[1]),
+                    static_cast<float>(fbxVertices[controlPointIndex].mData[2])
+                };
+
+                vertex.normal = {
+                        static_cast<float>(fbxNormals.mData[0]),
+                        static_cast<float>(fbxNormals.mData[1]),
+                        static_cast<float>(fbxNormals.mData[2])
+                };
+
+                vertex.textureCoordinates = {
+                    static_cast<float>(uvCoordinates.mData[0]),
+                    1.f - static_cast<float>(uvCoordinates.mData[1])
+                };
+
+                vertex.color = { 1.0f, 1.0f, 1.0f };
+
+                if (!uniqueVertices.contains(vertex))
+                {
+                    uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                    vertices.push_back(vertex);
+                }
+
+                indices.push_back(uniqueVertices[vertex]);
+            }
         }
     }
 }

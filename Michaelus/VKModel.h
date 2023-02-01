@@ -5,6 +5,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
+#include <fbxsdk.h>
 
 struct Vertex
 {
@@ -77,11 +78,16 @@ public:
 	void Draw(VkCommandBuffer commandBuffer) const;
 
 private:
-	void LoadModel(const std::string& modelPath);
+	void LoadModelOBJ(const std::string& modelPath);
+
+	void LoadModelFBX(const std::string& modelPath);
+
 	void CreateVertexBuffer();
 	void CreateIndexBuffer();
 
 private:
+	static FbxManager* pFbxManager;
+
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
