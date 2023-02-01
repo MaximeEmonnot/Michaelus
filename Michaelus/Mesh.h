@@ -13,17 +13,18 @@ class Mesh
 {
 public:
 	Mesh() = default;
-	Mesh(const std::string& meshPath, std::shared_ptr<Material> pMaterial);
+	Mesh(const std::string& meshPath, std::vector<std::shared_ptr<Material>> materials);
 
 
-	void SetMaterial(std::shared_ptr<Material> pNewMaterial);
-	std::shared_ptr<Material> GetMaterial() const;
+	void SetMaterial(int index, std::shared_ptr<Material> pNewMaterial);
+	std::shared_ptr<Material> GetMaterial(int index) const;
 
 	void Update(const FTransform& transform);
 	void Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
 private:
 	VKModel& rModel;
-	std::shared_ptr<Material> pMaterial;
+
+	std::vector<std::shared_ptr<Material>> pMaterials;
 };
 
