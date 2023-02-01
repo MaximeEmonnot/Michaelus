@@ -40,11 +40,15 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 10.f);
     ubo.projection[1][1] *= -1.f;
 
-    ubo.directionalLight = { 1.f, -3.f, -1.f, 1.f };
-    ubo.directionalColor = { 0.7f, 0.5f, 0.2f ,0.f };
+    ubo.directional.direction = { 1.f, -3.f, -1.f, 1.f };
+    ubo.directional.color = { 0.7f, 0.5f, 0.2f ,0.f };
     ubo.ambientColor = { 1.f, 1.f, 1.f, 0.02f };
-    ubo.pointLight = { 1.f, 1.f, 1.f, 1.f };
-    ubo.pointColor = { 0.5f, 0.5f, 1.f, 0.5f };
+    ubo.numLights = 3;
+    for (int i = 0; i < ubo.numLights; i++)
+    {
+        ubo.pointLights[i].position = { 5.f / (i + 1), i, 1.f, 1.f };
+        ubo.pointLights[i].color = { (ubo.numLights - i) / ubo.numLights, i / ubo.numLights, 1.f, 1.f };
+    }
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         memcpy(vkUniformBuffersMapped[i], &ubo, sizeof(ubo));

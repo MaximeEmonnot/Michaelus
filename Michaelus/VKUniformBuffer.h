@@ -9,16 +9,27 @@
 
 #include "Transform.h"
 
+struct DirectionalLightData
+{
+	glm::vec4 direction;
+	glm::vec4 color;
+};
+
+struct PointLightData
+{
+	glm::vec4 position;
+	glm::vec4 color;
+};
+
 struct UniformBufferObject
 {
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
-	glm::vec4 directionalLight;
-	glm::vec4 directionalColor;
+	DirectionalLightData directional;
 	glm::vec4 ambientColor;
-	glm::vec4 pointLight;
-	glm::vec4 pointColor;
+	PointLightData pointLights[32];
+	int numLights;
 };
 
 class VKUniformBuffer

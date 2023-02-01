@@ -1,14 +1,23 @@
 #version 450
 
+struct DirectionalLight {
+    vec4 direction;
+    vec4 color;
+};
+
+struct PointLight {
+    vec4 position;
+    vec4 color;
+};
+
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec4 directionnalLight;
-    vec4 directionnalColor;
+    DirectionalLight directional;
     vec4 ambientColor;
-    vec4 pointLight;
-    vec4 pointColor;
+    PointLight pointLights[32];
+    int numLights;
 } ubo;
 
 layout(location = 0) in vec3 inPosition;
