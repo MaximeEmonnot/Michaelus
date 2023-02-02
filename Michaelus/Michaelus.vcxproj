@@ -150,15 +150,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="BaseLogger.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ConsoleLogger.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="DebugLogger.cpp" />
+    <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="LoggerManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialFactory.cpp" />
@@ -185,16 +190,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="BaseLogger.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ConsoleLogger.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="EngineException.h" />
+    <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LightManager.h" />
+    <ClInclude Include="LoggerManager.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialFactory.h" />
     <ClInclude Include="Math.h" />

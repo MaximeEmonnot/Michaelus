@@ -2,6 +2,7 @@
 
 #include "Graphics.h"
 #include "LightManager.h"
+#include "LoggerManager.h"
 #include "TestActor.h"
 #include "TestPawn.h"
 #include "Timer.h"
@@ -36,5 +37,9 @@ void Game::UpdateFrame() const
 	pTestActor->Update();
 	//pTestActor2->Update();
 	pTestPawn->Update();
+
+	LOG("Test", ELoggerVerbosity::Console)
+	LOG("Test", ELoggerVerbosity::Debug)
+	LOG("Test", ELoggerVerbosity::Error)
 }
 

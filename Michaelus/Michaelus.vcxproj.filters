@@ -67,6 +67,9 @@
     <Filter Include="Fichiers d%27en-tête\Test">
       <UniqueIdentifier>{c393fc0d-195a-4eee-bc1b-677851cac466}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\DebugEngine">
+      <UniqueIdentifier>{596d2dc3-938c-4ffe-b1f8-333e0065545c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -162,11 +165,26 @@
     <ClCompile Include="SoundSystem.cpp">
       <Filter>Fichiers sources\AudioEngine</Filter>
     </ClCompile>
-    <ClCompile Include="LightManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLogger.cpp">
+      <Filter>Fichiers sources\DebugEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleLogger.cpp">
+      <Filter>Fichiers sources\DebugEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLogger.cpp">
+      <Filter>Fichiers sources\DebugEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorLogger.cpp">
+      <Filter>Fichiers sources\DebugEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggerManager.cpp">
+      <Filter>Fichiers sources\DebugEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,11 +299,26 @@
     <ClInclude Include="SoundSystem.h">
       <Filter>Fichiers d%27en-tête\AudioEngine</Filter>
     </ClInclude>
-    <ClInclude Include="LightManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorLogger.h">
+      <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLogger.h">
+      <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleLogger.h">
+      <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLogger.h">
+      <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerManager.h">
+      <Filter>Fichiers d%27en-tête\DebugEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
