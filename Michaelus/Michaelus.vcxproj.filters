@@ -55,11 +55,17 @@
     <Filter Include="Fichiers sources\MainEngine\Controllers">
       <UniqueIdentifier>{5ec9ae51-cf15-42dc-8d7d-369ed8e8b517}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\Test">
-      <UniqueIdentifier>{c393fc0d-195a-4eee-bc1b-677851cac466}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers sources\Test">
       <UniqueIdentifier>{11ab1183-1089-4198-b435-c9359706ed6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\AudioEngine">
+      <UniqueIdentifier>{c30b18a4-36ec-47bb-b631-b63a0533d8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\AudioEngine">
+      <UniqueIdentifier>{1c0f9eb5-5f9c-416c-b3ce-d64ac5cfa218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Test">
+      <UniqueIdentifier>{c393fc0d-195a-4eee-bc1b-677851cac466}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,11 +156,14 @@
     <ClCompile Include="MaterialFactory.cpp">
       <Filter>Fichiers sources\GraphicsEngine</Filter>
     </ClCompile>
-    <ClCompile Include="SoundSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="VKUniformBuffer.cpp">
       <Filter>Fichiers sources\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Fichiers sources\AudioEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +276,9 @@
       <Filter>Fichiers d%27en-tête\GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="SoundSystem.h">
+      <Filter>Fichiers d%27en-tête\AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
