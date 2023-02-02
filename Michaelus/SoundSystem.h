@@ -20,6 +20,8 @@ public:
 
 	void PlaySoundAtLocation(const std::string& path, const FVec3D& location);
 
+	void SetListenerLocation(const FVec3D& location);
+
 private:
 
 	ALuint LoadSound(const std::string& path);

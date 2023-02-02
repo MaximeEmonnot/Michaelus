@@ -1,5 +1,7 @@
 #include "CameraComponent.h"
 
+#include "SoundSystem.h"
+
 CameraComponent::CameraComponent(Actor& rOwner)
 	:
 	Component(rOwner)
@@ -8,6 +10,7 @@ CameraComponent::CameraComponent(Actor& rOwner)
 
 void CameraComponent::Update()
 {
+	SFX.SetListenerLocation(GetWorldLocation());
 }
 
 void CameraComponent::SetFieldOfView(float newFieldOfView)

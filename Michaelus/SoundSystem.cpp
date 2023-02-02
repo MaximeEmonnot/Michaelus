@@ -42,15 +42,19 @@ void SoundSystem::PlaySoundAtLocation(const std::string& path, const FVec3D& loc
 		alGetSourcei(source, AL_SOURCE_STATE, &status);
 		if (status != AL_PLAYING)
 		{
-			alSourcei(source, AL_BUFFER, soundBuffers.at(path));
 			alSource3f(source, AL_POSITION, location.x, location.y, location.z);
-
+			alSourcei(source, AL_BUFFER, soundBuffers.at(path));
 			alSourcePlay(source);
 			return;
 		}
 	}
 
 	
+}
+
+void SoundSystem::SetListenerLocation(const FVec3D& location)
+{
+	alListener3f(AL_POSITION, location.x, location.y, location.z);
 }
 
 ALuint SoundSystem::LoadSound(const std::string& path)
