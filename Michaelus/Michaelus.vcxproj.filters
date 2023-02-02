@@ -165,6 +165,9 @@
     <ClCompile Include="LightManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>Fichiers sources\CoreEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -280,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

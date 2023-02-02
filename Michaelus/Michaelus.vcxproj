@@ -172,6 +172,7 @@
     <ClCompile Include="TestActor.cpp" />
     <ClCompile Include="TestPawn.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VKDescriptor.cpp" />
     <ClCompile Include="VKDevice.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="TestActor.h" />
     <ClInclude Include="TestPawn.h" />
     <ClInclude Include="TextureFactory.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vec2D.h" />

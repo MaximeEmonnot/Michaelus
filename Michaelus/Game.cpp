@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "Graphics.h"
+#include "LightManager.h"
 #include "TestActor.h"
 #include "TestPawn.h"
 #include "Timer.h"
@@ -16,6 +17,9 @@ Game::Game()
 
 	pTestActor->SetActorLocation(FVec3D(0.f, 0.f, 0.f));
 	//pTestActor2->SetActorLocation(FVec3D(-0.5f, 0.5f, 0.f));
+
+	LIGHT_SYSTEM.SetDirectionalLight({ 3.f, -3.f, -3.f }, { 0.5f, 0.5f, 0.5f }, 0.2f);
+
 }
 
 void Game::Go()
