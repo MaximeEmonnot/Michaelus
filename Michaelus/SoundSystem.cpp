@@ -19,6 +19,10 @@ SoundSystem::SoundSystem()
 
 SoundSystem::~SoundSystem()
 {
+	alDeleteSources(sources.size(), sources.data());
+	for (auto& entry : soundBuffers)
+		alDeleteBuffers(1, &entry.second);
+
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(pAlContext);
 	alcCloseDevice(pAlDevice);
@@ -31,25 +35,43 @@ SoundSystem& SoundSystem::GetInstance()
 	return *pInstance;
 }
 
-void SoundSystem::PlaySoundAtLocation(const std::string& path, const FVec3D& location)
+void SoundSystem::UpdatePlayingSound(int index, bool bIsLooping, float pitch, float gain, const FVec3D& location,
+	const FVec3D& velocity)
 {
-	if (!soundBuffers.contains(path))
-		soundBuffers.emplace(path, LoadSound(path));
+	ALuint source = sources.at(index);
 
-	for (ALuint& source : sources)
+	if (GetSourceStatus(source) == AL_PLAYING)
 	{
-		ALint status;
-		alGetSourcei(source, AL_SOURCE_STATE, &status);
-		if (status != AL_PLAYING)
-		{
-			alSource3f(source, AL_POSITION, location.x, location.y, location.z);
-			alSourcei(source, AL_BUFFER, soundBuffers.at(path));
-			alSourcePlay(source);
-			return;
-		}
+		alSourcei(source, AL_LOOPING, bIsLooping);
+		alSourcef(source, AL_PITCH, pitch);
+		alSourcef(source, AL_GAIN, gain);
+		alSource3f(source, AL_POSITION, location.x, location.y, location.z);
+		alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
 	}
+}
 
-	
+void SoundSystem::PauseSound(int index)
+{
+	ALuint source = sources.at(index);
+
+	if (GetSourceStatus(source) == AL_PLAYING)
+		alSourcePause(source);
+}
+
+void SoundSystem::ResumeSound(int index)
+{
+	ALuint source = sources.at(index);
+
+	if (GetSourceStatus(source) == AL_PAUSED) 
+		alSourcePlay(source);
+}
+
+void SoundSystem::StopSound(int index)
+{
+	ALuint source = sources.at(index);
+
+	if (GetSourceStatus(source) != AL_STOPPED)
+		alSourceStop(source);
 }
 
 void SoundSystem::SetListenerLocation(const FVec3D& location)
@@ -57,35 +79,9 @@ void SoundSystem::SetListenerLocation(const FVec3D& location)
 	alListener3f(AL_POSITION, location.x, location.y, location.z);
 }
 
-ALuint SoundSystem::LoadSound(const std::string& path)
+ALint SoundSystem::GetSourceStatus(ALuint source)
 {
-	SF_INFO fileInfos;
-	SNDFILE* file = sf_open(path.c_str(), SFM_READ, &fileInfos);
-	if (!file) return 0;
-
-	ALsizei nbSamples = static_cast<ALsizei>(fileInfos.channels * fileInfos.frames);
-	ALsizei sampleRate = static_cast<ALsizei>(fileInfos.samplerate);
-
-	std::vector<ALshort> samples(nbSamples);
-	if (sf_read_short(file, &samples[0], nbSamples) < nbSamples) return 0;
-
-	sf_close(file);
-
-	ALenum format;
-
-	switch(fileInfos.channels)
-	{
-	case 1: format = AL_FORMAT_MONO16; break;
-	case 2: format = AL_FORMAT_STEREO16; break;
-	default: return 0;
-	}
-
-	ALuint buffer;
-	alGenBuffers(1, &buffer);
-
-	alBufferData(buffer, format, &samples[0], nbSamples * sizeof(ALushort), sampleRate);
-
-	if (alGetError() != AL_NO_ERROR) return 0;
-
-	return buffer;
+	ALint status;
+	alGetSourcei(source, AL_SOURCE_STATE, &status);
+	return status;
 }

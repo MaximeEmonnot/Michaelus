@@ -3,6 +3,8 @@
 #include "Graphics.h"
 #include "LightManager.h"
 #include "LoggerManager.h"
+#include "Mouse.h"
+#include "SoundSystem.h"
 #include "TestActor.h"
 #include "TestPawn.h"
 #include "Timer.h"
@@ -38,8 +40,19 @@ void Game::UpdateFrame() const
 	//pTestActor2->Update();
 	pTestPawn->Update();
 
-	LOG("Test", ELoggerVerbosity::Console)
-	LOG("Test", ELoggerVerbosity::Debug)
-	LOG("Test", ELoggerVerbosity::Error)
+	switch(MOUSE.Read())
+	{
+	case Mouse::EventType::LPress:
+		SFX.PlaySound<Music>("Sounds/test.wav", true);
+		break;
+	case Mouse::EventType::MPress:
+		SFX.StopSound(0);
+		break;
+	case Mouse::EventType::RPress:
+		SFX.ResumeSound(0);
+		break;
+	default:
+		break;
+	}
 }
 
