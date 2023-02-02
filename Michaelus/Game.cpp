@@ -18,7 +18,7 @@ Game::Game()
 	pTestActor->SetActorLocation(FVec3D(0.f, 0.f, 0.f));
 	//pTestActor2->SetActorLocation(FVec3D(-0.5f, 0.5f, 0.f));
 
-	LIGHT_SYSTEM.SetDirectionalLight({ 3.f, -3.f, -3.f }, { 0.5f, 0.5f, 0.5f }, 0.2f);
+	LIGHT_SYSTEM.SetDirectionalLight({ 1.f, 0.f, 1.f }, { 1.f, 1.f, 1.f }, 1.f);
 
 }
 

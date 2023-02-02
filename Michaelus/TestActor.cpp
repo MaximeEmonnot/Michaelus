@@ -17,9 +17,9 @@ TestActor::TestActor(const std::string& name)
 
 	std::vector<std::shared_ptr<Material>> materials;
 	//materials.push_back(MATERIAL("Textures/Shrek.jpg", EShadingModel::Lit));
-	materials.push_back(MATERIAL("Textures/viking_room.png", EShadingModel::Lit));
+	materials.push_back(MATERIAL("Textures/Shrek.jpg", EShadingModel::Cel));
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/viking_room.obj", materials);
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/Samba Dancing.fbx", materials);
 	pMeshComponent->SetMesh(mesh);
 }
 

@@ -19,7 +19,7 @@ TestPawn::TestPawn(const std::string& name)
 	pCameraComponent = CreateComponent<CameraComponent>();
 	pCameraComponent->AttachTo(pSceneComponent);
 	pCameraComponent->SetFieldOfView(60.f);
-	pCameraComponent->AddRelativeLocation(FVec3D(1.5f, 0.f,1.5f));
+	pCameraComponent->AddRelativeLocation(FVec3D(50.f, 50.f,50.0f));
 	CAMERA.SetActiveCamera(pCameraComponent);
 }
 

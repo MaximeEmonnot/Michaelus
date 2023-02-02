@@ -47,7 +47,7 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     ubo.viewPosition = glm::vec4(cameraLocation.x, cameraLocation.y, cameraLocation.z, 1.f);
     ubo.directional.direction = {directionalLight.direction.x, directionalLight.direction.y, directionalLight.direction.z, 1.f};
     ubo.directional.color = { directionalLight.color.x, directionalLight.color.y, directionalLight.color.z , directionalLight.intensity };
-    ubo.lightIntensities = { 0.02f, 2.f, 5.f, 16.f};
+    ubo.lightIntensities = { 0.02f, 2.f, 5.f, 8.f};
     ubo.numLights = static_cast<int>(pointLights.size());
     for (size_t i = 0; i < pointLights.size(); i++)
     {

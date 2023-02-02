@@ -15,7 +15,8 @@ class VKTexture;
 enum class EShadingModel
 {
 	Unlit,
-	Lit
+	Lit,
+	Cel
 };
 
 class Material

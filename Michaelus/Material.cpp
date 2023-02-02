@@ -66,6 +66,8 @@ std::string Material::GetShaderName(EShadingModel shadingModel) const
 		return "unlit";
 	case EShadingModel::Lit: 
 		return "lit";
+	case EShadingModel::Cel:
+		return "cel";
 	default: 
 		return "";
 	}
