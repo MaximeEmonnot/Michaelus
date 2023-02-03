@@ -187,7 +187,7 @@
       <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,7 +324,7 @@
       <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

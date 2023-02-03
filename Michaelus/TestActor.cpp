@@ -39,5 +39,5 @@ void TestActor::Update()
 		break;
 	}
 
-	AddActorRotation(FRotator(0.f, 0.f, MMath::Rad(angle)) * DELTATIME);
+	AddActorRotation(FRotator(MMath::Rad(angle), 0.f, 0.f) * DELTATIME);
 }

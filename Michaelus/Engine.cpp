@@ -46,5 +46,14 @@ void Engine::Run()
 void Engine::UpdateFrame() const
 {
 	pCurrentWorld->Update();
+
+	switch(MOUSE.Read())
+	{
+	case Mouse::EventType::MPress:
+		SFX.PlaySound<Effect>("Sounds/test.wav", false, 1.f, 1.f, FVec3D());
+		break;
+	default:
+		break;
+	}
 }
 

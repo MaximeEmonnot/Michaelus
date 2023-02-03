@@ -47,6 +47,11 @@ World::~World()
 
 void World::BeginPlay()
 {
+    pTestActor1->SetActorLocation({ 0.f, 0.f, 0.f });
+    pTestActor2->SetActorLocation({ 2.f, 2.f, 1.f });
+    pTestActor3->SetActorLocation({ 1.f, -1.f, 0.f });
+    pTestActor4->SetActorLocation({ -1.f, 1.f, 0.f });
+    pTestActor5->SetActorLocation({ -1.f, -1.f, 0.f });
 }
 
 void World::Update()

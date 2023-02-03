@@ -45,13 +45,14 @@ FRotator Component::GetRelativeRotation() const
 
 FVec3D Component::GetWorldLocation() const
 {
-	if (pParentComponent) return pParentComponent->GetRelativeLocation() + transform.location;
+	if (pParentComponent) 
+		return pParentComponent->GetWorldLocation() + transform.location;
 	return rOwner.GetActorLocation() + transform.location;
 }
 
 FRotator Component::GetWorldRotation() const
 {
-	if (pParentComponent) return pParentComponent->GetRelativeRotation() + transform.rotation;
+	if (pParentComponent) return pParentComponent->GetWorldRotation() + transform.rotation;
 	return rOwner.GetActorRotation() + transform.rotation;
 }
 

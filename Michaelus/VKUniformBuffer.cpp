@@ -38,10 +38,14 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
 
     UniformBufferObject ubo{};
 
-    ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelTransform.location.x, modelTransform.location.y, modelTransform.location.z)) * glm::eulerAngleXYZ(modelTransform.rotation.roll, modelTransform.rotation.pitch, modelTransform.rotation.yaw);
-    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z)) * glm::eulerAngleXYZ(cameraRotation.roll, cameraRotation.pitch, cameraRotation.yaw);
-    //ubo.model = glm::rotate(glm::mat4(1.f), MMath::Rad(90.f), glm::vec3(0.f, 0.f, 1.f));
-    ubo.view = glm::lookAt(glm::vec3(cameraLocation.x, cameraLocation.y, cameraLocation.z), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f));
+    glm::vec4 forwardVector = glm::vec4(0.f, 1.f, 0.f, 0.f) * 
+        glm::quat_cast(glm::eulerAngleYXZ(cameraRotation.roll, cameraRotation.pitch, cameraRotation.yaw));
+
+    ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelTransform.location.y, modelTransform.location.x, modelTransform.location.z))
+	* glm::eulerAngleYXZ(modelTransform.rotation.roll, modelTransform.rotation.pitch, modelTransform.rotation.yaw);
+    ubo.view = glm::lookAt(glm::vec3(cameraLocation.y, cameraLocation.x, cameraLocation.z), 
+        glm::vec3(cameraLocation.y + forwardVector.x, cameraLocation.x + forwardVector.y, cameraLocation.z + forwardVector.z), 
+        glm::vec3(0.f, 0.f, 1.f));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 1000'00.f);
     ubo.projection[1][1] *= -1.f;
     ubo.viewPosition = glm::vec4(cameraLocation.x, cameraLocation.y, cameraLocation.z, 1.f);
