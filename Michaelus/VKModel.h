@@ -53,6 +53,49 @@ struct Vertex
 	glm::vec3 normal;
 	glm::vec3 color;
 	glm::vec2 textureCoordinates;
+	glm::vec4 boneIDs;
+	glm::vec4 weights;
+};
+
+struct AnimKeyFrame
+{
+	AnimKeyFrame() : mNext(nullptr) {}
+
+	FbxLongLong mFrameNum;
+	FbxAMatrix mGlobalTransform;
+	AnimKeyFrame* mNext;
+};
+
+struct Joint
+{
+	int mParentIndex;
+	std::string mName;
+	FbxAMatrix mGlobalBindposeInverse;
+	AnimKeyFrame* mAnimation;
+	FbxNode* mNode;
+
+	Joint() :
+		mNode(nullptr),
+		mAnimation(nullptr)
+	{
+		mGlobalBindposeInverse.SetIdentity();
+		mParentIndex = -1;
+	}
+
+	~Joint()
+	{
+		while (mAnimation)
+		{
+			AnimKeyFrame* temp = mAnimation->mNext;
+			delete mAnimation;
+			mAnimation = temp;
+		}
+	}
+};
+
+struct Skeleton
+{
+	std::vector<Joint> mJoints;
 };
 
 namespace std {
@@ -69,18 +112,22 @@ namespace std {
 class VKModel
 {
 public:
-	VKModel(const std::string& modelPath);
+	VKModel(const std::string& modelPath, bool bIsSkeletal = false);
 	~VKModel();
 
 	void Destroy();
 
-	void Bind(VkCommandBuffer commandBuffer) const;
-	void Draw(VkCommandBuffer commandBuffer) const;
+	void Bind(VkCommandBuffer commandBuffer, size_t shapeIndex) const;
+	void Draw(VkCommandBuffer commandBuffer, size_t shapeIndex) const;
 
 private:
 	void LoadModelOBJ(const std::string& modelPath);
 
 	void LoadModelFBX(const std::string& modelPath);
+	void ProcessSkeletonHierarchy(FbxNode* inRootNode);
+	void ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDepth, int myIndex, int inParentIndex);
+	void ProcessJointsAndAnimations(FbxNode* inNode);
+	FbxAMatrix GetGeometryTransformation(FbxNode* inNode);
 
 	void CreateVertexBuffer();
 	void CreateIndexBuffer();
@@ -88,12 +135,15 @@ private:
 private:
 	static FbxManager* pFbxManager;
 
-	std::vector<Vertex> vertices;
-	std::vector<uint32_t> indices;
+	bool bIsSkeletal = false;
+	Skeleton skeleton;
 
-	VkBuffer vkVertexBuffer;
-	VkDeviceMemory vkVertexBufferMemory;
-	VkBuffer vkIndexBuffer;
-	VkDeviceMemory vkIndexBufferMemory;
+	std::vector<std::vector<Vertex>> vertices;
+	std::vector<std::vector<uint32_t>> indices;
+
+	std::vector<VkBuffer> vkVertexBuffers;
+	std::vector<VkDeviceMemory> vkVertexBufferMemories;
+	std::vector<VkBuffer> vkIndexBuffers;
+	std::vector<VkDeviceMemory> vkIndexBufferMemories;
 };
 

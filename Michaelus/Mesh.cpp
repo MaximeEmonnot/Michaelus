@@ -29,7 +29,10 @@ void Mesh::Update(const FTransform& transform)
 
 void Mesh::Draw(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
-	rModel.Bind(commandBuffer);
-	for (auto& material : pMaterials) material->Bind(commandBuffer, currentFrame);
-	rModel.Draw(commandBuffer);
+	for (size_t i = 0; i < pMaterials.size(); i++)
+	{
+		rModel.Bind(commandBuffer, i);
+		pMaterials.at(i)->Bind(commandBuffer, currentFrame);
+		rModel.Draw(commandBuffer, i);
+	}
 }

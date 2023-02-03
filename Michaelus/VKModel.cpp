@@ -3,11 +3,14 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tinyobj/tiny_obj_loader.h>
 
+#include "LoggerManager.h"
 #include "VKDevice.h"
 
 FbxManager* VKModel::pFbxManager = nullptr;
 
-VKModel::VKModel(const std::string& modelPath)
+VKModel::VKModel(const std::string& modelPath, bool bIsSkeletal)
+	:
+	bIsSkeletal(bIsSkeletal)
 {
     if (modelPath.find(".obj") != std::string::npos) LoadModelOBJ(modelPath);
     else if (modelPath.find(".fbx") != std::string::npos) LoadModelFBX(modelPath);
@@ -22,24 +25,31 @@ VKModel::~VKModel()
 
 void VKModel::Destroy()
 {
-    vkDestroyBuffer(VK_DEVICE.GetDevice(), vkIndexBuffer, nullptr);
-    vkFreeMemory(VK_DEVICE.GetDevice(), vkIndexBufferMemory, nullptr);
-    vkDestroyBuffer(VK_DEVICE.GetDevice(), vkVertexBuffer, nullptr);
-    vkFreeMemory(VK_DEVICE.GetDevice(), vkVertexBufferMemory, nullptr);
+    for (const auto& vkIndexBuffer : vkIndexBuffers)
+    		vkDestroyBuffer(VK_DEVICE.GetDevice(), vkIndexBuffer, nullptr);
+    for (const auto& vkIndexBufferMemory : vkIndexBufferMemories)
+		vkFreeMemory(VK_DEVICE.GetDevice(), vkIndexBufferMemory, nullptr);
+    for (const auto& vkVertexBuffer : vkVertexBuffers)
+		vkDestroyBuffer(VK_DEVICE.GetDevice(), vkVertexBuffer, nullptr);
+    for (const auto& vkVertexBufferMemory : vkVertexBufferMemories)
+		vkFreeMemory(VK_DEVICE.GetDevice(), vkVertexBufferMemory, nullptr);
 }
 
-void VKModel::Bind(VkCommandBuffer commandBuffer) const
+void VKModel::Bind(VkCommandBuffer commandBuffer, size_t shapeIndex) const
 {
-    VkBuffer vertexBuffers[] = { vkVertexBuffer };
-    VkDeviceSize offsets[] = { 0 };
-    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    if (shapeIndex < vkVertexBuffers.size()) {
+        VkBuffer vertexBuffers[] = { vkVertexBuffers.at(shapeIndex) };
+        VkDeviceSize offsets[] = { 0 };
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-    vkCmdBindIndexBuffer(commandBuffer, vkIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(commandBuffer, vkIndexBuffers.at(shapeIndex), 0, VK_INDEX_TYPE_UINT32);
+    }
 }
 
-void VKModel::Draw(VkCommandBuffer commandBuffer) const
+void VKModel::Draw(VkCommandBuffer commandBuffer, size_t shapeIndex) const
 {
-    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+    if (shapeIndex < vkIndexBuffers.size())
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.at(shapeIndex).size()), 1, 0, 0, 0);
 }
 
 void VKModel::LoadModelOBJ(const std::string& modelPath)
@@ -52,10 +62,13 @@ void VKModel::LoadModelOBJ(const std::string& modelPath)
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str()))
         throw GFX_EXCEPTION(warn + err);
 
-    std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
     for (const auto& shape : shapes)
     {
+		std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+        std::vector<Vertex> currentShapeVertices;
+        std::vector< uint32_t> currentShapeIndices;
+
         for (const auto& index : shape.mesh.indices)
         {
             Vertex vertex{};
@@ -81,12 +94,15 @@ void VKModel::LoadModelOBJ(const std::string& modelPath)
 
             if (!uniqueVertices.contains(vertex))
             {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                vertices.push_back(vertex);
+                uniqueVertices[vertex] = static_cast<uint32_t>(currentShapeVertices.size());
+                currentShapeVertices.push_back(vertex);
             }
 
-            indices.push_back(uniqueVertices[vertex]);
+            currentShapeIndices.push_back(uniqueVertices[vertex]);
         }
+
+        vertices.push_back(currentShapeVertices);
+        indices.push_back(currentShapeIndices);
     }
 }
 
@@ -126,97 +142,177 @@ void VKModel::LoadModelFBX(const std::string& modelPath)
 
         FbxVector4* fbxVertices = fbxMesh->GetControlPoints();
 
-        std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
-        for (int j = 0; j < fbxMesh->GetPolygonVertexCount(); j++)
-        {
-            const int polygonVertices = fbxMesh->GetPolygonSize(j);
+        FbxStringList uvSets;
+        fbxMesh->GetUVSetNames(uvSets);
+        
+        for (int uvIndex = 0; uvIndex < uvSets.GetCount(); uvIndex++) {
 
-            for (int k = 0; k < polygonVertices; k++)
+			std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+            std::vector<Vertex> currentShapeVertices;
+            std::vector< uint32_t> currentShapeIndices;
+
+            for (int j = 0; j < fbxMesh->GetPolygonVertexCount(); j++)
             {
-                // Position
-                const int controlPointIndex = fbxMesh->GetPolygonVertex(j, k);
-                // Normal
-                FbxVector4 fbxNormals;
-                fbxMesh->GetPolygonVertexNormal(j, k, fbxNormals);
-                // Texture Coords
-                FbxStringList uvSets;
-                fbxMesh->GetUVSetNames(uvSets);
-                FbxVector2 uvCoordinates;
-                bool hasUV = false;
-                fbxMesh->GetPolygonVertexUV(j, k, uvSets.GetItemAt(0)->mString, uvCoordinates, hasUV);
+                const int polygonVertices = fbxMesh->GetPolygonSize(j);
 
-                Vertex vertex{};
-
-                vertex.position = {
-                    static_cast<float>(fbxVertices[controlPointIndex].mData[0]),
-                    static_cast<float>(fbxVertices[controlPointIndex].mData[1]),
-                    static_cast<float>(fbxVertices[controlPointIndex].mData[2])
-                };
-
-                vertex.normal = {
-                        static_cast<float>(fbxNormals.mData[0]),
-                        static_cast<float>(fbxNormals.mData[1]),
-                        static_cast<float>(fbxNormals.mData[2])
-                };
-
-                vertex.textureCoordinates = {
-                    static_cast<float>(uvCoordinates.mData[0]),
-                    1.f - static_cast<float>(uvCoordinates.mData[1])
-                };
-
-                vertex.color = { 1.0f, 1.0f, 1.0f };
-
-                if (!uniqueVertices.contains(vertex))
+                for (int k = 0; k < polygonVertices; k++)
                 {
-                    uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                    vertices.push_back(vertex);
-                }
+                    // Position
+                    const int controlPointIndex = fbxMesh->GetPolygonVertex(j, k);
+                    // Normal
+                    FbxVector4 fbxNormals;
+                    fbxMesh->GetPolygonVertexNormal(j, k, fbxNormals);
+                    // Texture Coords
+                    FbxVector2 uvCoordinates;
+                    bool bHasNoUV = false;
+                    fbxMesh->GetPolygonVertexUV(j, k, uvSets.GetItemAt(uvIndex)->mString, uvCoordinates, bHasNoUV);
+                    if (!bHasNoUV) {
+                        Vertex vertex{};
 
-                indices.push_back(uniqueVertices[vertex]);
+                        vertex.position = {
+                            static_cast<float>(fbxVertices[controlPointIndex].mData[0]),
+                            static_cast<float>(fbxVertices[controlPointIndex].mData[1]),
+                            static_cast<float>(fbxVertices[controlPointIndex].mData[2])
+                        };
+
+                        vertex.normal = {
+                                static_cast<float>(fbxNormals.mData[0]),
+                                static_cast<float>(fbxNormals.mData[1]),
+                                static_cast<float>(fbxNormals.mData[2])
+                        };
+
+                        vertex.textureCoordinates = {
+                            static_cast<float>(uvCoordinates.mData[0]),
+                            1.f - static_cast<float>(uvCoordinates.mData[1])
+                        };
+
+                        vertex.color = { 1.0f, 1.0f, 1.0f };
+
+                        if (!uniqueVertices.contains(vertex))
+                        {
+                            uniqueVertices[vertex] = static_cast<uint32_t>(currentShapeVertices.size());
+                            currentShapeVertices.push_back(vertex);
+                        }
+
+                        currentShapeIndices.push_back(uniqueVertices[vertex]);
+                    }
+                }
             }
+
+            vertices.push_back(currentShapeVertices);
+            indices.push_back(currentShapeIndices);
         }
     }
+
+    // ANIMATION
+
+    /*if (bIsSkeletal)
+    {
+        ProcessSkeletonHierarchy(fbxNode);
+        ProcessJointsAndAnimations(fbxNode);
+    }
+    */
+}
+
+void VKModel::ProcessSkeletonHierarchy(FbxNode* inRootNode)
+{
+    for (int childIndex = 0; childIndex < inRootNode->GetChildCount(); ++childIndex)
+    {
+        FbxNode* currentNode = inRootNode->GetChild(childIndex);
+        ProcessSkeletonHierarchyRecursively(currentNode, 0, 0, -1);
+    }
+}
+
+void VKModel::ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDepth, int myIndex, int inParentIndex)
+{
+    if (inNode->GetNodeAttribute() && inNode->GetNodeAttribute()->GetAttributeType() && inNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+    {
+        Joint currJoint;
+        currJoint.mParentIndex = inParentIndex;
+        currJoint.mName = inNode->GetName();
+        skeleton.mJoints.push_back(currJoint);
+    }
+
+    for (int i = 0; i < inNode->GetChildCount(); i++)
+        ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), inDepth + 1, skeleton.mJoints.size(), myIndex);
+}
+
+void VKModel::ProcessJointsAndAnimations(FbxNode* inNode)
+{
+    FbxMesh* currMesh = inNode->GetMesh();
+    unsigned int numOfDeformers = currMesh->GetDeformerCount();
+
+    FbxAMatrix geometryTransform = GetGeometryTransformation(inNode);
+
+    for (unsigned int deformerIndex = 0; deformerIndex < numOfDeformers; ++deformerIndex)
+    {
+	    
+    }
+}
+
+FbxAMatrix VKModel::GetGeometryTransformation(FbxNode* inNode)
+{
+    if (!inNode)
+        throw GFX_EXCEPTION("Null for mesh geometry");
+
+    const FbxVector4 lT = inNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+    const FbxVector4 lR = inNode->GetGeometricRotation(FbxNode::eSourcePivot);
+    const FbxVector4 lS = inNode->GetGeometricScaling(FbxNode::eSourcePivot);
+
+    return FbxAMatrix(lT, lR, lS);
 }
 
 void VKModel::CreateVertexBuffer()
 {
-    const VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+    vkVertexBuffers.resize(vertices.size());
+    vkVertexBufferMemories.resize(vertices.size());
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    for (size_t i = 0; i < vertices.size(); i++)
+    {
+        const VkDeviceSize bufferSize = sizeof(vertices.at(i).at(0)) * vertices.at(i).size();
 
-    void* data;
-    vkMapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-    vkUnmapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory);
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-    VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkVertexBuffer, vkVertexBufferMemory);
+        void* data;
+        vkMapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
+        memcpy(data, vertices.at(i).data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory);
 
-    VK_DEVICE.CopyBuffer(stagingBuffer, vkVertexBuffer, bufferSize);
+        VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkVertexBuffers.at(i), vkVertexBufferMemories.at(i));
 
-    vkDestroyBuffer(VK_DEVICE.GetDevice(), stagingBuffer, nullptr);
-    vkFreeMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, nullptr);
+        VK_DEVICE.CopyBuffer(stagingBuffer, vkVertexBuffers.at(i), bufferSize);
+
+        vkDestroyBuffer(VK_DEVICE.GetDevice(), stagingBuffer, nullptr);
+        vkFreeMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, nullptr);
+    }
 }
 
 void VKModel::CreateIndexBuffer()
 {
-    const VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+    vkIndexBuffers.resize(indices.size());
+    vkIndexBufferMemories.resize(indices.size());
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    for (size_t i = 0; i < indices.size(); i++)
+    {
+        const VkDeviceSize bufferSize = sizeof(indices.at(i).at(0)) * indices.at(i).size();
 
-    void* data;
-    vkMapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
-    vkUnmapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory);
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-    VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffer, vkIndexBufferMemory);
+        void* data;
+        vkMapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
+        memcpy(data, indices.at(i).data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(VK_DEVICE.GetDevice(), stagingBufferMemory);
 
-    VK_DEVICE.CopyBuffer(stagingBuffer, vkIndexBuffer, bufferSize);
+        VK_DEVICE.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffers.at(i), vkIndexBufferMemories.at(i));
 
-    vkDestroyBuffer(VK_DEVICE.GetDevice(), stagingBuffer, nullptr);
-    vkFreeMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, nullptr);
+        VK_DEVICE.CopyBuffer(stagingBuffer, vkIndexBuffers.at(i), bufferSize);
+
+        vkDestroyBuffer(VK_DEVICE.GetDevice(), stagingBuffer, nullptr);
+        vkFreeMemory(VK_DEVICE.GetDevice(), stagingBufferMemory, nullptr);
+    }
 }
