@@ -16,11 +16,9 @@ TestActor::TestActor(const std::string& name)
 	pRootComponent = pMeshComponent;
 
 	std::vector<std::shared_ptr<Material>> materials;
-	materials.push_back(MATERIAL("Textures/rat_2.png", EShadingModel::Lit));
-	materials.push_back(MATERIAL("Textures/rat_3.png", EShadingModel::Lit));
-	materials.push_back(MATERIAL("Textures/rat_4.png", EShadingModel::Lit));
+	materials.push_back(MATERIAL("Textures/rat.png", EShadingModel::Lit));
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/rat_whole.fbx", materials);
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Meshes/rat2.obj", materials);
 	pMeshComponent->SetMesh(mesh);
 }
 

@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "EngineException.h"
-#include "Game.h"
+#include "Engine.h"
 #include "Graphics.h"
 #include "Window.h"
 
@@ -11,9 +11,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	try
 	{
-		WND;
-		Game theGame;
-		while (WND.ProcessMessages()) theGame.Go();
+		while (WND.ProcessMessages()) ENGINE.Run();
 		GFX.Destroy();
 	}
 	catch(EngineException& e)

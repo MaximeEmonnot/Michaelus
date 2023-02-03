@@ -84,7 +84,7 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="Engine.cpp">
       <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
@@ -186,6 +186,9 @@
     <ClCompile Include="LightManager.cpp">
       <Filter>Fichiers sources\MainEngine</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -203,7 +206,7 @@
     <ClInclude Include="Vec2D.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="Engine.h">
       <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
@@ -319,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>Fichiers d%27en-tête\MainEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

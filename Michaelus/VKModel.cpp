@@ -139,9 +139,7 @@ void VKModel::LoadModelFBX(const std::string& modelPath)
         if (attributeType != FbxNodeAttribute::eMesh) continue;
 
         FbxMesh* fbxMesh = (FbxMesh*)fbxChildNode->GetNodeAttribute();
-
         FbxVector4* fbxVertices = fbxMesh->GetControlPoints();
-
 
         FbxStringList uvSets;
         fbxMesh->GetUVSetNames(uvSets);
