@@ -54,7 +54,7 @@ DemoLightAndSound::DemoLightAndSound(const std::string& name)
 	pointLightLocations.emplace_back(pLightPoint7);
 	pointLightLocations.emplace_back(pLightPoint8);
 
-	pSoundSource->AddRelativeLocation({ 10.f, 0.f, 0.f });
+	pSoundSource->AddRelativeLocation({ 25.f, 0.f, 0.f });
 
 	// Lights Creation
 	pointLights.push_back(LIGHT_SYSTEM.CreatePointLight(pLightPoint1->GetWorldLocation(), { 1.f, 0.f, 0.f }, 1.f));
@@ -75,8 +75,8 @@ void DemoLightAndSound::Update()
 	Actor::Update();
 
 	// Rotations
-	pLightRoot->AddRelativeRotation(FQuaternion(0.f, 0.f, MMath::Rad(0.05f)) * DELTATIME);
-	pSoundRoot->AddRelativeRotation(FQuaternion(0.f, 0.f, -MMath::Rad(0.05f)) * DELTATIME);
+	pLightRoot->AddRelativeRotation(FQuaternion(0.f, 0.f, MMath::Rad(30.f) * DELTATIME));
+	pSoundRoot->AddRelativeRotation(FQuaternion(0.f, 0.f, -MMath::Rad(30.f) * DELTATIME));
 
 	// Lights and Sound Update
 	for (size_t i = 0; i < pointLights.size(); i++)

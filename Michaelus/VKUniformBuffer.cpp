@@ -38,19 +38,18 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     const FQuaternion modelRotation = modelTransform.rotation.GetUnit();
     // CAMERA
     const FVec3D cameraLocation = CAMERA.GetActiveCamera()->GetWorldLocation();
-    const FQuaternion cameraRotation = CAMERA.GetActiveCamera()->GetWorldRotation();
+    const FVec3D forwardCameraLocation = cameraLocation + CAMERA.GetActiveCamera()->GetForwardVector();
     // LIGHTS
     DirectionalLight directionalLight = LIGHT_SYSTEM.GetDirectionalLight();
     std::vector<PointLight> pointLights = LIGHT_SYSTEM.GetPointLights();
 
     UniformBufferObject ubo{};
     glm::mat4 modelRotMatrix = glm::toMat4(glm::quat(modelRotation.w, modelRotation.x, modelRotation.y, modelRotation.z));
-    glm::mat4 cameraRotMatrix = glm::toMat4(glm::quat(cameraRotation.w, cameraRotation.x, cameraRotation.y, cameraRotation.z));
 
     ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelLocation.y, modelLocation.x, modelLocation.z)) * modelRotMatrix;
     //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.y, cameraLocation.x, cameraLocation.z)) * cameraRotMatrix;
 	ubo.view = glm::lookAt(glm::vec3(cameraLocation.y, cameraLocation.x, cameraLocation.z), 
-        glm::vec3(0.f, 0.f, 0.f),
+        glm::vec3(forwardCameraLocation.y, forwardCameraLocation.x, forwardCameraLocation.z),
         glm::vec3(0.f, 0.f, 1.f));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 1000'00.f);
     ubo.projection[1][1] *= -1.f;

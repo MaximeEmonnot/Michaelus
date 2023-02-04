@@ -30,7 +30,7 @@ void Component::AddRelativeLocation(const FVec3D& offsetLocation)
 
 void Component::AddRelativeRotation(const FQuaternion& offsetRotation)
 {
-	transform.rotation = transform.rotation * offsetRotation.GetUnit();
+	transform.rotation = transform.rotation * offsetRotation;
 }
 
 FVec3D Component::GetRelativeLocation() const
@@ -46,14 +46,14 @@ FQuaternion Component::GetRelativeRotation() const
 FVec3D Component::GetWorldLocation() const
 {
 	if (pParentComponent) 
-		return pParentComponent->GetWorldLocation() + pParentComponent->GetWorldRotation().RotateVector(transform.location);
-	return rOwner.GetActorLocation() + rOwner.GetActorRotation().RotateVector(transform.location);
+		return pParentComponent->GetWorldLocation() + pParentComponent->GetRelativeRotation().UnrotateVector(transform.location);
+	return rOwner.GetActorLocation() + rOwner.GetActorRotation().UnrotateVector(transform.location);
 }
 
 FQuaternion Component::GetWorldRotation() const
 {
-	if (pParentComponent) return transform.rotation.GetUnit() * pParentComponent->GetWorldRotation().GetUnit();
-	return transform.rotation.GetUnit() * rOwner.GetActorRotation().GetUnit();
+	if (pParentComponent) return pParentComponent->GetWorldRotation() * transform.rotation;
+	return rOwner.GetActorRotation() * transform.rotation;
 }
 
 FTransform Component::GetTransform() const
@@ -63,15 +63,15 @@ FTransform Component::GetTransform() const
 
 FVec3D Component::GetForwardVector() const
 {
-	return GetWorldRotation().RotateVector(FVec3D(1.f, 0.f ,0.f));
+	return GetWorldRotation().UnrotateVector(FVec3D(1.f, 0.f ,0.f));
 }
 
 FVec3D Component::GetRightVector() const
 {
-	return GetWorldRotation().RotateVector(FVec3D(0.f, 1.f, 0.f));
+	return GetWorldRotation().UnrotateVector(FVec3D(0.f, 1.f, 0.f));
 }
 
 FVec3D Component::GetUpVector() const
 {
-	return GetWorldRotation().RotateVector(FVec3D(0.f, 0.f, 1.f));
+	return GetWorldRotation().UnrotateVector(FVec3D(0.f, 0.f, 1.f));
 }

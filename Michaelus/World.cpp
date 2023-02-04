@@ -57,7 +57,7 @@ World::~World()
 
 void World::BeginPlay()
 {
-    pTestActor1->SetActorLocation({ 2.f, 0.f, 0.f });
+    pTestActor1->SetActorLocation({ -2.f, 0.f, 0.f });
     pTestActor2->SetActorLocation({ 1.f, 1.f, 0.f });
     pTestActor3->SetActorLocation({ 1.f, -1.f, 0.f });
     pTestActor4->SetActorLocation({ -1.f, 1.f, 0.f });
@@ -74,13 +74,15 @@ void World::BeginPlay()
 
 void World::Update()
 {
-    pTestActor1->AddActorRotation(FQuaternion(MMath::Rad(0.075f), 0.f, 0.f) * DELTATIME);
-    pTestActor2->AddActorRotation(FQuaternion(0.f, MMath::Rad(0.075f), 0.f) * DELTATIME);
-    pTestActor3->AddActorRotation(FQuaternion(0.f, 0.f, MMath::Rad(0.075f)) * DELTATIME);
-    pTestActor4->AddActorRotation(FQuaternion(MMath::Rad(0.075f), 0.f, MMath::Rad(0.075f)) * DELTATIME);
-    pTestActor5->AddActorRotation(FQuaternion(MMath::Rad(0.075f), MMath::Rad(0.075f), 0.f) * DELTATIME);
+    const float angle = MMath::Rad(45.f) * DELTATIME;
 
-    pDemoShrek->AddActorRotation(FQuaternion(0.f, 0.f, MMath::Rad(0.075f)) * DELTATIME);
+    pTestActor1->AddActorRotation(FQuaternion(angle, 0.f, 0.f));
+    pTestActor2->AddActorRotation(FQuaternion(0.f, angle, 0.f));
+    pTestActor3->AddActorRotation(FQuaternion(0.f, 0.f, angle));
+    pTestActor4->AddActorRotation(FQuaternion(angle, 0.f, angle));
+    pTestActor5->AddActorRotation(FQuaternion(angle, angle, 0.f));
+
+    pDemoShrek->AddActorRotation(FQuaternion(0.f, 0.f, angle));
 
     for (auto& actor : actors) actor->Update();
 }

@@ -110,10 +110,19 @@ public:
 	FVec3D RotateVector(const FVec3D& v) const
 	{
 		const FVec3D q(x, y, z);
+		const FVec3D t = FVec3D::CrossProduct(q, v) * 2.f;
+		const FVec3D result = v + (t * w) + FVec3D::CrossProduct(q, t);
 		
-		return q * 2.f * FVec3D::DotProduct(q, v)
-			+ q * (w * w - FVec3D::DotProduct(q, q))
-			+ FVec3D::CrossProduct(q, v) * w * 2.f;
+		return result;
+	}
+
+	FVec3D UnrotateVector(const FVec3D& v) const
+	{
+		const FVec3D q(-x, -y, -z);
+		const FVec3D t = FVec3D::CrossProduct(q, v) * 2.f;
+		const FVec3D result = v + (t * w) + FVec3D::CrossProduct(q, t);
+
+		return result;
 	}
 
 	Quaternion GetConjugate() const

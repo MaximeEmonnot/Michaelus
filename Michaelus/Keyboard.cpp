@@ -71,9 +71,3 @@ void Keyboard::PopLastEvents()
 	if (!eventBuffer.empty()) eventBuffer.pop();
 	if (!charBuffer.empty()) charBuffer.pop();
 }
-
-
-
-
-
-

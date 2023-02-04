@@ -118,23 +118,16 @@ public:
 	}
 
 	float Dot(const Vec3D& rhs) const{
-		Vec3D v0 = GetNormalized();
-		Vec3D v1 = rhs.GetNormalized();
-
-		return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
+		return x * rhs.x + y * rhs.y + z * rhs.z;
 	}
 
 	Vec3D Cross(const Vec3D& rhs) const
 	{
-		Vec3D a = GetNormalized();
-		Vec3D b = rhs.GetNormalized();
-
-		Vec3D out;
-		out.x = a.y * b.z - a.z * b.y;
-		out.y = a.z * b.x - a.x * b.z;
-		out.z = a.x * b.y - a.y * b.x;
-
-		return out;
+		return Vec3D(
+			y * rhs.z - z * rhs.y,
+			z * rhs.x - x * rhs.z,
+			x * rhs.y - y * rhs.x
+		);
 	}
 
 	static float DotProduct(const Vec3D& lhs, const Vec3D& rhs)
