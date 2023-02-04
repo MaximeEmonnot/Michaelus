@@ -8,8 +8,8 @@
 
 class World;
 
-class TestPawn;
-class TestActor;
+class DemoPawn;
+class DemoRat;
 
 class Engine
 {

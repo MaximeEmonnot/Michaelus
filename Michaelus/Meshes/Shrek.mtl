@@ -1,0 +1,99 @@
+# Blender 3.4.1 MTL File: 'Shrek 2_0.blend'
+# www.blender.org
+
+newmtl Eyes
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/harri/Downloads/Shrek HD/Shrek HD/Textures/shrekball.jpg
+
+newmtl Material
+Ns 588.967041
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekball.jpg
+
+newmtl ShrekBody
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekBody.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekBody.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.030736 0.030736 0.030736
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekBody.003
+Ns 217.569016
+Ka 1.000000 1.000000 1.000000
+Ks 0.083893 0.083893 0.083893
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekBody.004
+Ns 340.930542
+Ka 1.000000 1.000000 1.000000
+Ks 0.063758 0.063758 0.063758
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekBody.005
+Ns 179.393204
+Ka 1.000000 1.000000 1.000000
+Ks 0.074420 0.074420 0.074420
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_d C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekbody.png
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekBody_Nrm.png
+
+newmtl ShrekHead
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/shrekhead.jpg
+map_Bump -bm 1.000000 C:/Users/maxim/AppData/Local/Temp/Rar$DRa35964.4639/source/PC Computer - Shrek Forever After - Shrek/Shrek/ShrekHead_Nrm.png

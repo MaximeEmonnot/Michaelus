@@ -46,8 +46,8 @@ FQuaternion Component::GetRelativeRotation() const
 FVec3D Component::GetWorldLocation() const
 {
 	if (pParentComponent) 
-		return pParentComponent->GetWorldLocation() + transform.location;
-	return rOwner.GetActorLocation() + transform.location;
+		return pParentComponent->GetWorldLocation() + pParentComponent->GetWorldRotation().RotateVector(transform.location);
+	return rOwner.GetActorLocation() + rOwner.GetActorRotation().RotateVector(transform.location);
 }
 
 FQuaternion Component::GetWorldRotation() const

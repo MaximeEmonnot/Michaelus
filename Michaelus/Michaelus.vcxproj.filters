@@ -150,10 +150,10 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
-    <ClCompile Include="TestPawn.cpp">
+    <ClCompile Include="DemoPawn.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
-    <ClCompile Include="TestActor.cpp">
+    <ClCompile Include="DemoRat.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
     <ClCompile Include="MaterialFactory.cpp">
@@ -188,6 +188,15 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Fichiers sources\MainEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoPlane.cpp">
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoShrek.cpp">
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoLightAndSound.cpp">
+      <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,10 +299,10 @@
     <ClInclude Include="Timer.h">
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
-    <ClInclude Include="TestPawn.h">
+    <ClInclude Include="DemoPawn.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestActor.h">
+    <ClInclude Include="DemoRat.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
     <ClInclude Include="MaterialFactory.h">
@@ -328,6 +337,15 @@
     </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoPlane.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoShrek.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoLightAndSound.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

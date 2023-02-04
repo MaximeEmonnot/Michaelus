@@ -158,6 +158,9 @@
     <ClCompile Include="ConsoleLogger.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DebugLogger.cpp" />
+    <ClCompile Include="DemoLightAndSound.cpp" />
+    <ClCompile Include="DemoPlane.cpp" />
+    <ClCompile Include="DemoShrek.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -175,8 +178,8 @@
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="SceneComponent.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
-    <ClCompile Include="TestActor.cpp" />
-    <ClCompile Include="TestPawn.cpp" />
+    <ClCompile Include="DemoRat.cpp" />
+    <ClCompile Include="DemoPawn.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -199,6 +202,9 @@
     <ClInclude Include="ConsoleLogger.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="DebugLogger.h" />
+    <ClInclude Include="DemoLightAndSound.h" />
+    <ClInclude Include="DemoPlane.h" />
+    <ClInclude Include="DemoShrek.h" />
     <ClInclude Include="EngineException.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="Engine.h" />
@@ -219,8 +225,8 @@
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="SceneComponent.h" />
     <ClInclude Include="SoundSystem.h" />
-    <ClInclude Include="TestActor.h" />
-    <ClInclude Include="TestPawn.h" />
+    <ClInclude Include="DemoRat.h" />
+    <ClInclude Include="DemoPawn.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Timer.h" />

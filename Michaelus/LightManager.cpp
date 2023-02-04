@@ -35,3 +35,13 @@ std::vector<PointLight> LightManager::GetPointLights() const
 {
     return pointLights;
 }
+
+FVec3D LightManager::GetPointLightColor(int index) const
+{
+    return pointLights.at(index).color;
+}
+
+float LightManager::GetPointLightIntensity(int index) const
+{
+    return pointLights.at(index).intensity;
+}

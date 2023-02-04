@@ -2,8 +2,11 @@
 #include <memory>
 #include <vector>
 
-class TestPawn;
-class TestActor;
+class DemoLightAndSound;
+class DemoShrek;
+class DemoPlane;
+class DemoPawn;
+class DemoRat;
 class Actor;
 
 class World
@@ -42,12 +45,18 @@ private:
 
 	// ACTORS
 
-	std::shared_ptr<TestActor> pTestActor1;
-	std::shared_ptr<TestActor> pTestActor2;
-	std::shared_ptr<TestActor> pTestActor3;
-	std::shared_ptr<TestActor> pTestActor4;
-	std::shared_ptr<TestActor> pTestActor5;
+	std::shared_ptr<DemoRat> pTestActor1;
+	std::shared_ptr<DemoRat> pTestActor2;
+	std::shared_ptr<DemoRat> pTestActor3;
+	std::shared_ptr<DemoRat> pTestActor4;
+	std::shared_ptr<DemoRat> pTestActor5;
 
-	std::shared_ptr<TestPawn> pTestPawn;
+	std::shared_ptr<DemoPawn> pTestPawn;
+
+	std::shared_ptr<DemoPlane> pDemoPlane;
+
+	std::shared_ptr<DemoShrek> pDemoShrek;
+
+	std::shared_ptr<DemoLightAndSound> pDemoLightSound;
 };
 
