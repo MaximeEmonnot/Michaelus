@@ -119,8 +119,8 @@ public:
 				alSourcei(source, AL_LOOPING, bIsLooping);
 				alSourcef(source, AL_PITCH, pitch);
 				alSourcef(source, AL_GAIN, gain);
-				alSource3f(source, AL_POSITION, location.x, location.y, location.z);
-				alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+				alSource3f(source, AL_POSITION, location.y, location.x, location.z);
+				alSource3f(source, AL_VELOCITY, velocity.y, velocity.x, velocity.z);
 				alSourcei(source, AL_BUFFER, soundBuffers.at(key));
 				alSourcePlay(source);
 				return i;

@@ -8,11 +8,14 @@ public:
 
     virtual void Update() override;
 
-    void SetFieldOfView(float newFieldOfView);
+    void SetSensitivity(float newSensitivity);
+    float GetSensitivity() const;
 
+    void SetFieldOfView(float newFieldOfView);
     float GetFieldOfView() const;
 
 private:
     float fieldOfView = 0.f;
+    float sensitivity = 1.f;
 };
 

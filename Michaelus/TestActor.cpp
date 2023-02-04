@@ -25,19 +25,4 @@ TestActor::TestActor(const std::string& name)
 void TestActor::Update()
 {
 	Actor::Update();
-
-	switch(MOUSE.Read())
-	{
-	case Mouse::EventType::LPress:
-		//SFX.PlaySoundAtLocation("Sounds/test.wav", FVec3D(5000.f, 0.f, 0.f));
-		break;
-	case Mouse::EventType::WheelDown:
-		angle += 5.f;
-		break;
-	case Mouse::EventType::WheelUp:
-		angle -= 5.f;
-		break;
-	}
-
-	AddActorRotation(FRotator(MMath::Rad(angle), 0.f, 0.f) * DELTATIME);
 }

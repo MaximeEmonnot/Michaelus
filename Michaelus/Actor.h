@@ -63,12 +63,16 @@ public:
 	}
 
 	void SetActorLocation(const FVec3D& newLocation);
-	void SetActorRotation(const FRotator& newRotation);
+	void SetActorRotation(const FQuaternion& newRotation);
 	void AddActorLocation(const FVec3D& offsetLocation);
-	void AddActorRotation(const FRotator& offsetRotation);
+	void AddActorRotation(const FQuaternion& offsetRotation);
 	FVec3D GetActorLocation() const;
-	FRotator GetActorRotation() const;
+	FQuaternion GetActorRotation() const;
 	FTransform GetActorTransform() const;
+
+	FVec3D GetActorForwardVector() const;
+	FVec3D GetActorRightVector() const;
+	FVec3D GetActorUpVector() const;
 
 protected:
 	std::shared_ptr<Component> pRootComponent;

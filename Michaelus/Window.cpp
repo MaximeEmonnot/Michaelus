@@ -10,6 +10,9 @@ HINSTANCE Window::hInstance;
 std::wstring Window::className;
 
 Window::Window() noexcept
+	:
+	width(GetSystemMetrics(SM_CXSCREEN)),
+	height(GetSystemMetrics(SM_CYSCREEN))
 {
 	hInstance = GetModuleHandle(nullptr);
 	className = L"Vulkan 3D Engine";
@@ -32,18 +35,11 @@ Window::Window() noexcept
 
 	RegisterClassEx(&wc);
 
-	RECT wr;
-	wr.left = 0;
-	wr.top = 0;
-	wr.right = width + wr.left;
-	wr.bottom = height + wr.top;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
-
 	hWnd = CreateWindow(
 		className.c_str(),
 		L"Vulkan 3D Engine",
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+		WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
 		nullptr,
 		nullptr,
 		hInstance,
@@ -51,6 +47,7 @@ Window::Window() noexcept
 	);
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	ShowCursor(FALSE);
 }
 
 Window::~Window()
@@ -68,6 +65,7 @@ bool Window::ProcessMessages()
 {
 	MSG msg;
 	KBD.PopLastEvents();
+	SetCursorPos(width / 2, height / 2);
 	MOUSE.PopLastEvent();
 	ZeroMemory(&msg, sizeof(MSG));
 	while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -97,6 +95,11 @@ int Window::GetWidth() const
 int Window::GetHeight() const
 {
 	return height;
+}
+
+FVec2D Window::GetCenterOfScreen() const
+{
+	return { static_cast<float>(width) / 2.f , static_cast<float>(height) / 2.f };
 }
 
 LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

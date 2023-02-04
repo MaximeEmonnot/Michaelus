@@ -1,5 +1,7 @@
 #include "Mouse.h"
 
+#include "Window.h"
+
 std::unique_ptr<Mouse> Mouse::pInstance = nullptr;
 
 Mouse::~Mouse()
@@ -21,7 +23,7 @@ Mouse::EventType Mouse::Read() const
 
 FVec2D Mouse::GetPosition() const
 {
-    return position;
+    return position - WND.GetCenterOfScreen();
 }
 
 bool Mouse::LeftIsPressed() const

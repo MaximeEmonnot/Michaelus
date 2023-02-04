@@ -17,14 +17,18 @@ public:
 	Actor& GetOwner();
 
 	void AddRelativeLocation(const FVec3D& offsetLocation);
-	void AddRelativeRotation(const FRotator& offsetRotation);
+	void AddRelativeRotation(const FQuaternion& offsetRotation);
 
 	FVec3D GetRelativeLocation() const;
-	FRotator GetRelativeRotation() const;
+	FQuaternion GetRelativeRotation() const;
 	FVec3D GetWorldLocation() const;
-	FRotator GetWorldRotation() const;
+	FQuaternion GetWorldRotation() const;
 
 	FTransform GetTransform() const;
+
+	FVec3D GetForwardVector() const;
+	FVec3D GetRightVector() const;
+	FVec3D GetUpVector() const;
 
 private:
 	Actor& rOwner;

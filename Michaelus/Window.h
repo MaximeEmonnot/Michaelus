@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include "Vec2D.h"
+
 #define WND Window::GetInstance()
 
 class Window
@@ -30,6 +32,8 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 
+	FVec2D GetCenterOfScreen() const;
+
 private:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -41,7 +45,7 @@ private:
 	static HINSTANCE hInstance;
 	static std::wstring className;
 
-	static constexpr int width = 800;
-	static constexpr int height = 640;
+	int width;
+	int height;
 };
 

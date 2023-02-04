@@ -17,4 +17,8 @@ struct MMath
 
 	static inline float Rad(float degree) { return degree * PI / 180.f; }
 	static inline float Deg(float radian) { return radian * 180.f / PI; }
+
+	// Algebra
+	static inline float Abs(float value) { return abs(value); }
+	static inline float Sign(float value) { return value / Abs(value); }
 };

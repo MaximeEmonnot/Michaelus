@@ -1,5 +1,5 @@
 #pragma once
-#include "Rotator.h"
+#include "Quaternion.h"
 #include "Vec3D.h"
 
 template <typename T>
@@ -10,13 +10,12 @@ public:
 	{
 		Transform out = *this;
 		out.location += rhs.location;
-		out.rotation += rhs.rotation;
-
+		out.rotation *= rhs.rotation;
 		return out;
 	}
 
 	Vec3D<T> location;
-	Rotator<T> rotation;
+	Quaternion<T> rotation;
 	Vec3D<T> Scale = { 1.f, 1.f, 1.f };
 };
 

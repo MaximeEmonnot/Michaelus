@@ -33,7 +33,7 @@ void Actor::SetActorLocation(const FVec3D& newLocation)
 	transform.location = newLocation;
 }
 
-void Actor::SetActorRotation(const FRotator& newRotation)
+void Actor::SetActorRotation(const FQuaternion& newRotation)
 {
 	transform.rotation = newRotation;
 }
@@ -43,9 +43,9 @@ void Actor::AddActorLocation(const FVec3D& offsetLocation)
 	transform.location += offsetLocation;
 }
 
-void Actor::AddActorRotation(const FRotator& offsetRotation)
+void Actor::AddActorRotation(const FQuaternion& offsetRotation)
 {
-	transform.rotation += offsetRotation;
+	transform.rotation = transform.rotation * offsetRotation.GetUnit();
 }
 
 FVec3D Actor::GetActorLocation() const
@@ -53,7 +53,7 @@ FVec3D Actor::GetActorLocation() const
 	return transform.location;
 }
 
-FRotator Actor::GetActorRotation() const
+FQuaternion Actor::GetActorRotation() const
 {
 	return transform.rotation;
 }
@@ -61,4 +61,19 @@ FRotator Actor::GetActorRotation() const
 FTransform Actor::GetActorTransform() const
 {
 	return transform;
+}
+
+FVec3D Actor::GetActorForwardVector() const
+{
+	return transform.rotation.RotateVector(FVec3D(1.f, 0.f, 0.f));
+}
+
+FVec3D Actor::GetActorRightVector() const
+{
+	return transform.rotation.RotateVector(FVec3D(0.f, 1.f, 0.f));
+}
+
+FVec3D Actor::GetActorUpVector() const
+{
+	return transform.rotation.RotateVector(FVec3D(0.f, 0.f, 1.f));
 }

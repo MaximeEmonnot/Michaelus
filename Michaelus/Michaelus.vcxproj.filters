@@ -326,5 +326,8 @@
     <ClInclude Include="World.h">
       <Filter>Fichiers d%27en-tête\MainEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
