@@ -80,7 +80,7 @@ void DemoLightAndSound::Update()
 
 	// Lights and Sound Update
 	for (size_t i = 0; i < pointLights.size(); i++)
-		LIGHT_SYSTEM.SetPointLight(pointLights.at(i), pointLightLocations.at(i)->GetWorldLocation());
+		LIGHT_SYSTEM.SetPointLight(static_cast<int>(pointLights.at(i)), pointLightLocations.at(i)->GetWorldLocation());
 
 	SFX.UpdatePlayingSound(soundSourceIndex, true, 1.f, 1.f, pSoundSource->GetWorldLocation());
 }

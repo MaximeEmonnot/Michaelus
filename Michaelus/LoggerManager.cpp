@@ -8,9 +8,8 @@ std::unique_ptr<LoggerManager> LoggerManager::pInstance = nullptr;
 
 LoggerManager::LoggerManager()
 	:
-	pLogger(std::make_shared<ConsoleLogger>())
+	pLogger(std::make_shared<ConsoleLogger>(std::make_shared<DebugLogger>(std::make_shared<ErrorLogger>())))
 {
-	pLogger->SetNext(std::make_shared<DebugLogger>())->SetNext(std::make_shared<ErrorLogger>());
 }
 
 LoggerManager& LoggerManager::GetInstance()

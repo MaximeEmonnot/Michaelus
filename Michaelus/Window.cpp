@@ -1,10 +1,11 @@
 #include "Window.h"
 
+#include "WindowEventObserver.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
 std::unique_ptr<Window> Window::pInstance = nullptr;
-
+std::vector<WindowEventObserver*> Window::observers;
 HWND Window::hWnd;
 HINSTANCE Window::hInstance;
 std::wstring Window::className;
@@ -64,9 +65,7 @@ Window& Window::GetInstance()
 bool Window::ProcessMessages()
 {
 	MSG msg;
-	KBD.PopLastEvents();
 	SetCursorPos(width / 2, height / 2);
-	MOUSE.PopLastEvent();
 	ZeroMemory(&msg, sizeof(MSG));
 	while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
@@ -75,6 +74,11 @@ bool Window::ProcessMessages()
 		if (msg.message == WM_QUIT) return false;
 	}
 	return true;
+}
+
+void Window::AddObserver(WindowEventObserver* observer)
+{
+	observers.push_back(observer);
 }
 
 HWND Window::GetHWND() const
@@ -104,6 +108,7 @@ FVec2D Window::GetCenterOfScreen() const
 
 LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+
 	switch(uMsg)
 	{
 	case WM_CLOSE:
@@ -113,67 +118,8 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOVING:
 		break;
 
-	case WM_KEYDOWN:
-		{
-		KBD.OnKeyPressed(static_cast<unsigned char>(wParam));
-		}
-		break;
-	case WM_KEYUP:
-		{
-		KBD.OnKeyReleased(static_cast<unsigned char>(wParam));
-		}
-		break;
-	case WM_CHAR:
-		{
-		KBD.OnChar(static_cast<char>(wParam));
-		}
-		break;
-
-	case WM_MOUSEMOVE:
-		{
-		const int x = LOWORD(lParam);
-		const int y = HIWORD(lParam);
-		MOUSE.OnMouseMove(x, y);
-		}
-		break;
-	case WM_LBUTTONDOWN:
-		{
-		MOUSE.OnLeftPressed();
-		}
-		break;
-	case WM_LBUTTONUP:
-		{
-		MOUSE.OnLeftReleased();
-		}
-		break;
-	case WM_MBUTTONDOWN:
-		{
-		MOUSE.OnMiddlePressed();
-		}
-		break;
-	case WM_MBUTTONUP:
-		{
-		MOUSE.OnMiddleReleased();
-		}
-		break;
-	case WM_RBUTTONDOWN:
-		{
-		MOUSE.OnRightPressed();
-		}
-		break;
-	case WM_RBUTTONUP:
-		{
-		MOUSE.OnRightReleased();
-		}
-		break;
-	case WM_MOUSEWHEEL: 
-		{
-		if (GET_WHEEL_DELTA_WPARAM(wParam) >= 0) MOUSE.OnWheelUp();
-		else MOUSE.OnWheelDown();
-		}
-		break;
-
 	default:
+		for (WindowEventObserver* pObserver : observers) pObserver->Update(uMsg, wParam, lParam);
 		break;
 	}
 

@@ -9,9 +9,36 @@ Keyboard::~Keyboard()
 
 Keyboard& Keyboard::GetInstance()
 {
-	if (!pInstance)
+	if (!pInstance) {
 		pInstance = std::make_unique<Keyboard>();
+		DefineObservable(pInstance.get());
+	}
 	return *pInstance;
+}
+
+void Keyboard::Update(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	PopLastEvents();
+
+	switch (uMsg)
+	{
+	case WM_KEYDOWN:
+	{
+		OnKeyPressed(static_cast<unsigned char>(wParam));
+	}
+	break;
+	case WM_KEYUP:
+	{
+		OnKeyReleased(static_cast<unsigned char>(wParam));
+	}
+	break;
+	case WM_CHAR:
+	{
+		OnChar(static_cast<char>(wParam));
+	}
+	break;
+	default: break;
+	}
 }
 
 bool Keyboard::KeyIsPressed(unsigned char keycode) const

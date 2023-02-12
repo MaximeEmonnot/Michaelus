@@ -12,8 +12,64 @@ Mouse::~Mouse()
 Mouse& Mouse::GetInstance()
 {
     if (!pInstance)
+    {
         pInstance = std::make_unique<Mouse>();
+		DefineObservable(pInstance.get());
+    }
     return *pInstance;
+}
+
+void Mouse::Update(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	PopLastEvent();
+
+    switch(uMsg)
+    {
+	case WM_MOUSEMOVE:
+	{
+		const int x = LOWORD(lParam);
+		const int y = HIWORD(lParam);
+		OnMouseMove(x, y);
+	}
+	break;
+	case WM_LBUTTONDOWN:
+	{
+		OnLeftPressed();
+	}
+	break;
+	case WM_LBUTTONUP:
+	{
+		OnLeftReleased();
+	}
+	break;
+	case WM_MBUTTONDOWN:
+	{
+		OnMiddlePressed();
+	}
+	break;
+	case WM_MBUTTONUP:
+	{
+		OnMiddleReleased();
+	}
+	break;
+	case WM_RBUTTONDOWN:
+	{
+		OnRightPressed();
+	}
+	break;
+	case WM_RBUTTONUP:
+	{
+		OnRightReleased();
+	}
+	break;
+	case WM_MOUSEWHEEL:
+	{
+		if (GET_WHEEL_DELTA_WPARAM(wParam) >= 0) OnWheelUp();
+		else OnWheelDown();
+	}
+	break;
+    default: break;
+    }
 }
 
 Mouse::EventType Mouse::Read() const

@@ -18,12 +18,6 @@ BaseLogger::~BaseLogger()
 	outFile.close();
 }
 
-std::shared_ptr<BaseLogger> BaseLogger::SetNext(std::shared_ptr<BaseLogger> pNextLogger)
-{
-	pNext = pNextLogger;
-	return pNext;
-}
-
 void BaseLogger::Write(const std::string& message, ELoggerVerbosity priority)
 {
 	if (priority == verbosity) LogMessage(message);

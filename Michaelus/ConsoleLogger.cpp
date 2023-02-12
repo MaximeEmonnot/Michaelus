@@ -9,6 +9,13 @@ ConsoleLogger::ConsoleLogger()
 	outFile.open(outDirectory + "/CONSOLE.log", std::ios::out | std::ios::app);
 }
 
+ConsoleLogger::ConsoleLogger(std::shared_ptr<BaseLogger> pNext)
+{
+	this->pNext = pNext;
+	verbosity = ELoggerVerbosity::Console;
+	outFile.open(outDirectory + "/CONSOLE.log", std::ios::out | std::ios::app);
+}
+
 void ConsoleLogger::LogMessage(const std::string& message)
 {
 	const __time64_t timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

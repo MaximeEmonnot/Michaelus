@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Vec2D.h"
+#include "WindowEventObserver.h"
 
 #define WND Window::GetInstance()
 
@@ -26,6 +27,8 @@ public:
 
 	bool ProcessMessages();
 
+	void AddObserver(WindowEventObserver* observer);
+
 	HWND GetHWND() const;
 	HINSTANCE GetHInstance() const;
 
@@ -38,8 +41,9 @@ private:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-
 	static std::unique_ptr<Window> pInstance;
+
+	static std::vector<WindowEventObserver*> observers;
 
 	static HWND hWnd;
 	static HINSTANCE hInstance;

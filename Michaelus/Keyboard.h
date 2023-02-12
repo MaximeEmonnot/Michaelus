@@ -3,12 +3,12 @@
 #include <bitset>
 #include <queue>
 
+#include "WindowEventObserver.h"
+
 #define KBD Keyboard::GetInstance()
 
-class Keyboard
+class Keyboard : public WindowEventObserver
 {
-private:
-	friend class Window;
 public:
 	struct Event
 	{
@@ -29,9 +29,11 @@ public:
 	Keyboard(Keyboard&&) = delete;
 	Keyboard& operator=(Keyboard&&) = delete;
 
-	~Keyboard();
+	~Keyboard() override;
 
 	static Keyboard& GetInstance();
+
+	virtual void Update(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 
 	bool KeyIsPressed(unsigned char keycode) const;
 	Keyboard::Event ReadKey() const;

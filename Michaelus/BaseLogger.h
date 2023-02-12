@@ -17,8 +17,6 @@ public:
 	BaseLogger();
 	virtual ~BaseLogger();
 
-	std::shared_ptr<BaseLogger> SetNext(std::shared_ptr<BaseLogger> pNextLogger);
-
 	void Write(const std::string& message, ELoggerVerbosity priority);
 
 protected:

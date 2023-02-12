@@ -19,7 +19,7 @@ SoundSystem::SoundSystem()
 
 SoundSystem::~SoundSystem()
 {
-	alDeleteSources(sources.size(), sources.data());
+	alDeleteSources(static_cast<ALint>(sources.size()), sources.data());
 	for (auto& entry : soundBuffers)
 		alDeleteBuffers(1, &entry.second);
 

@@ -9,6 +9,13 @@ ErrorLogger::ErrorLogger()
 	outFile.open(outDirectory + "/ERROR.log", std::ios::out | std::ios::app);
 }
 
+ErrorLogger::ErrorLogger(std::shared_ptr<BaseLogger> pNext)
+{
+	this->pNext = pNext;
+	verbosity = ELoggerVerbosity::Error;
+	outFile.open(outDirectory + "/ERROR.log", std::ios::out | std::ios::app);
+}
+
 void ErrorLogger::LogMessage(const std::string& message)
 {
 	const __time64_t timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

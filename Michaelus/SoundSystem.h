@@ -123,7 +123,7 @@ public:
 				alSource3f(source, AL_VELOCITY, velocity.y, velocity.x, velocity.z);
 				alSourcei(source, AL_BUFFER, soundBuffers.at(key));
 				alSourcePlay(source);
-				return i;
+				return static_cast<int>(i);
 				}
 			default:
 				break;

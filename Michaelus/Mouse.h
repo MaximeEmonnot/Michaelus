@@ -3,13 +3,12 @@
 #include <queue>
 
 #include "Vec2D.h"
+#include "WindowEventObserver.h"
 
 #define MOUSE Mouse::GetInstance()
 
-class Mouse
+class Mouse : public WindowEventObserver
 {
-private:
-	friend class Window;
 public:
 	enum class EventType
 	{
@@ -33,9 +32,11 @@ public:
 	Mouse(Mouse&&) = delete;
 	Mouse& operator=(Mouse&&) = delete;
 
-	~Mouse();
+	~Mouse() override;
 
 	static Mouse& GetInstance();
+
+	virtual void Update(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 
 	Mouse::EventType Read() const;
 
