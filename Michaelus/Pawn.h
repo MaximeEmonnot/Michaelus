@@ -11,7 +11,13 @@ public:
     Pawn(const std::string& name);
 
     template<class T>
-    void SetController();
+    void SetController()
+    {
+        if (!std::is_base_of<Controller, T>())
+            throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a Controller Class. Please check your call for SetController.");
+
+        pController = std::make_shared<T>(*this);
+    }
 
     virtual void Update() override;
 

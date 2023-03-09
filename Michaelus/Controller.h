@@ -7,14 +7,14 @@ class Controller
 {
 public:
 	Controller() = default;
-	Controller(std::weak_ptr<Pawn> pPawn);
+	Controller(Pawn& pawn);
 
 	virtual void Update();
 
 protected:
-	std::shared_ptr<Pawn> GetPawn();
+	Pawn GetPawn() const;
 
 private:
-	std::weak_ptr<Pawn> pPawn;
+	Pawn& pawn;
 };
 

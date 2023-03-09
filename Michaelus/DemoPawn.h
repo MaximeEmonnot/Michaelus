@@ -10,6 +10,9 @@ public:
     DemoPawn(const std::string& name);
 
     virtual void Update() override;
+
+    std::shared_ptr<CameraComponent> GetCamera() const;
+
 private:
     std::shared_ptr<SceneComponent> pSceneComponent;
 

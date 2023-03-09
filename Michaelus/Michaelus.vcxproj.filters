@@ -201,6 +201,9 @@
     <ClCompile Include="WindowEventObserver.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
+    <ClCompile Include="DemoController.cpp">
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="WindowEventObserver.h">
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoController.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

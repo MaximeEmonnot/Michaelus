@@ -1,8 +1,10 @@
 #include "Controller.h"
 
-Controller::Controller(std::weak_ptr<Pawn> pPawn)
+#include "Pawn.h"
+
+Controller::Controller(Pawn& pawn)
 	:
-	pPawn(pPawn)
+	pawn(pawn)
 {
 }
 
@@ -10,7 +12,8 @@ void Controller::Update()
 {
 }
 
-std::shared_ptr<Pawn> Controller::GetPawn()
+Pawn Controller::GetPawn() const
 {
-	return pPawn.lock();
+	return pawn;
 }
+
