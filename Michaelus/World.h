@@ -2,25 +2,20 @@
 #include <memory>
 #include <vector>
 
-class DemoLightAndSound;
-class DemoShrek;
-class DemoPlane;
-class DemoPawn;
-class DemoRat;
 class Actor;
 
 class World
 {
 public:
-	World();
+	World() = default;
 	World(const World& toCopy);
 	World& operator= (const World& rhs);
 	World(World&& toMove);
 	World& operator= (World&& rhs);
 	virtual ~World();
 
-	virtual void BeginPlay();
-	virtual void Update();
+	virtual void BeginPlay() = 0;
+	virtual void Update() = 0;
 
 	template<class T>
 	std::shared_ptr<T> SpawnActor()
@@ -40,23 +35,7 @@ public:
 		return new_actor;
 	}
 
-private:
+protected:
 	std::vector<std::shared_ptr<Actor>> actors;
-
-	// ACTORS
-
-	std::shared_ptr<DemoRat> pTestActor1;
-	std::shared_ptr<DemoRat> pTestActor2;
-	std::shared_ptr<DemoRat> pTestActor3;
-	std::shared_ptr<DemoRat> pTestActor4;
-	std::shared_ptr<DemoRat> pTestActor5;
-
-	std::shared_ptr<DemoPawn> pTestPawn;
-
-	std::shared_ptr<DemoPlane> pDemoPlane;
-
-	std::shared_ptr<DemoShrek> pDemoShrek;
-
-	std::shared_ptr<DemoLightAndSound> pDemoLightSound;
 };
 

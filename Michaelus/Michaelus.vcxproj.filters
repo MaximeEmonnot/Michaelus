@@ -204,6 +204,9 @@
     <ClCompile Include="DemoController.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
+    <ClCompile Include="DemoWorld.cpp">
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -357,6 +360,9 @@
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
     <ClInclude Include="DemoController.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoWorld.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
   </ItemGroup>

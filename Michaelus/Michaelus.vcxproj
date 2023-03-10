@@ -162,6 +162,7 @@
     <ClCompile Include="DemoLightAndSound.cpp" />
     <ClCompile Include="DemoPlane.cpp" />
     <ClCompile Include="DemoShrek.cpp" />
+    <ClCompile Include="DemoWorld.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="DemoLightAndSound.h" />
     <ClInclude Include="DemoPlane.h" />
     <ClInclude Include="DemoShrek.h" />
+    <ClInclude Include="DemoWorld.h" />
     <ClInclude Include="EngineException.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="Engine.h" />

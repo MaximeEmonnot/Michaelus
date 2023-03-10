@@ -5,8 +5,7 @@
 #include "LoggerManager.h"
 #include "Mouse.h"
 #include "SoundSystem.h"
-#include "DemoRat.h"
-#include "DemoPawn.h"
+#include "DemoWorld.h"
 #include "Timer.h"
 #include "VKDevice.h"
 #include "World.h"
@@ -17,7 +16,7 @@ Engine::Engine()
 {
 	GFX;
 
-	AddWorld<World>();
+	AddWorld<DemoWorld>();
 
 	pCurrentWorld->BeginPlay();
 }
@@ -50,7 +49,7 @@ void Engine::UpdateFrame() const
 	switch(MOUSE.Read())
 	{
 	case Mouse::EventType::MPress:
-		SFX.PlaySound<Effect>("Sounds/test.wav", false, 1.f, 1.f, FVec3D());
+		SFX.PlaySoundW<Effect>("Sounds/test.wav", false, 1.f, 1.f, FVec3D());
 		break;
 	default:
 		break;
