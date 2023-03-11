@@ -17,8 +17,6 @@ void DemoController::Update()
 {
 	Controller::Update();
 
-	//DemoPawn* pDemo = dynamic_cast<DemoPawn*>(&GetPawn());
-
 	if (KBD.KeyIsPressed('Z')) GetPawn().AddActorLocation(GetPawn().GetActorForwardVector() * DELTATIME);
 	if (KBD.KeyIsPressed('D')) GetPawn().AddActorLocation(GetPawn().GetActorRightVector() * DELTATIME);
 	if (KBD.KeyIsPressed('S')) GetPawn().AddActorLocation(-GetPawn().GetActorForwardVector() * DELTATIME);

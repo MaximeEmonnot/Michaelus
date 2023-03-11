@@ -12,7 +12,7 @@ public:
 	virtual void Update();
 
 protected:
-	Pawn GetPawn() const;
+	Pawn& GetPawn() const;
 
 private:
 	Pawn& pawn;

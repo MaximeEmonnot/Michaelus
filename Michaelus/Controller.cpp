@@ -12,7 +12,7 @@ void Controller::Update()
 {
 }
 
-Pawn Controller::GetPawn() const
+Pawn& Controller::GetPawn() const
 {
 	return pawn;
 }
