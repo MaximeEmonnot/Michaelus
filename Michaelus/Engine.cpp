@@ -49,7 +49,7 @@ void Engine::UpdateFrame() const
 	switch(MOUSE.Read())
 	{
 	case Mouse::EventType::MPress:
-		SFX.PlaySoundW<Effect>("Sounds/test.wav", false, 1.f, 1.f, FVec3D());
+		SFX.PlaySound<Effect>("Sounds/test.wav", false, 1.f, 1.f, FVec3D());
 		break;
 	default:
 		break;

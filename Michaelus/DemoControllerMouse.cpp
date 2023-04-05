@@ -1,4 +1,4 @@
-#include "DemoController.h"
+#include "DemoControllerMouse.h"
 
 #include "DemoPawn.h"
 #include "Keyboard.h"
@@ -7,13 +7,13 @@
 #include "Timer.h"
 #include "Vec2D.h"
 
-DemoController::DemoController(Pawn& pawn)
+DemoControllerMouse::DemoControllerMouse(Pawn& pawn)
 	:
 	Controller(pawn)
 {
 }
 
-void DemoController::Update()
+void DemoControllerMouse::Update()
 {
 	Controller::Update();
 
@@ -25,5 +25,5 @@ void DemoController::Update()
 	if (KBD.KeyIsPressed('A')) GetPawn().AddActorLocation(-GetPawn().GetActorUpVector() * DELTATIME);
 
 	const FVec2D mouseMovement = MOUSE.GetPosition() * DELTATIME;
-	GetPawn().AddActorRotation(FQuaternion(0.f, MMath::Rad(-mouseMovement.y), MMath::Rad(-mouseMovement.x)));
+	GetPawn().AddActorRotation(FQuaternion(0.f, MMath::Rad(-mouseMovement.GetY()), MMath::Rad(-mouseMovement.GetX())));
 }

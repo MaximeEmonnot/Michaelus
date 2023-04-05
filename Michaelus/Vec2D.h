@@ -36,17 +36,17 @@ public:
 	template <typename T2>
 	Vec2D(Vec2D<T2> v)
 		:
-		Vec2D(static_cast<T>(v.x), static_cast<T>(v.y))
+		Vec2D(static_cast<T>(v.GetX()), static_cast<T>(v.GetY()))
 	{}
 
 
-	Vec2D operator-() {
+	virtual Vec2D operator-() {
 		x *= -1;
 		y *= -1;
 		return *this;
 	}
 
-	Vec2D operator+(const Vec2D& rhs) const {
+	virtual Vec2D operator+(const Vec2D& rhs) const {
 		Vec2D out = *this;
 		out.x += rhs.x;
 		out.y += rhs.y;
@@ -55,7 +55,7 @@ public:
 	void operator+=(const Vec2D& rhs) {
 		*this = *this + rhs;
 	}
-	Vec2D operator-(const Vec2D& rhs) const {
+	virtual Vec2D operator-(const Vec2D& rhs) const {
 		Vec2D out = *this;
 		out.x -= rhs.x;
 		out.y -= rhs.y;
@@ -64,7 +64,7 @@ public:
 	void operator-=(const Vec2D& rhs) {
 		*this = *this - rhs;
 	}
-	Vec2D operator*(T scale) const {
+	virtual Vec2D operator*(T scale) const {
 		Vec2D out = *this;
 		out.x *= scale;
 		out.y *= scale;
@@ -81,23 +81,23 @@ public:
 		*this = *this / scale;
 	}
 
-	bool operator==(const Vec2D& rhs) const {
+	virtual bool operator==(const Vec2D& rhs) const {
 		return x == rhs.x && y == rhs.y;
 	}
 	bool operator!=(const Vec2D& rhs) const {
 		return !(*this == rhs);
 	}
 
-	float GetLength() const {
+	virtual float GetLength() const {
 		return sqrtf(x * x + y * y);
 	}
 
-	Vec2D GetNormalized() const {
+	virtual Vec2D GetNormalized() const {
 		Vec2D v = *this;
 		if (GetLength() > 0) {
 			float magnitude = 1 / GetLength();
-			v.x *= magnitude;
-			v.y *= magnitude;
+			v.x *= static_cast<T>(magnitude);
+			v.y *= static_cast<T>(magnitude);
 			return v;
 		}
 		return Vec2D();
@@ -119,7 +119,7 @@ public:
 		return lhs.Dot(rhs);
 	}
 
-	std::string ToString() const
+	virtual std::string ToString() const
 	{
 		return "X = " + std::to_string(x) + " Y = " + std::to_string(y);
 	}
@@ -130,8 +130,17 @@ public:
 		return v.GetLength();
 	}
 
-public:
+	virtual T GetX() const
+	{
+		return x;
+	}
 
+	virtual T GetY() const
+	{
+		return y;
+	}
+
+protected:
 	T x = static_cast<T>(0);
 	T y = static_cast<T>(0);
 };

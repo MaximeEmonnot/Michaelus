@@ -46,24 +46,24 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     UniformBufferObject ubo{};
     glm::mat4 modelRotMatrix = glm::toMat4(glm::quat(modelRotation.w, modelRotation.x, modelRotation.y, modelRotation.z));
 
-    ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelLocation.y, modelLocation.x, modelLocation.z)) * modelRotMatrix;
-    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.y, cameraLocation.x, cameraLocation.z)) * cameraRotMatrix;
-	ubo.view = glm::lookAt(glm::vec3(cameraLocation.y, cameraLocation.x, cameraLocation.z), 
-        glm::vec3(forwardCameraLocation.y, forwardCameraLocation.x, forwardCameraLocation.z),
+    ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelLocation.GetY(), modelLocation.GetX(), modelLocation.GetZ())) * modelRotMatrix;
+    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.GetY(), cameraLocation.GetX(), cameraLocation.GetZ())) * cameraRotMatrix;
+	ubo.view = glm::lookAt(glm::vec3(cameraLocation.GetY(), cameraLocation.GetX(), cameraLocation.GetZ()), 
+        glm::vec3(forwardCameraLocation.GetY(), forwardCameraLocation.GetX(), forwardCameraLocation.GetZ()),
         glm::vec3(0.f, 0.f, 1.f));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 1000'00.f);
     ubo.projection[1][1] *= -1.f;
-    ubo.viewPosition = glm::vec4(cameraLocation.x, cameraLocation.y, cameraLocation.z, 1.f);
-    ubo.directional.direction = {directionalLight.direction.x, directionalLight.direction.y, directionalLight.direction.z, 1.f};
-    ubo.directional.color = { directionalLight.color.x, directionalLight.color.y, directionalLight.color.z , directionalLight.intensity };
+    ubo.viewPosition = glm::vec4(cameraLocation.GetX(), cameraLocation.GetY(), cameraLocation.GetZ(), 1.f);
+    ubo.directional.direction = {directionalLight.direction.GetX(), directionalLight.direction.GetY(), directionalLight.direction.GetZ(), 1.f};
+    ubo.directional.color = { directionalLight.color.GetX(), directionalLight.color.GetY(), directionalLight.color.GetZ() , directionalLight.intensity };
     ubo.lightIntensities = { 0.02f, 2.f, 5.f, 8.f};
     ubo.numLights = static_cast<int>(pointLights.size());
     for (size_t i = 0; i < pointLights.size(); i++)
     {
         PointLight pointLight = pointLights.at(i);
 
-        ubo.pointLights[i].position = { pointLight.position.x, pointLight.position.y, pointLight.position.z, 1.f };
-        ubo.pointLights[i].color = { pointLight.color.x, pointLight.color.y, pointLight.color.z, pointLight.intensity };
+        ubo.pointLights[i].position = { pointLight.position.GetX(), pointLight.position.GetY(), pointLight.position.GetZ(), 1.f };
+        ubo.pointLights[i].color = { pointLight.color.GetX(), pointLight.color.GetY(), pointLight.color.GetZ(), pointLight.intensity };
     }
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)

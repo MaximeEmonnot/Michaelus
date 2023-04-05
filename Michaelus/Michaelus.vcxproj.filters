@@ -201,7 +201,7 @@
     <ClCompile Include="WindowEventObserver.cpp">
       <Filter>Fichiers sources\CoreEngine</Filter>
     </ClCompile>
-    <ClCompile Include="DemoController.cpp">
+    <ClCompile Include="DemoControllerMouse.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
     <ClCompile Include="DemoWorld.cpp">
@@ -359,11 +359,17 @@
     <ClInclude Include="WindowEventObserver.h">
       <Filter>Fichiers d%27en-tête\CoreEngine</Filter>
     </ClInclude>
-    <ClInclude Include="DemoController.h">
+    <ClInclude Include="DemoControllerMouse.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
     <ClInclude Include="DemoWorld.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2DAdapter.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3DAdapter.h">
+      <Filter>Fichiers d%27en-tête\MathEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

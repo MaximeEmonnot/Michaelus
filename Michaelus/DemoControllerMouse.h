@@ -1,10 +1,10 @@
 #pragma once
 #include "Controller.h"
-class DemoController :
+class DemoControllerMouse :
     public Controller
 {
 public:
-    DemoController(Pawn& pawn);
+    DemoControllerMouse(Pawn& pawn);
 
     virtual void Update() override;
 };

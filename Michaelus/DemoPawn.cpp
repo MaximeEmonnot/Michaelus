@@ -3,7 +3,7 @@
 #include "SceneComponent.h"
 #include "CameraComponent.h"
 #include "CameraManager.h"
-#include "DemoController.h"
+#include "DemoControllerMouse.h"
 #include "Keyboard.h"
 #include "LoggerManager.h"
 #include "Mouse.h"
@@ -25,7 +25,7 @@ DemoPawn::DemoPawn(const std::string& name)
 	pCameraComponent->AddRelativeLocation(FVec3D(0.f,0.f,0.f));
 	CAMERA.SetActiveCamera(pCameraComponent);
 
-	SetController<DemoController>();
+	SetController<DemoControllerMouse>();
 }
 
 void DemoPawn::Update()

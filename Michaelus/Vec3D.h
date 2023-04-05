@@ -45,14 +45,14 @@ public:
 	{}
 
 
-	Vec3D operator-() {
+	virtual Vec3D operator-() {
 		x *= -1;
 		y *= -1;
 		z *= -1;
 		return *this;
 	}
 
-	Vec3D operator+(const Vec3D& rhs) const {
+	virtual Vec3D operator+(const Vec3D& rhs) const {
 		Vec3D out = *this;
 		out.x += rhs.x;
 		out.y += rhs.y;
@@ -62,7 +62,7 @@ public:
 	void operator+=(const Vec3D& rhs) {
 		*this = *this + rhs;
 	}
-	Vec3D operator-(const Vec3D& rhs) const {
+	virtual Vec3D operator-(const Vec3D& rhs) const {
 		Vec3D out = *this;
 		out.x -= rhs.x;
 		out.y -= rhs.y;
@@ -72,7 +72,7 @@ public:
 	void operator-=(const Vec3D& rhs) {
 		*this = *this - rhs;
 	}
-	Vec3D operator*(T scale) const {
+	virtual Vec3D operator*(T scale) const {
 		Vec3D out = *this;
 		out.x *= scale;
 		out.y *= scale;
@@ -90,18 +90,18 @@ public:
 		*this = *this / scale;
 	}
 
-	bool operator==(const Vec3D& rhs) const {
+	virtual bool operator==(const Vec3D& rhs) const {
 		return x == rhs.x && y == rhs.y && z == rhs.z;
 	}
 	bool operator!=(const Vec3D& rhs) const {
 		return !(*this == rhs);
 	}
 
-	float GetLength() const {
+	virtual float GetLength() const {
 		return MMath::Sqrt(x * x + y * y + z * z);
 	}
 
-	Vec3D GetNormalized() const {
+	virtual Vec3D GetNormalized() const {
 		Vec3D v = *this;
 		if (GetLength() > 0) {
 			float magnitude = 1 / GetLength();
@@ -117,11 +117,11 @@ public:
 		*this = GetNormalized();
 	}
 
-	float Dot(const Vec3D& rhs) const{
+	virtual float Dot(const Vec3D& rhs) const{
 		return x * rhs.x + y * rhs.y + z * rhs.z;
 	}
 
-	Vec3D Cross(const Vec3D& rhs) const
+	virtual Vec3D Cross(const Vec3D& rhs) const
 	{
 		return Vec3D(
 			y * rhs.z - z * rhs.y,
@@ -140,7 +140,7 @@ public:
 		return lhs.Cross(rhs);
 	}
 
-	std::string ToString() const
+	virtual std::string ToString() const
 	{
 		return "X = " + std::to_string(x) + " Y = " + std::to_string(y) + " Z = " + std::to_string(z);
 	}
@@ -151,8 +151,22 @@ public:
 		return v.GetLength();
 	}
 
-public:
+	virtual T GetX() const
+	{
+		return x;
+	}
 
+	virtual T GetY() const
+	{
+		return y;
+	}
+
+	virtual T GetZ() const
+	{
+		return z;
+	}
+
+protected:
 	T x = static_cast<T>(0);
 	T y = static_cast<T>(0);
 	T z = static_cast<T>(0);
