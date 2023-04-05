@@ -207,6 +207,9 @@
     <ClCompile Include="DemoWorld.cpp">
       <Filter>Fichiers sources\Test</Filter>
     </ClCompile>
+    <ClCompile Include="DemoControllerKeyboard.cpp">
+      <Filter>Fichiers sources\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Vec3DAdapter.h">
       <Filter>Fichiers d%27en-tête\MathEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoControllerKeyboard.h">
+      <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

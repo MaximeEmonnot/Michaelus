@@ -39,18 +39,18 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     // CAMERA
     const FVec3D cameraLocation = CAMERA.GetActiveCamera()->GetWorldLocation();
     const FVec3D forwardCameraLocation = cameraLocation + CAMERA.GetActiveCamera()->GetForwardVector();
+    const FVec3D cameraUpVector = CAMERA.GetActiveCamera()->GetUpVector();
+
     // LIGHTS
     DirectionalLight directionalLight = LIGHT_SYSTEM.GetDirectionalLight();
     std::vector<PointLight> pointLights = LIGHT_SYSTEM.GetPointLights();
 
     UniformBufferObject ubo{};
     glm::mat4 modelRotMatrix = glm::toMat4(glm::quat(modelRotation.w, modelRotation.x, modelRotation.y, modelRotation.z));
-
     ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelLocation.GetY(), modelLocation.GetX(), modelLocation.GetZ())) * modelRotMatrix;
-    //ubo.view = glm::translate(glm::mat4(1.f), glm::vec3(cameraLocation.GetY(), cameraLocation.GetX(), cameraLocation.GetZ())) * cameraRotMatrix;
 	ubo.view = glm::lookAt(glm::vec3(cameraLocation.GetY(), cameraLocation.GetX(), cameraLocation.GetZ()), 
         glm::vec3(forwardCameraLocation.GetY(), forwardCameraLocation.GetX(), forwardCameraLocation.GetZ()),
-        glm::vec3(0.f, 0.f, 1.f));
+        glm::vec3(cameraUpVector.GetY(), cameraUpVector.GetX(),cameraUpVector.GetZ()));
 	ubo.projection = glm::perspective(MMath::Rad(CAMERA.GetActiveCamera()->GetFieldOfView()), static_cast<float>(WND.GetWidth()) / static_cast<float>(WND.GetHeight()), 0.1f, 1000'00.f);
     ubo.projection[1][1] *= -1.f;
     ubo.viewPosition = glm::vec4(cameraLocation.GetX(), cameraLocation.GetY(), cameraLocation.GetZ(), 1.f);

@@ -41,9 +41,9 @@ public:
 		const Vec3D<T> normalizedAxis = axis.GetNormalized();
 
 		w = cos;
-		x = sin * normalizedAxis.x;
-		y = sin * normalizedAxis.y;
-		z = sin * normalizedAxis.z;
+		x = sin * normalizedAxis.GetX();
+		y = sin * normalizedAxis.GetY();
+		z = sin * normalizedAxis.GetZ();
 	}
 
 	Quaternion& operator=(const Quaternion& rhs)

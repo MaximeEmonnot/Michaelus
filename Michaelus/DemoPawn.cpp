@@ -3,6 +3,7 @@
 #include "SceneComponent.h"
 #include "CameraComponent.h"
 #include "CameraManager.h"
+#include "DemoControllerKeyboard.h"
 #include "DemoControllerMouse.h"
 #include "Keyboard.h"
 #include "LoggerManager.h"
