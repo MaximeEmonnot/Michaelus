@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseLogger.h"
+#include "EngineException.h"
 
 #define LOG(message, verbosity) LoggerManager::GetInstance().Log(message, verbosity);
 
@@ -17,6 +18,15 @@ public:
 	static LoggerManager& GetInstance();
 
 	void Log(const std::string& message, ELoggerVerbosity verbosity);
+
+	template <typename T>
+	void ExtendLogger()
+	{
+		if (!std::is_base_of<BaseLogger, T>())
+			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a BaseLogger Class. Please check your call for ExtendLogger.");
+
+		pLogger = std::make_unique<T>(pLogger);
+	}
 
 private:
 	static std::unique_ptr<LoggerManager> pInstance;
