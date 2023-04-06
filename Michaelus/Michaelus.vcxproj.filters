@@ -377,5 +377,18 @@
     <ClInclude Include="DemoControllerKeyboard.h">
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Fichiers de ressources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Michaelus.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

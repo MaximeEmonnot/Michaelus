@@ -218,6 +218,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Vec2DAdapter.h" />
     <ClInclude Include="Vec3DAdapter.h" />
     <ClInclude Include="WindowEventObserver.h" />
@@ -252,6 +253,12 @@
     <ClInclude Include="VKUniformBuffer.h" />
     <ClInclude Include="Vulkan.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Michaelus.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

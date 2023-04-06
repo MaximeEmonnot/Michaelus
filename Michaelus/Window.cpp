@@ -3,6 +3,7 @@
 #include "WindowEventObserver.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "resource.h"
 
 std::unique_ptr<Window> Window::pInstance = nullptr;
 std::vector<WindowEventObserver*> Window::observers;
@@ -32,7 +33,7 @@ Window::Window() noexcept
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = className.c_str();
-	wc.hIconSm = nullptr;
+	wc.hIconSm = static_cast<HICON>(LoadImage(nullptr, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 32, 32, 0));
 
 	RegisterClassEx(&wc);
 
