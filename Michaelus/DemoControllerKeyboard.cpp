@@ -36,5 +36,5 @@ void DemoControllerKeyboard::Update()
 	if (KBD.KeyIsPressed('P')) GetPawn().AddActorRotation(FQuaternion(GetPawn().GetActorForwardVector(), -MMath::Rad(angle)));
 
 	// Switch to DemoControllerMouse
-	if (MOUSE.Read() == Mouse::EventType::MRelease) GetPawn().SetController<DemoControllerMouse>();
+	if (KBD.KeyIsPressed(VK_F1)) GetPawn().SetController<DemoControllerMouse>();
 }

@@ -2,7 +2,7 @@
 // fichier Include Microsoft Visual C++.
 // Utilisé par Michaelus.rc
 //
-#define IDI_APPICON 101
+#define IDI_ICON1                       101
 
 // Next default values for new objects
 // 

@@ -378,7 +378,7 @@
       <Filter>Fichiers d%27en-tête\Test</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Fichiers de ressources</Filter>
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

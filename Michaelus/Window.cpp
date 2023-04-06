@@ -28,12 +28,12 @@ Window::Window() noexcept
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
-	wc.hIcon = nullptr;
+	wc.hIcon = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, 0));
 	wc.hCursor = nullptr;
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = className.c_str();
-	wc.hIconSm = static_cast<HICON>(LoadImage(nullptr, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 32, 32, 0));
+	wc.hIconSm = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, 0));
 
 	RegisterClassEx(&wc);
 
