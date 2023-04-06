@@ -25,7 +25,7 @@ public:
 		if (!std::is_base_of<BaseLogger, T>())
 			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a BaseLogger Class. Please check your call for ExtendLogger.");
 
-		pLogger = std::make_unique<T>(pLogger);
+		pLogger = std::make_shared<T>(pLogger);
 	}
 
 private:
