@@ -18,7 +18,7 @@ public:
 	~Timer() = default;
 
 	// Ces différents constructeurs sont définis comme étant supprimés, pour correspondre au patron de conception Singleton
-	// et également à la RO5 des normes du C++ThreadPool(const ThreadPool&) = delete;
+	// et également à la RO5 des normes du C++
 	Timer(const Timer&) = delete;
 	Timer& operator= (const Timer&) = delete;
 	Timer(Timer&&) = delete;

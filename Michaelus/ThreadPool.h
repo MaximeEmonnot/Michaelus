@@ -21,7 +21,8 @@ public:
 	~ThreadPool();
 
 	// Ces différents constructeurs sont définis comme étant supprimés, pour correspondre au patron de conception Singleton
-	// et également à la RO5 des normes du C++ThreadPool(const ThreadPool&) = delete;
+	// et également à la RO5 des normes du C++
+	ThreadPool(const ThreadPool&) = delete;
 	ThreadPool& operator=(const ThreadPool&) = delete;
 	ThreadPool(ThreadPool&&) = delete;
 	ThreadPool& operator=(ThreadPool&&) = delete;

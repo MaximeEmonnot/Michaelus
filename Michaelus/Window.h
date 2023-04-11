@@ -19,13 +19,13 @@ class Window
 private:
 	friend class Graphics;
 public:
-	// Constructeur (public car std::unique_ptr nécessite un constructeur publique) 
+	// Constructeur (publique car std::unique_ptr nécessite un constructeur publique) 
 	Window() noexcept;
 	// Destructeur par défaut
 	~Window();
 
 	// Ces différents constructeurs sont définis comme étant supprimés, pour correspondre au patron de conception Singleton
-	// et également à la RO5 des normes du C++ThreadPool(const ThreadPool&) = delete;Window(const Window&) = delete;
+	// et également à la RO5 des normes du C++
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	Window(Window&&) = delete;
