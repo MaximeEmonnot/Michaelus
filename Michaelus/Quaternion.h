@@ -1,15 +1,21 @@
 #pragma once
 #include "Vec3D.h"
 
+/*
+ * Classe Quarternion
+ * Définit une rotation dans l'espace
+ */
 template <typename T>
 class Quaternion
 {
 public:
+	// Constructeur par défaut
 	constexpr Quaternion()
 		:
 		Quaternion(1, 0, 0, 0)
 	{}
 
+	// Constructeur définissant directement W X Y Z
 	constexpr Quaternion(T w, T x, T y, T z)
 		:
 		w(w),
@@ -18,6 +24,7 @@ public:
 		z(z)
 	{}
 
+	// Constructeur à partir des 3 angles Roll (axe X) Pitch (axe Y) et Yaw (axe Z)
 	constexpr Quaternion(T roll, T pitch, T yaw)
 	{
 		const float cr = MMath::Cos(roll * 0.5f);
@@ -33,6 +40,7 @@ public:
 		z = cr * cp * sy - sr * sp * cy;
 	}
 
+	// Constructeur à partir d'un axe de rotation et d'un angle
 	constexpr Quaternion(const Vec3D<T>& axis, T angle)
 	{
 		const float halfAngle = 0.5f * angle;
@@ -46,6 +54,7 @@ public:
 		z = sin * normalizedAxis.GetZ();
 	}
 
+	// Constructeur de copie
 	Quaternion& operator=(const Quaternion& rhs)
 	{
 		w = rhs.w;
@@ -55,12 +64,14 @@ public:
 		return *this;
 	}
 
+	// Conversion implicite 
 	template<typename T2>
 	Quaternion(Quaternion<T2> q)
 		:
 		Quaternion(static_cast<T>(q.w), static_cast<T>(q.x), static_cast<T>(q.y), static_cast<T>(q.z))
 	{}
 
+	// Opérateurs d'addition entre deux Quaternion
 	Quaternion operator+(const Quaternion& rhs) const
 	{
 		Quaternion out = *this;
@@ -76,6 +87,7 @@ public:
 		*this = *this + rhs;
 	}
 
+	// Opérateurs de multiplication entre deux Quaternion
 	Quaternion operator*(const Quaternion& rhs) const
 	{
 		Quaternion out = *this;
@@ -92,6 +104,7 @@ public:
 		*this = *this * rhs;
 	}
 
+	// Opérateurs de multiplication entre un Quaternion et un scalaire
 	Quaternion operator*(T scale) const
 	{
 		Quaternion out = *this;
@@ -107,6 +120,7 @@ public:
 		*this = *this * scale;
 	}
 
+	// Réalise la rotation d'un vecteur 3D
 	FVec3D RotateVector(const FVec3D& v) const
 	{
 		const FVec3D q(x, y, z);
@@ -116,6 +130,7 @@ public:
 		return result;
 	}
 
+	// Réalise la rotation inverse d'un vecteur 3D
 	FVec3D UnrotateVector(const FVec3D& v) const
 	{
 		const FVec3D q(-x, -y, -z);
@@ -125,6 +140,7 @@ public:
 		return result;
 	}
 
+	// Récupère le conjugué du Quaternion
 	Quaternion GetConjugate() const
 	{
 		Quaternion out = *this;
@@ -136,11 +152,13 @@ public:
 		return out;
 	}
 
+	// Récupère la norme du Quaternion
 	float GetNorm() const
 	{
 		return MMath::Sqrt(MMath::Square(w) + MMath::Square(x) + MMath::Square(y) + MMath::Square(z));
 	}
 
+	// Récupère le Quaternion unitaire
 	Quaternion GetUnit() const
 	{
 		float norm = GetNorm();
@@ -148,6 +166,7 @@ public:
 		return Quaternion(w / norm, x / norm, y / norm, z / norm);
 	}
 
+	// Méthode ToString() pour l'affichage du Quaternion
 	std::string ToString() const
 	{
 		return "W = " + std::to_string(w) + " X = " + std::to_string(x) + " Y = " + std::to_string(y) + " Z = " + std::to_string(z);

@@ -2,10 +2,15 @@
 #include "Quaternion.h"
 #include "Vec3D.h"
 
+/*
+ * Classe Transform
+ * Définit une position (Vec3D), une rotation (Quaternion) et une taille (Vec3D)
+ */
 template <typename T>
 struct Transform
 {
 public:
+	// Opérateur d'addition entre deux Transform
 	Transform operator+(const Transform& rhs) const
 	{
 		Transform out = *this;

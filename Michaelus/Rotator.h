@@ -1,11 +1,18 @@
 #pragma once
 
+/*
+ * Classe Rotator
+ * Définit une rotation dans l'espace
+ */
 template <typename T>
+[[deprecated("Classe dépreciée : Utilisez Quaternion à la place")]]
 class Rotator
 {
 public:
+	// Constructeur par défaut
 	Rotator() = default;
 
+	// Constructeur définissant les angles Roll (axe X), Pitch (axe Y) et Yaw (axe Z)
 	constexpr Rotator(T roll, T pitch, T yaw)
 		:
 		roll(roll),
@@ -13,6 +20,7 @@ public:
 		yaw(yaw)
 	{}
 
+	// Constructeur de copie
 	Rotator& operator=(const Rotator& rhs)
 	{
 		roll = rhs.roll;
@@ -21,12 +29,14 @@ public:
 		return *this;
 	}
 
+	// Conversion implicite
 	template<typename T2>
 	Rotator(Rotator<T2> r)
 		:
 		Rotator(static_cast<T>(r.roll), static_cast<T>(r.pitch), static_cast<T>(r.yaw))
 	{}
 
+	// Opérateurs d'addition entre deux Rotator
 	Rotator operator+(const Rotator& rhs) const
 	{
 		Rotator out = *this;
@@ -41,6 +51,7 @@ public:
 		*this = *this + rhs;
 	}
 
+	// Opérateurs de multiplication entre un Rotator et un scalaire
 	Rotator operator*(T scale) const
 	{
 		Rotator out = *this;

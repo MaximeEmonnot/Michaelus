@@ -3,6 +3,10 @@
 
 #define PI (3.1415926535897932f)
 
+/*
+ * Structure MMath
+ * Regroupe différentes fonctions mathématiques, pour garder une certaine cohérence
+ */
 struct MMath
 {
 	// Powers
