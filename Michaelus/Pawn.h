@@ -23,7 +23,7 @@ public:
     {
         // Une exception est levée si la classe entre chevrons n'hérite pas de Controller
         if (!std::is_base_of<Controller, T>())
-            throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a Controller Class. Please check your call for SetController.");
+            throw ENGINE_EXCEPTION("Michaelus 3D Engine - Main Engine Exception", "This is not a Controller Class. Please check your call for SetController.");
 
         pController = std::make_shared<T>(*this);
     }

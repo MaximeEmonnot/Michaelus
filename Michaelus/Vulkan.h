@@ -13,4 +13,4 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 
 #define VK_FAILED(vkResult) vkResult != VK_SUCCESS
-#define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Vulkan 3D Engine - Graphics Engine Exception", note)
+#define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Michaelus 3D Engine - Graphics Engine Exception", note)

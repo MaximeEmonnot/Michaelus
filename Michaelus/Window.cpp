@@ -46,7 +46,7 @@ Window::Window() noexcept
 	// Création de la fenêtre
 	hWnd = CreateWindow(
 		className.c_str(), // Nom de la classe
-		L"Vulkan 3D Engine - Michaelus", // Titre de la fenêtre
+		L"Michaelus 3D Engine", // Titre de la fenêtre
 		WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, // Tags
 		CW_USEDEFAULT, CW_USEDEFAULT, width, height, // Dimensions
 		nullptr,

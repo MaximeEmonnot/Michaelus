@@ -131,7 +131,7 @@ void VKDevice::CreateInstance()
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Michaelus";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "Vulkan 3D Engine";
+    appInfo.pEngineName = "Michaelus 3D Engine";
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_1;
 

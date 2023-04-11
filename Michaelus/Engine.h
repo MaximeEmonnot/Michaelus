@@ -48,7 +48,7 @@ public:
 				return;
 			}
 		}
-		throw ENGINE_EXCEPTION("Vulkan 3D Engine - Standard Exception", "This world doesn't exist! Please check your code.");
+		throw ENGINE_EXCEPTION("Michaelus 3D Engine - Standard Exception", "This world doesn't exist! Please check your code.");
 	}
 
 	// Récupération du monde courant

@@ -36,7 +36,7 @@ public:
 	{
 		// Une exception est levée si la classe entre chevrons n'hérite pas de BaseLogger
 		if (!std::is_base_of<BaseLogger, T>())
-			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a BaseLogger Class. Please check your call for ExtendLogger.");
+			throw ENGINE_EXCEPTION("Michaelus 3D Engine - Main Engine Exception", "This is not a BaseLogger Class. Please check your call for ExtendLogger.");
 
 		// On étend le Logger par le principe du Décorateur
 		pLogger = std::make_shared<T>(pLogger);

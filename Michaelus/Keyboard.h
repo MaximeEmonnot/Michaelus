@@ -73,7 +73,7 @@ private:
 	template <typename T>
 	void TrimBuffer(std::queue<T>& buffer);
 
-	// Supprime l'évènement le plus vieux
+	// Supprime l'évè
 	void PopLastEvents();
 
 private:

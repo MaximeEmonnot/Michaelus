@@ -33,7 +33,7 @@ public:
 	{
 		// Une exception est levée si la classe entre chevrons n'hérite pas de Component
 		if (!std::is_base_of<Component, T>())
-			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for CreateComponent.");
+			throw ENGINE_EXCEPTION("Michaelus 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for CreateComponent.");
 
 		// On crée le nouveau Component, qu'on lie à l'Actor
 		std::shared_ptr<Component> newComponent = std::make_shared<T>(*this);
@@ -60,7 +60,7 @@ public:
 	{
 		// Une exception est levée si la classe entre chevrons n'hérite pas de Component
 		if (!std::is_base_of<Component, T>())
-			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for GetComponentByClass.");
+			throw ENGINE_EXCEPTION("Michaelus 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for GetComponentByClass.");
 
 		for (std::shared_ptr<Component> component : components)
 			if (std::shared_ptr<T> comp = std::dynamic_pointer_cast<T>(component)) return comp;
@@ -73,7 +73,7 @@ public:
 	{
 		// Une exception est levée si la classe entre chevrons n'hérite pas de Component
 		if (!std::is_base_of<Component, T>())
-			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for GetComponentsByClass.");
+			throw ENGINE_EXCEPTION("Michaelus 3D Engine - Main Engine Exception", "This is not a Component Class. Please check your call for GetComponentsByClass.");
 
 		std::vector<std::shared_ptr<T>> out;
 
