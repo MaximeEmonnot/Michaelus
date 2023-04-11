@@ -1,7 +1,11 @@
 #include "Timer.h"
 
+// VARIABLES STATIQUES
 std::unique_ptr<Timer> Timer::pInstance = nullptr;
 
+// ********* //
+
+// Constructeur
 Timer::Timer()
 	:
 	last(std::chrono::steady_clock::now()),
@@ -9,6 +13,7 @@ Timer::Timer()
 {
 }
 
+// Méthode du patron de conception Singleton
 Timer& Timer::GetInstance()
 {
 	if (!pInstance)
@@ -16,6 +21,7 @@ Timer& Timer::GetInstance()
 	return *pInstance;
 }
 
+// Mise à jour de la variable DeltaTime : Temps écoulé durant une frame
 void Timer::Update()
 {
 	const std::chrono::steady_clock::time_point old = last;
@@ -23,6 +29,7 @@ void Timer::Update()
 	deltaTime = std::chrono::duration<float>(last - old).count();
 }
 
+// Récupération de la variable DeltaTime
 float Timer::DeltaTime() const
 {
 	return deltaTime;

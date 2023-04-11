@@ -2,30 +2,34 @@
 
 #include "EngineException.h"
 
-// STATIC VARIABLES INITIALIZATION
+// VARIABLES STATIQUES
 std::unique_ptr<ThreadPool> ThreadPool::pInstance = nullptr;
 
-//******//
+// ********* //
 
+// Constructeur
 ThreadPool::ThreadPool()
 	:
-	numThreads(std::thread::hardware_concurrency())
+	numThreads(std::thread::hardware_concurrency()) // On définit le nombre maximal de threads comme étant le nombre de coeur LOGIQUES du processeur
 {
+	// Initialisation des threads :
 	for (size_t i = 0; i < numThreads; ++i) {
+		// On lance un thread avec une boucle infinie :
 		threads.emplace_back([&] {
 			while (true) {
 				std::function<void()> task;
 				{
-					// We wait for a notify...
+					// On met le thread en attente d'une notification ...
 					std::unique_lock<std::mutex> lock(eventMutex);
 					eventVar.wait(lock, [&] { return bStopping || !tasks.empty(); });
 					if (bStopping) break;
 
-					//...so that we can execute a new task
+					// ... et une fois la notification survenue, on récupère la tâche ...
 					task = std::move(tasks.front());
 					tasks.pop();
 				}
 				try {
+					// ... que l'on exécute
 					task();
 				}
 				catch (EngineException& e)
@@ -45,18 +49,20 @@ ThreadPool::ThreadPool()
 	}
 }
 
+// Destructeur
 ThreadPool::~ThreadPool()
 {
 	{
 		std::unique_lock<std::mutex> lock(eventMutex);
 		bStopping = true;
 	}
-	// We notify all waiting threads so we can make them join safely
+	// On notifie tous les threads pour réaliser un join vers le thread principal en toute sécurité
 	eventVar.notify_all();
 
 	for (std::thread& thread : threads) thread.join();
 }
 
+// Méthode du patron de conception Singleton
 ThreadPool& ThreadPool::GetInstance()
 {
 	if (!pInstance)
@@ -64,6 +70,7 @@ ThreadPool& ThreadPool::GetInstance()
 	return *pInstance;
 }
 
+// Ajoute une tâche à la liste qui sera exécutée par l'un des threads en attente
 void ThreadPool::Enqueue(std::function<void()> task)
 {
 	{

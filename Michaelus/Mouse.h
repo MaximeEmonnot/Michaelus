@@ -7,9 +7,17 @@
 
 #define MOUSE Mouse::GetInstance()
 
+/*
+ * Classe enregistrant tous les évènements liés à la souris
+ */
 class Mouse : public WindowEventObserver
 {
 public:
+	/*
+	 * Enumération des évènements
+	 * Bouton gauche pressé/relâché, Bouton du milieu pressé/relâché, Bouton droit pressé/relâché
+	 * Molette Haut/Bas, Déplacement de la souris, Rien
+	 */
 	enum class EventType
 	{
 		LPress,
@@ -25,28 +33,37 @@ public:
 	};
 
 public:
+	// Constructeur par défaut
 	Mouse() = default;
+	// Destructeur
+	~Mouse() override;
 
+	// Ces différents constructeurs sont définis comme étant supprimés, pour correspondre au patron de conception Singleton
+	// et également à la RO5 des normes du C++
 	Mouse(const Mouse&) = delete;
 	Mouse& operator=(const Mouse&) = delete;
 	Mouse(Mouse&&) = delete;
 	Mouse& operator=(Mouse&&) = delete;
 
-	~Mouse() override;
-
+	// Méthode du patron de conception Singleton
 	static Mouse& GetInstance();
 
+	// Méthode Update issue de la classe WindowEventObserver
 	virtual void Update(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 
+	// Retourne le dernier évènement enregistré
 	Mouse::EventType Read() const;
 
+	// Retourne la position de la souris dans la fenêtre
 	FVec2D GetPosition() const;
 
+	// Retourne les états des boutons (Pressé/Relâché)
 	bool LeftIsPressed() const;
 	bool MiddleIsPressed() const;
 	bool RightIsPressed() const;
 
 private:
+	// Sous-méthodes du traitement d'évènements
 	void OnMouseMove(int x, int y);
 	void OnLeftPressed();
 	void OnLeftReleased();
@@ -57,9 +74,12 @@ private:
 	void OnWheelUp();
 	void OnWheelDown();
 
+	// Vide le buffer d'évènements
 	void FlushBuffer();
+	// Supprime l'évènement le plus vieux si l'on dépasse la taille maximale d'évènements
 	void TrimBuffer();
 
+	// Supprime l'évènement le plus vieux
 	void PopLastEvent();
 
 private:
