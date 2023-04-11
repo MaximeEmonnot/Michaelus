@@ -22,6 +22,10 @@ public:
 
 	static Engine& GetInstance();
 
+	/*
+		Définition du monde en cours
+		Tant que ledit monde a bien été préalablement ajouté à la liste de mondes du moteur
+	*/
 	template<class T>
 	void SetWorld()
 	{
