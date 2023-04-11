@@ -24,7 +24,7 @@ Window::Window() noexcept
 	hInstance = GetModuleHandle(nullptr);
 
 	// On définit la classe de la fenêtre
-	className = L"Vulkan 3D Engine";
+	className = L"Michaelus 3D Engine";
 	WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	wc.cbSize = sizeof(wc); // Taille de la variable

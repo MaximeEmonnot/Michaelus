@@ -34,7 +34,7 @@ public:
 	template <typename T>
 	void ExtendLogger()
 	{
-		// Si la classe définie entre chevrons n'hérite pas de BaseLogger, une exception est renvoyée
+		// Une exception est levée si la classe entre chevrons n'hérite pas de BaseLogger
 		if (!std::is_base_of<BaseLogger, T>())
 			throw ENGINE_EXCEPTION("Vulkan 3D Engine - Main Engine Exception", "This is not a BaseLogger Class. Please check your call for ExtendLogger.");
 
