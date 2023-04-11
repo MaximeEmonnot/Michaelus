@@ -8,12 +8,13 @@
 #include "Timer.h"
 #include "Vec2D.h"
 
+// Constructeur définissant le Pawn lié au Controller
 DemoControllerMouse::DemoControllerMouse(Pawn& pawn)
 	:
 	Controller(pawn)
-{
-}
+{}
 
+// Méthode concrète Update()
 void DemoControllerMouse::Update()
 {
 	Controller::Update();

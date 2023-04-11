@@ -5,6 +5,7 @@
 #include "SoundSystem.h"
 #include "Timer.h"
 
+// Constructeur définissant le nom de l'acteur
 DemoLightAndSound::DemoLightAndSound(const std::string& name)
 {
 	// COMPONENTS CREATION
@@ -70,6 +71,7 @@ DemoLightAndSound::DemoLightAndSound(const std::string& name)
 	soundSourceIndex = SFX.PlaySound<Effect>("Sounds/free_bird.wav", true, 1.f, 1.f, pSoundSource->GetWorldLocation());
 }
 
+// Méthode Update() de l'acteur, surchargée
 void DemoLightAndSound::Update()
 {
 	Actor::Update();

@@ -10,32 +10,38 @@
 #include "DemoPlane.h"
 #include "DemoShrek.h"
 
+// Constructeur
 DemoWorld::DemoWorld()
 {
-    pTestActor1 = SpawnActor<DemoRat>("Test Actor 1");
-    pTestActor2 = SpawnActor<DemoRat>("Test Actor 1");
-    pTestActor3 = SpawnActor<DemoRat>("Test Actor 1");
-    pTestActor4 = SpawnActor<DemoRat>("Test Actor 1");
-    pTestActor5 = SpawnActor<DemoRat>("Test Actor 1");
+    // On créé les différents Rats
+    pTestRat1 = SpawnActor<DemoRat>("Test Rat 1");
+    pTestRat2 = SpawnActor<DemoRat>("Test Rat 2");
+    pTestRat3 = SpawnActor<DemoRat>("Test Rat 3");
+    pTestRat4 = SpawnActor<DemoRat>("Test Rat 4");
+    pTestRat5 = SpawnActor<DemoRat>("Test Rat 5");
 
+    // On crée le pion du joueur
     pTestPawn = SpawnActor<DemoPawn>("Test Pawn");
 
+    // On crée le plan
     pDemoPlane = SpawnActor<DemoPlane>("Demo Plane");
 
+    // On crée Shrek
     pDemoShrek = SpawnActor<DemoShrek>("Demo Shrek");
 
+    // On crée le système lumineux de démo
     pDemoLightSound = SpawnActor<DemoLightAndSound>("Demo Light Sound");
 
-    //LIGHT_SYSTEM.SetDirectionalLight({ 1.f, 0.f, 1.f }, { 1.f, 1.f, 1.f }, 1.f);
 }
 
+// Méthode BeginPlay(), surchargée : On définit les différentes positions au démarrage de la scène
 void DemoWorld::BeginPlay()
 {
-    pTestActor1->SetActorLocation({ -2.f, 0.f, 0.f });
-    pTestActor2->SetActorLocation({ 1.f, 1.f, 0.f });
-    pTestActor3->SetActorLocation({ 1.f, -1.f, 0.f });
-    pTestActor4->SetActorLocation({ -1.f, 1.f, 0.f });
-    pTestActor5->SetActorLocation({ -1.f, -1.f, 0.f });
+    pTestRat1->SetActorLocation({ -2.f, 0.f, 0.f });
+    pTestRat2->SetActorLocation({ 1.f, 1.f, 0.f });
+    pTestRat3->SetActorLocation({ 1.f, -1.f, 0.f });
+    pTestRat4->SetActorLocation({ -1.f, 1.f, 0.f });
+    pTestRat5->SetActorLocation({ -1.f, -1.f, 0.f });
 
     pTestPawn->SetActorLocation({ -0.5f, 0.f, 1.5f });
 
@@ -46,17 +52,20 @@ void DemoWorld::BeginPlay()
     pDemoLightSound->SetActorLocation({ 0.f, 0.f, 1.f });
 }
 
+// Méthode Update(), surchargée
 void DemoWorld::Update()
 {
+    // On applique une rotation aux rats
     const float angle = MMath::Rad(45.f) * DELTATIME;
+    pTestRat1->AddActorRotation(FQuaternion(angle, 0.f, 0.f));
+    pTestRat2->AddActorRotation(FQuaternion(0.f, angle, 0.f));
+    pTestRat3->AddActorRotation(FQuaternion(0.f, 0.f, angle));
+    pTestRat4->AddActorRotation(FQuaternion(angle, 0.f, angle));
+    pTestRat5->AddActorRotation(FQuaternion(angle, angle, 0.f));
 
-    pTestActor1->AddActorRotation(FQuaternion(angle, 0.f, 0.f));
-    pTestActor2->AddActorRotation(FQuaternion(0.f, angle, 0.f));
-    pTestActor3->AddActorRotation(FQuaternion(0.f, 0.f, angle));
-    pTestActor4->AddActorRotation(FQuaternion(angle, 0.f, angle));
-    pTestActor5->AddActorRotation(FQuaternion(angle, angle, 0.f));
-
+    // On applique une rotation à Shrek
     pDemoShrek->AddActorRotation(FQuaternion(0.f, 0.f, angle));
 
+    // On appelle les méthodes Update() de chaque acteur
     for (auto& actor : actors) actor->Update();
 }

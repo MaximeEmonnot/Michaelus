@@ -7,21 +7,28 @@ class DemoPlane;
 class DemoPawn;
 class DemoRat;
 
+/*
+ * Classe DemoWorld
+ * Démonstration d'une scène possédant plusieurs Actor et Pawn
+ */
 class DemoWorld :
     public World
 {
 public:
+	// Constructeur
     DemoWorld();
 
+	// Méthode BeginPlay(), surchargée
     virtual void BeginPlay() override;
+	// Méthode Update(), surchargée
     virtual void Update() override;
 
 private:
-	std::shared_ptr<DemoRat> pTestActor1;
-	std::shared_ptr<DemoRat> pTestActor2;
-	std::shared_ptr<DemoRat> pTestActor3;
-	std::shared_ptr<DemoRat> pTestActor4;
-	std::shared_ptr<DemoRat> pTestActor5;
+	std::shared_ptr<DemoRat> pTestRat1;
+	std::shared_ptr<DemoRat> pTestRat2;
+	std::shared_ptr<DemoRat> pTestRat3;
+	std::shared_ptr<DemoRat> pTestRat4;
+	std::shared_ptr<DemoRat> pTestRat5;
 
 	std::shared_ptr<DemoPawn> pTestPawn;
 

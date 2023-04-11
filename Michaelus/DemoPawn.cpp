@@ -12,6 +12,7 @@
 #include "Timer.h"
 #include "Window.h"
 
+// Constructeur définissant le nom du pion
 DemoPawn::DemoPawn(const std::string& name)
 	:
 	Pawn(name)
@@ -29,11 +30,13 @@ DemoPawn::DemoPawn(const std::string& name)
 	SetController<DemoControllerMouse>();
 }
 
+// Méthode Update() du pion, surchargée
 void DemoPawn::Update()
 {
 	Pawn::Update();
 }
 
+// Récupération de la caméra
 std::shared_ptr<CameraComponent> DemoPawn::GetCamera() const
 {
 	return pCameraComponent;

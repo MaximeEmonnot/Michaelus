@@ -8,12 +8,13 @@
 #include "Timer.h"
 #include "Pawn.h"
 
+// Constructeur définissant le Pawn lié au Controller
 DemoControllerKeyboard::DemoControllerKeyboard(Pawn& pawn)
 	:
 	Controller(pawn)
-{
-}
+{}
 
+// Méthode concrète Update()
 void DemoControllerKeyboard::Update()
 {
 	Controller::Update();

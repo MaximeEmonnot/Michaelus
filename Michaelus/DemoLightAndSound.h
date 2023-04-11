@@ -2,13 +2,20 @@
 #include "Actor.h"
 class SceneComponent;
 
+/*
+ * Classe DemoLightAndSound
+ * Démonstration d'un Actor définissant plusieurs points lumineux en rotation autour d'un point
+ */
 class DemoLightAndSound :
     public Actor
 {
 public:
+    // Constructeur par défaut
     DemoLightAndSound() = default;
+    // Constructeur définissant le nom de l'acteur
     DemoLightAndSound(const std::string& name);
 
+    // Méthode Update() de l'acteur, surchargée
     virtual void Update() override;
 
 private:
