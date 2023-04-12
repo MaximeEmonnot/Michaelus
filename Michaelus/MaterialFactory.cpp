@@ -2,8 +2,12 @@
 
 #include "Material.h"
 
+// VARIABLES STATIQUES
 std::unique_ptr<MaterialFactory> MaterialFactory::pInstance = nullptr;
 
+// ********* //
+
+// Méthode du patron de conception Singleton
 MaterialFactory& MaterialFactory::GetInstance()
 {
     if (!pInstance)
@@ -11,6 +15,7 @@ MaterialFactory& MaterialFactory::GetInstance()
     return *pInstance;
 }
 
+// Destructeur réel pour contrôler la libération de mémoire
 void MaterialFactory::Clear()
 {
     for (auto& material : materials)
@@ -18,6 +23,7 @@ void MaterialFactory::Clear()
     materials.clear();
 }
 
+// Création du matériau selon un path et un modèle de rendu
 std::shared_ptr<Material> MaterialFactory::GetMaterial(const std::string& path, EShadingModel shadingModel)
 {
     std::shared_ptr<Material> newMaterial = std::make_unique<Material>(path, shadingModel);

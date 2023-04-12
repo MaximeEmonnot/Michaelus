@@ -7,22 +7,20 @@
 #include "VKSwapChain.h"
 #include "VKDescriptor.h"
 
+// Constructeur définissant le Vertex Shader, le Fragment Shader, le lien avec le SwapChain et le Descriptor associé aux Shaders
 VKPipeLine::VKPipeLine(const std::string& vertexFilePath, const std::string& fragmentFilePath, const VKSwapChain& swapChain, VKDescriptor& descriptor)
 {
 	CreateGraphicsPipeline(vertexFilePath, fragmentFilePath, swapChain, descriptor);
 }
 
-VKPipeLine::~VKPipeLine()
-{
-
-}
-
+// Destructeur réel pour contrôler la libération de mémoire
 void VKPipeLine::Destroy()
 {
     vkDestroyPipeline(VK_DEVICE.GetDevice(), vkGraphicsPipeline, nullptr);
     vkDestroyPipelineLayout(VK_DEVICE.GetDevice(), vkPipelineLayout, nullptr);
 }
 
+// Lien du Pipeline avec le CommandBuffer courant
 void VKPipeLine::Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame, VKDescriptor& descriptor) const
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkGraphicsPipeline);
@@ -30,31 +28,39 @@ void VKPipeLine::Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame, VKDe
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipelineLayout, 0, 1, &descriptor.GetDescriptorSets().at(currentFrame), 0, nullptr);
 }
 
+// Création du Pipeline Graphique
+// Ce Pipeline est constitué de plusieurs étapes qui seront décrites tout au long de la méthode
 void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const std::string& fragmentFilePath, const VKSwapChain& swapChain, VKDescriptor& descriptor)
 {
+    // Lecture des Vertex et Fragment Shaders
     auto vertexShaderCode = ReadShaderFile(vertexFilePath);
     auto fragmentShaderCode = ReadShaderFile(fragmentFilePath);
 
+    // Création des Modules pour les Shaders
     VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);
     VkShaderModule fragmentShaderModule = CreateShaderModule(fragmentShaderCode);
 
+    // Informations pour le Vertex Shader
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo{};
     vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     vertexShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
     vertexShaderStageInfo.module = vertexShaderModule;
     vertexShaderStageInfo.pName = "main";
 
+    // Informations pour Fragment Shader
     VkPipelineShaderStageCreateInfo fragmentShaderStageInfo{};
     fragmentShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     fragmentShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
     fragmentShaderStageInfo.module = fragmentShaderModule;
     fragmentShaderStageInfo.pName = "main";
 
+    // Différentes étapes du Pipeline (Shaders)
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, fragmentShaderStageInfo };
 
     auto bindingDescription = Vertex::GetBindingDescription();
     auto attributeDescriptions = Vertex::GetAttributeDescription();
 
+    // Paramètres pour les vertex
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputInfo.vertexBindingDescriptionCount = 1;
@@ -62,11 +68,13 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
     vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
+    // Paramètres pour les entrées
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
+    // Définition du viewport, c'est-à-dire la fenêtre de rendu
     VkViewport viewport{};
     viewport.x = 0.f;
     viewport.y = 0.f;
@@ -75,10 +83,12 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     viewport.minDepth = 0.f;
     viewport.maxDepth = 1.f;
 
+    // Scissor, pour limiter la fenêtre de rendu dans le champ du SwapChain
     VkRect2D scissor{};
     scissor.offset = { 0, 0 };
     scissor.extent = swapChain.GetSwapChainExtent();
 
+    // Définition des états dynamiques du Pipeline
     std::vector<VkDynamicState> dynamicStates = {
         VK_DYNAMIC_STATE_VIEWPORT,
         VK_DYNAMIC_STATE_SCISSOR
@@ -89,6 +99,7 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
     dynamicState.pDynamicStates = dynamicStates.data();
 
+    // Définition des états du Viewport 
     VkPipelineViewportStateCreateInfo viewportState{};
     viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportState.viewportCount = 1;
@@ -96,6 +107,9 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     viewportState.scissorCount = 1;
     viewportState.pScissors = &scissor;
 
+    // Définition du Depth Stencil
+    // Ce dernier permet le calcul de la profondeur entre plusieurs faces.
+    // C'est ce qui permet d'afficher des objets sur plusieurs plans. Sans ce Depth Stencil, tout serait rendu au même plan
     VkPipelineDepthStencilStateCreateInfo depthStencil{};
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depthStencil.depthTestEnable = VK_TRUE;
@@ -108,6 +122,10 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     depthStencil.front = {};
     depthStencil.back = {};
 
+    // Définition du Rasterizer
+    // Ce dernier permet de remplir les triangle définis par les Vertex
+    // C'est ce qui permet entre autre de définir si une face est dans le bon sens ou non, et d'afficher seulement les faces qui "regardent vers la caméra"
+    // De même, c'est ce qui permet de définir quels pixels coloriés pour remplir le triangle
     VkPipelineRasterizationStateCreateInfo rasterizer{};
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterizer.depthClampEnable = VK_FALSE;
@@ -121,6 +139,8 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     rasterizer.depthBiasClamp = 0.f;
     rasterizer.depthBiasSlopeFactor = 0.f;
 
+    // Définition du Multisampling
+    // Grossièrement, il s'agit de subdiviser les pixels pour augmenter la définition de l'image
     VkPipelineMultisampleStateCreateInfo multisampling{};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     multisampling.sampleShadingEnable = VK_TRUE;
@@ -130,6 +150,9 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     multisampling.alphaToCoverageEnable = VK_FALSE;
     multisampling.alphaToOneEnable = VK_FALSE;
 
+    // Définition du ColorBlending
+    // Cela permet de gérer tout ce qui est transparance, défini par la valeur Alpha d'une couleur d'une face
+    // Ainsi, une face ayant pour alpha 0.5 aura une transparance de 50%
     VkPipelineColorBlendAttachmentState colorBlendAttachment{};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     colorBlendAttachment.blendEnable = VK_FALSE;
@@ -139,7 +162,6 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
     colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
     colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     colorBlending.logicOpEnable = VK_FALSE;
@@ -151,6 +173,7 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     colorBlending.blendConstants[2] = 0.f;
     colorBlending.blendConstants[3] = 0.f;
 
+    // Définition des informations du Layout du Pipeline
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
@@ -161,6 +184,7 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     if (VK_FAILED(vkCreatePipelineLayout(VK_DEVICE.GetDevice(), &pipelineLayoutInfo, nullptr, &vkPipelineLayout)))
         throw GFX_EXCEPTION("Failed to create pipeline layout!");
 
+    // Définition finale du Pipeline
     VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.stageCount = 2;
@@ -179,13 +203,16 @@ void VKPipeLine::CreateGraphicsPipeline(const std::string& vertexFilePath, const
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex = -1;
 
+    // Création du Pipeline
     if (VK_FAILED(vkCreateGraphicsPipelines(VK_DEVICE.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &vkGraphicsPipeline)))
         throw GFX_EXCEPTION("Failed to create Graphics Pipeline!");
 
+    // Destruction des Modules de Shader
     vkDestroyShaderModule(VK_DEVICE.GetDevice(), fragmentShaderModule, nullptr);
     vkDestroyShaderModule(VK_DEVICE.GetDevice(), vertexShaderModule, nullptr);
 }
 
+// Lecture du Shader
 std::vector<char> VKPipeLine::ReadShaderFile(const std::string& filename)
 {
 	std::ifstream file(filename, std::ios::ate | std::ios::binary);
@@ -202,6 +229,7 @@ std::vector<char> VKPipeLine::ReadShaderFile(const std::string& filename)
 	return buffer;
 }
 
+// Création du Module de Shader
 VkShaderModule VKPipeLine::CreateShaderModule(const std::vector<char>& code)
 {
 	VkShaderModuleCreateInfo createInfo{};

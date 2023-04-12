@@ -7,12 +7,18 @@
 #include <glm/gtx/hash.hpp>
 #include <fbxsdk.h>
 
+/*
+ * Structure Vertex
+ * Définition d'un sommet d'un triangle pour le rendu 3D
+ */
 struct Vertex
 {
+	// Opérateur d'égalité entre deux Vertex
 	bool operator==(const Vertex& other) const {
 		return position == other.position && color == other.color && textureCoordinates == other.textureCoordinates;
 	}
 
+	// Définition des paramètres de lien entre le CPU et le GPU pour le Vertex
 	static VkVertexInputBindingDescription GetBindingDescription()
 	{
 		VkVertexInputBindingDescription bindingDescription{};
@@ -22,6 +28,8 @@ struct Vertex
 		return bindingDescription;
 	}
 
+	// Description des paramètres d'un Vertex
+	// Paramètres utilisés : Position, Normale du vertex, Couleur du vertex, Coordonnées de texture
 	static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescription()
 	{
 		std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
@@ -57,6 +65,10 @@ struct Vertex
 	glm::vec4 weights;
 };
 
+/*
+ * Structure AnimKeyFrame
+ * Définit une étape de l'animation pour un modèle squeletique (Tentative)
+ */
 struct AnimKeyFrame
 {
 	AnimKeyFrame() : mNext(nullptr) {}
@@ -66,6 +78,10 @@ struct AnimKeyFrame
 	AnimKeyFrame* mNext;
 };
 
+/*
+ * Structure Joint
+ * Jointure entre deux Bones (tentative)
+ */
 struct Joint
 {
 	int mParentIndex;
@@ -93,11 +109,16 @@ struct Joint
 	}
 };
 
+/*
+ * Structure Skeleton
+ * Tentative de traitement des bones et jointure pour les modèles squeletiques
+ */
 struct Skeleton
 {
 	std::vector<Joint> mJoints;
 };
 
+// Hashage pour la structure Vertex
 namespace std {
 	template<> struct hash<Vertex> {
 		size_t operator()(Vertex const& vertex) const {
@@ -108,28 +129,41 @@ namespace std {
 	};
 }
 
-
+/*
+ * Classe VKModel
+ * Définit un modèle 3D qui sera rendu par Vulkan
+ * Deux formats de modèles : .OBJ et .FBX
+ */
 class VKModel
 {
 public:
+	// Construction définissant le modèle et s'il s'agit d'un modèle squeletique
 	VKModel(const std::string& modelPath, bool bIsSkeletal = false);
-	~VKModel();
+	// Destructeur par défaut
+	~VKModel() = default;
 
+	// Destructeur réel pour contrôler la libération de mémoire
 	void Destroy();
 
+	// Lien entre le modèle et le CommandBuffer courant
 	void Bind(VkCommandBuffer commandBuffer, size_t shapeIndex) const;
+	// Affichage du modèle dans le CommandBuffer courant
 	void Draw(VkCommandBuffer commandBuffer, size_t shapeIndex) const;
 
 private:
+	// Ouverture du Fichier OBJ
 	void LoadModelOBJ(const std::string& modelPath);
 
+	// Méthodes pour l'ouverture du Fichier FBX
 	void LoadModelFBX(const std::string& modelPath);
 	void ProcessSkeletonHierarchy(FbxNode* inRootNode);
 	void ProcessSkeletonHierarchyRecursively(FbxNode* inNode, int inDepth, int myIndex, int inParentIndex);
 	void ProcessJointsAndAnimations(FbxNode* inNode);
 	FbxAMatrix GetGeometryTransformation(FbxNode* inNode);
 
+	// Création du Vertex Buffer
 	void CreateVertexBuffer();
+	// Création de l'Index Buffer
 	void CreateIndexBuffer();
 
 private:

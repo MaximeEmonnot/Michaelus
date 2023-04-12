@@ -9,6 +9,7 @@
 #include "Vulkan.h"
 #include "Window.h"
 
+// Constructeur
 VKSwapChain::VKSwapChain()
 {
 	CreateSwapChain();
@@ -20,11 +21,7 @@ VKSwapChain::VKSwapChain()
 	CreateSynchronizationObjects();
 }
 
-VKSwapChain::~VKSwapChain()
-{
-    
-}
-
+// Destructeur réel pour contrôler la libération de mémoire
 void VKSwapChain::Destroy()
 {
     vkDeviceWaitIdle(VK_DEVICE.GetDevice());
@@ -41,51 +38,61 @@ void VKSwapChain::Destroy()
     }
 }
 
+// Récupération du Buffer de la frame en cours
 VkFramebuffer VKSwapChain::GetFrameBuffer(int index) const
 {
 	return vkSwapChainFrameBuffers.at(index);
 }
 
+// Récupération de la passe de rendu
 VkRenderPass VKSwapChain::GetRenderPass() const
 {
 	return vkRenderPass;
 }
 
+// Récupération de la vue du Buffer en cours
 VkImageView VKSwapChain::GetImageView(int index) const
 {
 	return vkSwapChainImageViews.at(index);
 }
 
+// Récupération du nombre d'images
 size_t VKSwapChain::GetImageCount() const
 {
 	return vkSwapChainImages.size();
 }
 
+// Récupération du format d'image du SwapChain
 VkFormat VKSwapChain::GetSwapChainImageFormat() const
 {
 	return vkSwapChainImageFormat;
 }
 
+// Récupération du champ du SwapChain
 VkExtent2D VKSwapChain::GetSwapChainExtent() const
 {
 	return vkSwapChainExtent;
 }
 
+// Récupération de la largeur du champ du SwapChain
 uint32_t VKSwapChain::GetWidth() const
 {
 	return vkSwapChainExtent.width;
 }
 
+// Récupération de la hauteur du champ du SwapChain
 uint32_t VKSwapChain::GetHeight() const
 {
 	return vkSwapChainExtent.height;
 }
 
+// Récupération du ratio largeur/hauteur du champ du SwapChain
 float VKSwapChain::GetExtentAspectRatio() const
 {
 	return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
 }
 
+// Récupération du format de profondeur du SwapChain
 VkFormat VKSwapChain::FindDepthFormat()
 {
     return VK_DEVICE.FindSupportedFormat(
@@ -95,6 +102,7 @@ VkFormat VKSwapChain::FindDepthFormat()
     );
 }
 
+// Démarrage de la séquence d'affichage
 void VKSwapChain::BeginDraw()
 {
     vkWaitForFences(VK_DEVICE.GetDevice(), 1, &vkInFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
@@ -106,6 +114,7 @@ void VKSwapChain::BeginDraw()
         throw GFX_EXCEPTION("Failed to acquire Swap Chain Image!");
 }
 
+// Fin de la séquence d'affichage
 void VKSwapChain::EndDraw(VkCommandBuffer* commandBuffers, std::vector<std::shared_ptr<Mesh>> meshes)
 {
     vkResetFences(VK_DEVICE.GetDevice(), 1, &vkInFlightFences[currentFrame]);
@@ -203,12 +212,14 @@ void VKSwapChain::SubmitCommandBuffers(const VkCommandBuffer* pCommandBuffers)
     currentFrame = (++currentFrame) % MAX_FRAMES_IN_FLIGHT;
 }
 
+// Opérateur d'égalité entre deux SwapChain, en cas de création de nouveau SwapChain
 bool VKSwapChain::operator==(const VKSwapChain& rhs) const
 {
 	return vkSwapChainImageFormat == rhs.vkSwapChainImageFormat &&
 		   vkSwapChainDepthFormat == rhs.vkSwapChainDepthFormat;
 }
 
+// Création du SwapChain
 void VKSwapChain::CreateSwapChain()
 {
     SwapChainSupportDetails swapChainSupport = VK_DEVICE.GetSwapChainSupport();
@@ -265,6 +276,7 @@ void VKSwapChain::CreateSwapChain()
     vkSwapChainExtent = extent;
 }
 
+// Création des vues d'images
 void VKSwapChain::CreateImageViews()
 {
     vkSwapChainImageViews.resize(vkSwapChainImages.size());
@@ -273,6 +285,7 @@ void VKSwapChain::CreateImageViews()
         vkSwapChainImageViews[i] = VK_DEVICE.CreateImageView(vkSwapChainImages[i], vkSwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 }
 
+// Création des Resources de couleurs
 void VKSwapChain::CreateColorResources()
 {
     VkFormat colorFormat = vkSwapChainImageFormat;
@@ -288,6 +301,7 @@ void VKSwapChain::CreateColorResources()
     }
 }
 
+// Création des ressources de profondeur
 void VKSwapChain::CreateDepthResources()
 {
     VkFormat depthFormat = FindDepthFormat();
@@ -306,6 +320,7 @@ void VKSwapChain::CreateDepthResources()
     }
 }
 
+// Création de la passe de rendu
 void VKSwapChain::CreateRenderPass()
 {
     VkAttachmentDescription colorAttachment{};
@@ -379,6 +394,7 @@ void VKSwapChain::CreateRenderPass()
         throw GFX_EXCEPTION("Failed to create Render Pass!");
 }
 
+// Création des FrameBuffers
 void VKSwapChain::CreateFrameBuffers()
 {
     vkSwapChainFrameBuffers.resize(vkSwapChainImageViews.size());
@@ -405,6 +421,7 @@ void VKSwapChain::CreateFrameBuffers()
     }
 }
 
+// Création des Thread pour le rendu Vulkan
 void VKSwapChain::CreateSynchronizationObjects()
 {
     vkImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -426,6 +443,7 @@ void VKSwapChain::CreateSynchronizationObjects()
     }
 }
 
+// Destruction du SwapChain
 void VKSwapChain::CleanUpSwapChain()
 {
     for (size_t i = 0; i < vkColorImages.size(); i++)
@@ -453,6 +471,7 @@ void VKSwapChain::CleanUpSwapChain()
     vkDestroySwapchainKHR(VK_DEVICE.GetDevice(), vkSwapChain, nullptr);
 }
 
+// Recréation du SwapChain
 void VKSwapChain::RecreateSwapChain()
 {
     vkDeviceWaitIdle(VK_DEVICE.GetDevice());
@@ -466,6 +485,7 @@ void VKSwapChain::RecreateSwapChain()
     CreateFrameBuffers();
 }
 
+// Selection du format de Surface
 VkSurfaceFormatKHR VKSwapChain::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
 {
 	for (const auto& availableFormat : availableFormats)
@@ -474,6 +494,7 @@ VkSurfaceFormatKHR VKSwapChain::ChooseSwapSurfaceFormat(const std::vector<VkSurf
     return availableFormats.at(0); ;
 }
 
+// Sélection du mode de présentation
 VkPresentModeKHR VKSwapChain::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
 {
     for (const auto& availablePresentMode : availablePresentModes)
@@ -482,6 +503,7 @@ VkPresentModeKHR VKSwapChain::ChooseSwapPresentMode(const std::vector<VkPresentM
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
+// Sélection du champ du SwapChain
 VkExtent2D VKSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
     if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) return capabilities.currentExtent;

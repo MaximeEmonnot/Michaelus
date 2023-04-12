@@ -7,6 +7,7 @@
 #include "VKTexture.h"
 #include "VKUniformBuffer.h"
 
+// Constructeur définissant la texture et le modèle de rendu
 Material::Material(const std::string& texturePath, EShadingModel shadingModel)
 	:
 	rTexture(TEXTURE(texturePath)),
@@ -16,11 +17,7 @@ Material::Material(const std::string& texturePath, EShadingModel shadingModel)
 {
 }
 
-Material::~Material()
-{
-
-}
-
+// Destructeur réel pour contrôler la libération de mémoire (IMPORTANT : La libération de mémoire doit se faire dans un ordre précis)
 void Material::Clear()
 {
 	pUniformBuffer->Destroy();
@@ -28,36 +25,43 @@ void Material::Clear()
 	pPipeline->Destroy();
 }
 
+// Récupération de la Texture (Vulkan)
 VKTexture& Material::GetTexture() const
 {
 	return rTexture;
 }
 
+// Récupération de l'UniformBuffer (Vulkan)
 VKUniformBuffer& Material::GetUniformBuffer() const
 {
 	return *pUniformBuffer;
 }
 
+// Récupération du Descriptor (Vulkan)
 VKDescriptor& Material::GetDescriptor() const
 {
 	return *pDescriptor;
 }
 
+// Récupération du Pipeline Graphique (Vulkan)
 VKPipeLine& Material::GetPipeline() const
 {
 	return *pPipeline;
 }
 
+// Mise à jour du UniformBuffer
 void Material::UpdateUniformBuffer(const FTransform& transform)
 {
 	pUniformBuffer->Update(transform);
 }
 
+// Lien du Material avec le CommandBuffer courant du système de rendu
 void Material::Bind(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
 	pPipeline->Bind(commandBuffer, currentFrame, *pDescriptor);
 }
 
+// Récupération des Shaders associés au modèle
 std::string Material::GetShaderName(EShadingModel shadingModel) const
 {
 	switch(shadingModel)

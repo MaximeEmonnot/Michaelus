@@ -6,8 +6,12 @@
 #include "LoggerManager.h"
 #include "VKDevice.h"
 
+// VARIABLES STATIQUES
 FbxManager* VKModel::pFbxManager = nullptr;
 
+// ********* //
+
+// Construction définissant le modèle et s'il s'agit d'un modèle squeletique
 VKModel::VKModel(const std::string& modelPath, bool bIsSkeletal)
 	:
 	bIsSkeletal(bIsSkeletal)
@@ -18,11 +22,7 @@ VKModel::VKModel(const std::string& modelPath, bool bIsSkeletal)
     CreateIndexBuffer();
 }
 
-VKModel::~VKModel()
-{
-    OutputDebugStringA("Model destroyed!\n");
-}
-
+// Destructeur réel pour contrôler la libération de mémoire
 void VKModel::Destroy()
 {
     for (const auto& vkIndexBuffer : vkIndexBuffers)
@@ -35,6 +35,8 @@ void VKModel::Destroy()
 		vkFreeMemory(VK_DEVICE.GetDevice(), vkVertexBufferMemory, nullptr);
 }
 
+// Lien entre le modèle et le CommandBuffer courant
+// On lie les Vertex Buffer et les Index Buffer, c'est à dire les différents sommets du modèle ainsi que l'ordre de rendu de ces sommets
 void VKModel::Bind(VkCommandBuffer commandBuffer, size_t shapeIndex) const
 {
     if (shapeIndex < vkVertexBuffers.size()) {
@@ -46,14 +48,17 @@ void VKModel::Bind(VkCommandBuffer commandBuffer, size_t shapeIndex) const
     }
 }
 
+// Affichage du modèle dans le CommandBuffer courant
 void VKModel::Draw(VkCommandBuffer commandBuffer, size_t shapeIndex) const
 {
     if (shapeIndex < vkIndexBuffers.size())
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.at(shapeIndex).size()), 1, 0, 0, 0);
 }
 
+// Ouverture du Fichier OBJ
 void VKModel::LoadModelOBJ(const std::string& modelPath)
 {
+    // Ouverture du fichier OBJ
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -62,43 +67,49 @@ void VKModel::LoadModelOBJ(const std::string& modelPath)
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str()))
         throw GFX_EXCEPTION(warn + err);
 
-
+    // Pour chaque forme présente dans le fichier OBJ
     for (const auto& shape : shapes)
     {
+        // On crée un VertexBuffer ...
 		std::unordered_map<Vertex, uint32_t> uniqueVertices{};
         std::vector<Vertex> currentShapeVertices;
         std::vector< uint32_t> currentShapeIndices;
 
+        // ... avec toutes les informations définissant le Vertex ...
         for (const auto& index : shape.mesh.indices)
         {
             Vertex vertex{};
-
+            // ... Position ...
             vertex.position = {
                 attrib.vertices[3 * index.vertex_index + 0],
                 attrib.vertices[3 * index.vertex_index + 1],
                 attrib.vertices[3 * index.vertex_index + 2]
             };
-
+            // ... Normale ...
             vertex.normal = {
                 attrib.normals[3 * index.normal_index + 0],
                 attrib.normals[3 * index.normal_index + 1],
                 attrib.normals[3 * index.normal_index + 2]
             };
-
+            // ... Coordonnées de texture ...
             vertex.textureCoordinates = {
                 attrib.texcoords[2 * index.texcoord_index + 0],
                 1.f - attrib.texcoords[2 * index.texcoord_index + 1]
             };
 
+            // ... Couleur
             vertex.color = { 1.0f, 1.0f, 1.0f };
 
+            // Si le vertex n'a pas été parcouru, on enregistre son Index...
             if (!uniqueVertices.contains(vertex))
             {
                 uniqueVertices[vertex] = static_cast<uint32_t>(currentShapeVertices.size());
                 currentShapeVertices.push_back(vertex);
             }
-
-            currentShapeIndices.push_back(uniqueVertices[vertex]);
+            // ... pour ensuite lier cet Index dans l'IndexBuffer
+            // Cette démarche est très importante, car l'ordre de lecture des Vertex indique si la face est "face à la caméra"
+            // ou "dos à la caméra"
+        	currentShapeIndices.push_back(uniqueVertices[vertex]);
         }
 
         vertices.push_back(currentShapeVertices);
@@ -106,6 +117,8 @@ void VKModel::LoadModelOBJ(const std::string& modelPath)
     }
 }
 
+// Tentative de Lecture d'un fichier FBX
+// La documentation de FBX SDK étant très peu détaillée, ou disons très mal expliquée, ce format a été abandonné pour le projet
 void VKModel::LoadModelFBX(const std::string& modelPath)
 {
     if (!pFbxManager)
@@ -261,6 +274,7 @@ FbxAMatrix VKModel::GetGeometryTransformation(FbxNode* inNode)
     return FbxAMatrix(lT, lR, lS);
 }
 
+// Création des Vertex Buffers du modèle
 void VKModel::CreateVertexBuffer()
 {
     vkVertexBuffers.resize(vertices.size());
@@ -288,6 +302,7 @@ void VKModel::CreateVertexBuffer()
     }
 }
 
+// Création des IndexBuffers du modèle
 void VKModel::CreateIndexBuffer()
 {
     vkIndexBuffers.resize(indices.size());

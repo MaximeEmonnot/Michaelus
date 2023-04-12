@@ -6,8 +6,18 @@
 
 #include <set>
 
+// VARIABLES STATIQUES
 std::unique_ptr<VKDevice> VKDevice::pInstance = nullptr;
 
+// ********* //
+/*
+ * NOTE : Cette classe est très longue et prends BEAUCOUP de temps pour être analysée et comprise dans son intégralité.
+ * Si vous êtes curieux de comprendre le fonctionnement de Vulkan, continuez, sinon il est préférable de regarder les autres fichiers
+ */
+
+// Création du système de debug de Vulkan
+// Vulkan possède son propre système de debug appelé ValidationLayer, qui décrit toutes les erreurs possibles lors des appels à la carte graphique
+// Ces erreurs sont très longues mais permettent de guider le développeur pour le débogage des méthodes Vulkan
 static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
     if (const auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT")))
@@ -16,12 +26,15 @@ static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugU
         return VK_ERROR_EXTENSION_NOT_PRESENT;
 }
 
+// Destruction du système de debug Vulkan
 static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
     if (const auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT")))
         func(instance, debugMessenger, pAllocator);
 }
 
+// Constructeur
+// Initialisation complète du Système Vulkan
 VKDevice::VKDevice()
 {
 	CreateInstance();
@@ -32,10 +45,7 @@ VKDevice::VKDevice()
 	CreateCommandPool();
 }
 
-VKDevice::~VKDevice()
-{
-}
-
+// Méthode du patron de conception Singleton
 VKDevice& VKDevice::GetInstance()
 {
 	if (!pInstance)
@@ -43,6 +53,8 @@ VKDevice& VKDevice::GetInstance()
 	return *pInstance;
 }
 
+// Destructeur réel pour contrôler la libération de mémoire
+// EXTREMEMENT IMPORTANT : Le device doit être détruit en dernier pour éviter toute fuite de mémoire
 void VKDevice::Destroy()
 {
     vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
@@ -56,46 +68,55 @@ void VKDevice::Destroy()
     vkDestroyInstance(vkInstance, nullptr);
 }
 
+// Récupération du Device Vulkan
 VkDevice VKDevice::GetDevice() const
 {
     return vkDevice;
 }
 
+// Récupération du Device Physique (Carte graphique)
 VkPhysicalDevice VKDevice::GetPhysicalDevice() const
 {
     return vkPhysicalDevice;
 }
 
+// Récupération de la surface de rendu
 VkSurfaceKHR VKDevice::GetSurface() const
 {
     return vkSurface;
 }
 
+// Récupération de la file graphique
 VkQueue VKDevice::GetGraphicsQueue() const
 {
     return vkGraphicsQueue;
 }
 
+// Récupération de la file de présentation
 VkQueue VKDevice::GetPresentQueue() const
 {
     return vkPresentQueue;
 }
 
+// Récupération de la Pool de commandes
 VkCommandPool VKDevice::GetCommandPool() const
 {
     return vkCommandPool;
 }
 
+// Récupération des Samples MSAA (Multi sampling des textures)
 VkSampleCountFlagBits VKDevice::GetMSAASamples() const
 {
     return vkMSAASamples;
 }
 
+// Récupération des détails pour le support du SwapChain
 SwapChainSupportDetails VKDevice::GetSwapChainSupport()
 {
     return QuerySwapChainSupport(vkPhysicalDevice, vkSurface);
 }
 
+// Récupération du type de mémoire pour le Device Physique
 uint32_t VKDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const
 {
     VkPhysicalDeviceMemoryProperties memoryProperties;
@@ -108,11 +129,13 @@ uint32_t VKDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
     throw GFX_EXCEPTION("Failed to find suitable Memory Type!");
 }
 
+// Récupération des propriétés de file graphique et de présentation pour le Device Physique
 QueueFamilyIndices VKDevice::FindPhysicalQueueFamilies()
 {
     return FindQueueFamilies(vkPhysicalDevice);
 }
 
+// Récupération du format supporté pour le Device Physique
 VkFormat VKDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const
 {
     for (VkFormat format : candidates) {
@@ -125,8 +148,11 @@ VkFormat VKDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, 
     throw GFX_EXCEPTION("Failed to find supported format!");
 }
 
+// Création de l'Instance Vulkan
 void VKDevice::CreateInstance()
 {
+    // Définition des informations pour l'application
+    // Dans notre cas, il s'agit du moteur Michaelus
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Michaelus";
@@ -135,12 +161,15 @@ void VKDevice::CreateInstance()
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_1;
 
+    // Définition des extensions Vulkan
     const char* extensions[] = {
     VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
     VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
     VK_KHR_SURFACE_EXTENSION_NAME
     };
 
+    // Définition des informations de l'instance
+    // Exemple : L'application, les extension, le système de debug...
     VkInstanceCreateInfo instanceInfos{};
     instanceInfos.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceInfos.pApplicationInfo = &appInfo;
@@ -152,14 +181,18 @@ void VKDevice::CreateInstance()
     }
     else instanceInfos.enabledLayerCount = 0;
 
+    // Création de l'instance
     if (VK_FAILED(vkCreateInstance(&instanceInfos, nullptr, &vkInstance)))
         throw GFX_EXCEPTION("An exception has been caught during the Vulkan Instance Creation");
 }
 
+// Définition du système de Debug Vulkan
 void VKDevice::SetupDebugMessenger()
 {
+    // Si ce système est désactivé par défaut, inutile d'aller plus loin
     if (!bEnableValidationLayers) return;
 
+    // Définition du système de Debug
     VkDebugUtilsMessengerCreateInfoEXT debugInfos{};
     debugInfos.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     debugInfos.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -167,20 +200,25 @@ void VKDevice::SetupDebugMessenger()
     debugInfos.pfnUserCallback = DebugCallback;
     debugInfos.pUserData = nullptr;
 
+    // Création du système de Debug
     if (VK_FAILED(CreateDebugUtilsMessengerEXT(vkInstance, &debugInfos, nullptr, &vkDebugMessenger)))
         throw GFX_EXCEPTION("An exception has been caught during the Debug Messenger Creation");
 }
 
+// Sélection d'un Device Physique
 void VKDevice::PickPhysicalDevice()
 {
+    // On énumère l'ensemble des processeurs graphiques présents sur l'ordinateur
+    // Exemple : Un ordinateur avec un CPU et un GPU aura deux processeurs graphiques, s'il y a deux cartes graphiques le système le saura également
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(vkInstance, &deviceCount, nullptr);
     if (deviceCount == 0)
         throw GFX_EXCEPTION("Failed to find GPUs with Vulkan support!");
-
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(vkInstance, &deviceCount, devices.data());
 
+    // Pour tous les processeurs graphiques, on cherche le processeur le plus adéquat
+    // Très important car ce processeur définira la qualité d'image de l'application, avec notamment les Samples MSAA
     for (const auto& device : devices)
     {
         if (IsDeviceSuitable(device)) {
@@ -190,10 +228,12 @@ void VKDevice::PickPhysicalDevice()
         }
     }
 
+    // Si au final aucun processeur graphique n'est adéquat, on lève une exception
     if (vkPhysicalDevice == VK_NULL_HANDLE)
         throw GFX_EXCEPTION("Failed to find a suitable GPU!");
 }
 
+// Création d'un Device Logique
 void VKDevice::CreateLogicalDevice()
 {
     QueueFamilyIndices indices = FindQueueFamilies(vkPhysicalDevice);
@@ -231,6 +271,7 @@ void VKDevice::CreateLogicalDevice()
     vkGetDeviceQueue(vkDevice, indices.presentFamily.value(), 0, &vkPresentQueue);
 }
 
+// Création de la surface de rendu : Dans notre cas nous réalisons un rendu dans une fenêtre gérée par l'API Win32
 void VKDevice::CreateSurface()
 {
     VkWin32SurfaceCreateInfoKHR createInfo{};
@@ -242,6 +283,7 @@ void VKDevice::CreateSurface()
         throw GFX_EXCEPTION("Failed to create window surface!");
 }
 
+// Création de la CommandPool : Important pour permettre l'affichage des objets dans la scène
 void VKDevice::CreateCommandPool()
 {
     QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(vkPhysicalDevice);
@@ -255,6 +297,8 @@ void VKDevice::CreateCommandPool()
         throw GFX_EXCEPTION("Failed to create command pool");
 }
 
+// Méthode vérification d'un processeur graphique
+// On vérifie si le processeur supporte les extensions nécessaires, la famille de file graphique etc
 bool VKDevice::IsDeviceSuitable(VkPhysicalDevice device)
 {
     const QueueFamilyIndices indices = FindQueueFamilies(device);
@@ -274,6 +318,7 @@ bool VKDevice::IsDeviceSuitable(VkPhysicalDevice device)
     return indices.IsComplete() && bExtensionsSupported && bSwapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
+// Méthode vérification support des Validation Layers (Debug Vulkan)
 bool VKDevice::CheckValidationLayerSupport()
 {
     uint32_t layerCount;
@@ -297,6 +342,7 @@ bool VKDevice::CheckValidationLayerSupport()
     return layerFound;
 }
 
+// Récupération des propriétés de file pour la file graphique et de présentation
 QueueFamilyIndices VKDevice::FindQueueFamilies(VkPhysicalDevice device)
 {
     QueueFamilyIndices indices;
@@ -321,6 +367,7 @@ QueueFamilyIndices VKDevice::FindQueueFamilies(VkPhysicalDevice device)
     return indices;
 }
 
+// Vérification du support des extensions pour un Device Physique
 bool VKDevice::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 {
     uint32_t extensionCount;
@@ -336,6 +383,7 @@ bool VKDevice::CheckDeviceExtensionSupport(VkPhysicalDevice device)
     return requiredExtension.empty();
 }
 
+// Récupération des détails de support pour le SwapChain
 SwapChainSupportDetails VKDevice::QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface)
 {
     SwapChainSupportDetails details;
@@ -368,17 +416,21 @@ bool VKDevice::HasStencilComponent(VkFormat format)
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
+// Création centralisée d'un Buffer
 void VKDevice::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
+    // Définition des informations du Buffer
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = size;
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
+    // Création du Buffer
     if (VK_FAILED(vkCreateBuffer(vkDevice, &bufferInfo, nullptr, &buffer)))
         throw GFX_EXCEPTION("Failed to create Buffer!");
 
+    // Allocation de la mémoire pour le Buffer
     VkMemoryRequirements memoryRequirements;
     vkGetBufferMemoryRequirements(vkDevice, buffer, &memoryRequirements);
 
@@ -388,26 +440,33 @@ void VKDevice::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemor
     allocInfo.memoryTypeIndex = FindMemoryType(memoryRequirements.memoryTypeBits, properties);
 
     if (VK_FAILED(vkAllocateMemory(vkDevice, &allocInfo, nullptr, &bufferMemory)))
-        throw GFX_EXCEPTION("Failed to allocate Vertex Buffer Memory!");
+        throw GFX_EXCEPTION("Failed to allocate Buffer Memory!");
 
+    // Lien du Buffer avec sa mémoire
     vkBindBufferMemory(vkDevice, buffer, bufferMemory, 0);
 }
 
+// Copie centralisée d'un Buffer
 void VKDevice::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
+    // Démarrage d'un CommandBuffer
     VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
+    // Copie d'un Buffer dans le CommandBuffer
     VkBufferCopy copyRegion{};
     copyRegion.srcOffset = 0;
     copyRegion.dstOffset = 0;
     copyRegion.size = size;
     vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
+    // Fin du CommandBuffer
     EndSingleTimeCommands(commandBuffer);
 }
 
+// Copie centralisée d'un Buffer vers une Image
 void VKDevice::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 {
+    // Démarrage d'un CommandBuffer
     VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
     VkBufferImageCopy region{};
@@ -428,8 +487,10 @@ void VKDevice::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
     EndSingleTimeCommands(commandBuffer);
 }
 
+// Démarrage d'un CommandBuffer pour le rendu
 VkCommandBuffer VKDevice::BeginSingleTimeCommands()
 {
+    // Paramètres pour l'allocation du CommandBuffer
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -439,6 +500,7 @@ VkCommandBuffer VKDevice::BeginSingleTimeCommands()
     VkCommandBuffer commandBuffer;
     vkAllocateCommandBuffers(vkDevice, &allocInfo, &commandBuffer);
 
+    // Paramètres pour le démarrage du CommandBuffer
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -448,10 +510,13 @@ VkCommandBuffer VKDevice::BeginSingleTimeCommands()
     return commandBuffer;
 }
 
+// Fin d'un CommandBuffer pour le rendu
 void VKDevice::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 {
+    // Fin du CommandBuffer
     vkEndCommandBuffer(commandBuffer);
 
+    // Paramètres pour l'enregistrement de la file graphique
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.commandBufferCount = 1;
@@ -460,11 +525,14 @@ void VKDevice::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
     vkQueueSubmit(vkGraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
     vkQueueWaitIdle(vkGraphicsQueue);
 
+    // Libération de la mémoire du CommandBuffer
     vkFreeCommandBuffers(vkDevice, vkCommandPool, 1, &commandBuffer);
 }
 
+// Création centralisée d'une Image
 void VKDevice::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
 {
+    // Définition des paramètres de l'Image
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -480,12 +548,15 @@ void VKDevice::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, 
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.samples = numSamples;
 
+    // Création de l'Image
     if (VK_FAILED(vkCreateImage(vkDevice, &imageInfo, nullptr, &image)))
         throw GFX_EXCEPTION("Failed to create Image!");
 
+    // Récupération des prérequis de l'Image
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(vkDevice, image, &memRequirements);
 
+    // Allocation de la mémoire de l'Image
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
@@ -494,11 +565,14 @@ void VKDevice::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, 
     if (VK_FAILED(vkAllocateMemory(vkDevice, &allocInfo, nullptr, &imageMemory)))
         throw GFX_EXCEPTION("Failed to allocate Image Memory!");
 
+    // Lien entre l'Image et sa mémoire
     vkBindImageMemory(vkDevice, image, imageMemory, 0);
 }
 
+// Création centralisée d'une vue vers une Image
 VkImageView VKDevice::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
 {
+    // Définition des paramètres de la vue
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -510,6 +584,7 @@ VkImageView VKDevice::CreateImageView(VkImage image, VkFormat format, VkImageAsp
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
+    // Création de la vue
     VkImageView imageView;
     if (VK_FAILED(vkCreateImageView(vkDevice, &viewInfo, nullptr, &imageView)))
         throw GFX_EXCEPTION("Failed to create texture image view!");
@@ -517,6 +592,7 @@ VkImageView VKDevice::CreateImageView(VkImage image, VkFormat format, VkImageAsp
     return imageView;
 }
 
+// Transition centralisée d'un Layout d'Image
 void VKDevice::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 {
     VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
@@ -571,16 +647,19 @@ void VKDevice::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayo
     EndSingleTimeCommands(commandBuffer);
 }
 
+// Génération du MipMapping pour les images (Textures)
 void VKDevice::GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {
-
+    // Récupération des priorités pour le MipMapping
     VkFormatProperties formatProperties;
     vkGetPhysicalDeviceFormatProperties(vkPhysicalDevice, format, &formatProperties);
     if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
         throw GFX_EXCEPTION("Texture image does not support linear blitting!");
 
+    // Démarrage d'un CommandBuffer
     VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
+    // Création d'une barrière pour la mémoire de l'image
     VkImageMemoryBarrier barrier{};
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     barrier.image = image;
@@ -642,6 +721,8 @@ void VKDevice::GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth,
     EndSingleTimeCommands(commandBuffer);
 }
 
+// Récupération du nombre de Sample maximum pour le MSAA
+// Ce nombre maximum dépend de la carte graphique
 VkSampleCountFlagBits VKDevice::GetMaxUsableSampleCount()
 {
     VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -658,6 +739,8 @@ VkSampleCountFlagBits VKDevice::GetMaxUsableSampleCount()
     return VK_SAMPLE_COUNT_1_BIT;
 }
 
+// Méthode Callback du système de Debug de Vulkan
+// Cette méthode sert juste à lever l'exception de Vulkan, pour la traiter par le système de Michaelus
 VkBool32 VKDevice::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData)

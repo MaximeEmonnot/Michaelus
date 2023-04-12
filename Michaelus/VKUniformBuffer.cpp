@@ -13,15 +13,13 @@
 #include "LoggerManager.h"
 
 
+// Constructeur
 VKUniformBuffer::VKUniformBuffer()
 {
     CreateUniformBuffers();
 }
 
-VKUniformBuffer::~VKUniformBuffer()
-{
-}
-
+// Destructeur réel pour contrôler la libération de mémoire
 void VKUniformBuffer::Destroy()
 {
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
@@ -31,6 +29,7 @@ void VKUniformBuffer::Destroy()
     }
 }
 
+// Mise à jour du UniformBuffer pour l'envoi de données vers le GPU
 void VKUniformBuffer::Update(const FTransform& modelTransform)
 {
     // MODEL
@@ -45,6 +44,9 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
     DirectionalLight directionalLight = LIGHT_SYSTEM.GetDirectionalLight();
     std::vector<PointLight> pointLights = LIGHT_SYSTEM.GetPointLights();
 
+    // Envoie des informations importantes pour le UniformBuffer, par exemple :
+    // Matrices Model (Objet à rendre), Vue (Caméra), Projection (Champ de vision)
+    // Position de la caméra, Lumière directionnelle, Points lumineux
     UniformBufferObject ubo{};
     glm::mat4 modelRotMatrix = glm::toMat4(glm::quat(modelRotation.w, modelRotation.x, modelRotation.y, modelRotation.z));
     ubo.model = glm::translate(glm::mat4(1.f), glm::vec3(modelLocation.GetY(), modelLocation.GetX(), modelLocation.GetZ())) * modelRotMatrix;
@@ -70,16 +72,19 @@ void VKUniformBuffer::Update(const FTransform& modelTransform)
         memcpy(vkUniformBuffersMapped[i], &ubo, sizeof(ubo));
 }
 
+// Récupération des UniformBuffers
 std::vector<VkBuffer> VKUniformBuffer::GetUniformBuffers() const
 {
     return vkUniformBuffers;
 }
 
+// Récupération des UniformBuffers mappés
 std::vector<void*> VKUniformBuffer::GetUniformBuffersMapped() const
 {
     return vkUniformBuffersMapped;
 }
 
+// Création des UniformBuffers
 void VKUniformBuffer::CreateUniformBuffers()
 {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);

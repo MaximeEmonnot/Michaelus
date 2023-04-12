@@ -11,8 +11,12 @@
 #include "ModelFactory.h"
 #include "TextureFactory.h"
 
+// VARIABLES STATIQUES
 std::unique_ptr<Graphics> Graphics::pInstance = nullptr;
 
+// ********* //
+
+// Constructeur
 Graphics::Graphics()
 	:
 	pSwapChain(std::make_unique<VKSwapChain>())
@@ -20,16 +24,14 @@ Graphics::Graphics()
     CreateCommandBuffers();
 }
 
-Graphics::~Graphics()
-{
-}
-
+// Méthode du patron de conception Singleton
 Graphics& Graphics::GetInstance()
 {
     if (!pInstance) pInstance = std::make_unique<Graphics>();
     return *pInstance;
 }
 
+// Destructeur réel pour contrôler la libération de mémoire
 void Graphics::Destroy()
 {
     pSwapChain->Destroy();
@@ -40,11 +42,13 @@ void Graphics::Destroy()
     VK_DEVICE.Destroy();
 }
 
+// Initialisation affichage
 void Graphics::BeginDraw()
 {
     pSwapChain->BeginDraw();
 }
 
+// Exécution affichage
 void Graphics::EndDraw()
 {
     std::vector<std::shared_ptr<Mesh>> meshList;
@@ -54,16 +58,19 @@ void Graphics::EndDraw()
     pSwapChain->EndDraw(vkCommandBuffers.data(), meshList);
 }
 
+// Ajout d'un mesh à rendre dans la scène
 void Graphics::AddMesh(std::weak_ptr<MeshComponent> mesh)
 {
     meshes.emplace_back(mesh);
 }
 
+// Récupération du SwapChain
 VKSwapChain& Graphics::GetSwapChain()
 {
     return *pSwapChain;
 }
 
+// Création des CommandBuffers de Vulkan pour le rendu des différents objets
 void Graphics::CreateCommandBuffers()
 {
     vkCommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
