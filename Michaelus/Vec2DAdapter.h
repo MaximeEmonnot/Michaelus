@@ -78,7 +78,7 @@ public:
 
 	// Produit scalaire entre deux Vec3D surchargé, pour utiliser directement le Vec2D
 	float Dot(const Vec3D<T>& rhs) const override {
-		return vec2d.GetX() * rhs.x + vec2d.GetY() * rhs.y;
+		return static_cast<float>(vec2d.GetX() * rhs.x + vec2d.GetY() * rhs.y);
 	}
 
 	// Produit vectoriel entre deux Vec3D surchargé, pour utiliser directement le Vec2D

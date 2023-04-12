@@ -5,8 +5,10 @@
 #include "Mouse.h"
 #include "SoundSystem.h"
 #include "DemoWorld.h"
+#include "Keyboard.h"
 #include "Timer.h"
 #include "VKDevice.h"
+#include "Window.h"
 #include "World.h"
 
 // VARIABLES STATIQUES
@@ -56,5 +58,7 @@ void Engine::Run()
 void Engine::UpdateFrame() const
 {
 	pCurrentWorld->Update();
+
+	if (KBD.KeyIsPressed(VK_ESCAPE)) WND.Exit();
 }
 

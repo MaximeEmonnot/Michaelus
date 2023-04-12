@@ -41,6 +41,9 @@ public:
 	// Ajout d'un observateur de la fenêtre
 	void AddObserver(WindowEventObserver* observer);
 
+	// Arrêt de l'application
+	void Exit();
+
 	// Récupération du HWND de l'API Win32
 	HWND GetHWND() const;
 	// Récupération de l'Instance de la fenêtre de l'API Win32
@@ -69,5 +72,7 @@ private:
 
 	int width;
 	int height;
+
+	bool bIsExiting = false;
 };
 

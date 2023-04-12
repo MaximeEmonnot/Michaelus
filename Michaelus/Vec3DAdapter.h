@@ -62,7 +62,13 @@ public:
 	// Récupération de la longeur du Vec3D dans l'espace 2D
 	float GetLength() const override
 	{
-		return sqrtf(vec3d.GetX() * vec3d.GetX() + vec3d.GetY() * vec3d.GetY());
+		return MMath::Sqrt(static_cast<float>(vec3d.GetX() * vec3d.GetX() + vec3d.GetY() * vec3d.GetY()));
+	}
+
+	// Produit scalaire entre deux Vec2D surchargé, pour utiliser directement le Vec3D
+	float Dot(const Vec2D<T>& rhs) const override
+	{
+		return static_cast<float>(vec3d.GetX() * rhs.x + vec3d.GetY() * rhs.y);
 	}
 
 	// Récupération du vecteur 2D normalisé, défini par le Vec3D

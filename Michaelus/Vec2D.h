@@ -3,6 +3,8 @@
 #include <functional>
 #include <string>
 
+#include "Math.h"
+
 /*
  * Classe Vec2D
  * Définit un vecteur dans un espace 2D
@@ -113,7 +115,7 @@ public:
 
 	// Récupération de la longueur d'un vecteur 2D
 	virtual float GetLength() const {
-		return sqrtf(x * x + y * y);
+		return MMath::Sqrt(static_cast<float>(x * x + y * y));
 	}
 
 	// Récupération du vecteur 2D normalisé
@@ -134,11 +136,8 @@ public:
 	}
 
 	// Produit scalaire entre deux Vec2D
-	float Dot(const Vec2D& rhs) {
-		Vec2D v0 = GetNormalized();
-		Vec2D v1 = rhs.GetNormalized();
-
-		return v0.x * v1.x + v0.y * v1.y;
+	virtual float Dot(const Vec2D& rhs) const {
+		return static_cast<float>(x * rhs.x + y * rhs.y);
 	}
 
 	// Produit scalaire entre deux Vec2D

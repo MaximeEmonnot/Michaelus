@@ -85,13 +85,19 @@ bool Window::ProcessMessages()
 		DispatchMessage(&msg);
 		if (msg.message == WM_QUIT) return false;
 	}
-	return true;
+	return !bIsExiting;
 }
 
 // Ajout d'un observateur de la fenêtre
 void Window::AddObserver(WindowEventObserver* observer)
 {
 	observers.push_back(observer);
+}
+
+// Arrêt de l'application
+void Window::Exit()
+{
+	bIsExiting = true;
 }
 
 // Récupération du HWND de l'API Win32

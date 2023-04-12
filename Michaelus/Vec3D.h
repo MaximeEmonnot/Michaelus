@@ -122,7 +122,7 @@ public:
 
 	// Récupération de la longueur du Vec3D
 	virtual float GetLength() const {
-		return MMath::Sqrt(x * x + y * y + z * z);
+		return MMath::Sqrt(static_cast<float>(x * x + y * y + z * z));
 	}
 
 	// Récupération du vecteur 3D normalisé
@@ -145,7 +145,7 @@ public:
 
 	// Produit scalaire entre deux Vec3D
 	virtual float Dot(const Vec3D& rhs) const{
-		return x * rhs.x + y * rhs.y + z * rhs.z;
+		return static_cast<float>(x * rhs.x + y * rhs.y + z * rhs.z);
 	}
 
 	// Produit vectoriel entre deux Vec3D
