@@ -1,6 +1,6 @@
 #pragma once
-#include <memory>
 
+// Forward declarations
 class Pawn;
 
 /*

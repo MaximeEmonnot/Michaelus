@@ -12,5 +12,7 @@
 
 #define VK_USE_PLATFORM_WIN32_KHR
 
+// Macro définissant simplement la condition d'échec de Vulkan
 #define VK_FAILED(vkResult) vkResult != VK_SUCCESS
+// Macro définissant simplement une exception graphique
 #define GFX_EXCEPTION(note) ENGINE_EXCEPTION("Michaelus 3D Engine - Graphics Engine Exception", note)

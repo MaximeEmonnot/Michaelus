@@ -6,6 +6,7 @@
 #include <optional>
 #include <vector>
 
+// Macro pour l'utilisation plus aisée de la classe VKDevice
 #define VK_DEVICE VKDevice::GetInstance()
 
 /*

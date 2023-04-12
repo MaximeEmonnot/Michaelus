@@ -2,7 +2,6 @@
 
 #include "Graphics.h"
 #include "LightManager.h"
-#include "LoggerManager.h"
 #include "Mouse.h"
 #include "SoundSystem.h"
 #include "DemoWorld.h"

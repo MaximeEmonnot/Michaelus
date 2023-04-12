@@ -8,6 +8,7 @@
 #include "Vec2D.h"
 #include "WindowEventObserver.h"
 
+// Macro pour l'utilisation plus aisée de la classe Window
 #define WND Window::GetInstance()
 
 /*

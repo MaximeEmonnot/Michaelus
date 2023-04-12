@@ -3,6 +3,7 @@
 
 #include "Vec3D.h"
 
+// Macro pour l'utilisation plus aisée de la classe LightManager
 #define LIGHT_SYSTEM LightManager::GetInstance()
 
 /*
@@ -28,7 +29,7 @@ struct PointLight
 };
 
 /*
- * Classe LoggerManager
+ * Classe LightManager
  * Permet la gestion des différentes lumières sur la scène
  * Définit une unique lumière directionnelle et une liste de points lumineux
  */

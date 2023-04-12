@@ -10,6 +10,7 @@
 #include "Transform.h"
 #include "MeshComponent.h"
 
+// Forward declarations
 class Component;
 
 /*

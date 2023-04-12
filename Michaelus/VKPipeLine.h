@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+// Forward declarations
 class VKDescriptor;
 class VKSwapChain;
 

@@ -17,8 +17,6 @@ DemoControllerMouse::DemoControllerMouse(Pawn& pawn)
 // Méthode concrète Update()
 void DemoControllerMouse::Update()
 {
-	Controller::Update();
-
 	// Position
 	if (KBD.KeyIsPressed('Z')) GetPawn().AddActorLocation(GetPawn().GetActorForwardVector() * DELTATIME);
 	if (KBD.KeyIsPressed('D')) GetPawn().AddActorLocation(GetPawn().GetActorRightVector() * DELTATIME);

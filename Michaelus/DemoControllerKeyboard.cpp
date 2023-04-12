@@ -3,7 +3,6 @@
 #include "DemoControllerMouse.h"
 #include "Keyboard.h"
 #include "Math.h"
-#include "Mouse.h"
 #include "Quaternion.h"
 #include "Timer.h"
 #include "Pawn.h"
@@ -17,8 +16,6 @@ DemoControllerKeyboard::DemoControllerKeyboard(Pawn& pawn)
 // Méthode concrète Update()
 void DemoControllerKeyboard::Update()
 {
-	Controller::Update();
-
 	// Position
 	if (KBD.KeyIsPressed('Z')) GetPawn().AddActorLocation(GetPawn().GetActorForwardVector() * DELTATIME);
 	if (KBD.KeyIsPressed('D')) GetPawn().AddActorLocation(GetPawn().GetActorRightVector() * DELTATIME);

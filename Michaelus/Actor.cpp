@@ -1,11 +1,8 @@
 #include "Actor.h"
 
-#include "CameraComponent.h"
 #include "CameraManager.h"
 #include "Component.h"
-#include "EngineException.h"
 #include "Graphics.h"
-#include "MeshComponent.h"
 
 // Constructeur définissant le nom de l'acteur
 Actor::Actor(const std::string& name)

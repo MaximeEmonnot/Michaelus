@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+
 /*
  * Classe SceneComponent
  * Component basique définissant une position relative à l'Actor

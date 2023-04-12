@@ -6,7 +6,9 @@
 #include <queue>
 #include <memory>
 
+// Macro pour l'utilisation plus aisée de la classe ThreadPool
 #define THREAD ThreadPool::GetInstance()
+
 /*
  * Classe ThreadPool définissant une liste de threads et une liste de tâches
  * Tous les threads sont ouverts et en attente, exécutant les tâches au fur et à mesure qu'elles sont ajoutés à la liste

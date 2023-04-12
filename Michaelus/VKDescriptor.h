@@ -3,6 +3,7 @@
 
 #include <vector>
 
+// Forward declarations
 class VKTexture;
 class VKUniformBuffer;
 

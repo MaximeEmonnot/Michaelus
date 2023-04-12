@@ -5,6 +5,7 @@
 #include "Vec2D.h"
 #include "WindowEventObserver.h"
 
+// Macro pour l'utilisation plus aisée de la classe Mouse
 #define MOUSE Mouse::GetInstance()
 
 /*

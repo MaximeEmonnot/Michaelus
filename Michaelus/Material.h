@@ -7,6 +7,7 @@
 
 #include "Transform.h"
 
+// Forward declarations
 class VKPipeLine;
 class VKDescriptor;
 class VKUniformBuffer;

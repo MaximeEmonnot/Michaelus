@@ -10,9 +10,11 @@
 #include "VKUniformBuffer.h"
 #include "VKDescriptor.h"
 
-#define GFX Graphics::GetInstance()
-
+// Forward declarations
 class MeshComponent;
+
+// Macro pour l'utilisation plus aisée de la classe Graphics
+#define GFX Graphics::GetInstance()
 
 /*
  * Classe Graphics

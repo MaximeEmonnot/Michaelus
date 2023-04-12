@@ -6,6 +6,7 @@
 
 #include "Transform.h"
 
+// Forward declarations
 class Material;
 class VKModel;
 

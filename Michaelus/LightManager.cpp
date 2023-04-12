@@ -24,7 +24,7 @@ int LightManager::CreatePointLight(const FVec3D& position, const FVec3D& color, 
 {
     pointLights.push_back({ position, color, intensity });
 
-    return pointLights.size() - static_cast<size_t>(1);
+    return static_cast<int>(pointLights.size() - static_cast<size_t>(1));
 }
 
 // Modification de la position, de la couleur et de l'intensité d'un point lumineux existant

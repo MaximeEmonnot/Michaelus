@@ -3,7 +3,9 @@
 #include <exception>
 #include <sstream>
 
+// Macro définissant une exception selon son type et la note
 #define ENGINE_EXCEPTION(type, note) EngineException(type, note, __FILE__, __LINE__)
+// Macro permmettant l'affichage d'un message dans une boîte de dialogue
 #define SHOW_MESSAGE(title, message) MessageBoxExA(nullptr, message, title, MB_ICONERROR | MB_OK, MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL));
 
 /*

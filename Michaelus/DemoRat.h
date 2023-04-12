@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 
+// Forward declarations
 class MeshComponent;
 
 /*

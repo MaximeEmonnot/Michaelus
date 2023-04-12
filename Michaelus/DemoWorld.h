@@ -1,6 +1,7 @@
 #pragma once
 #include "World.h"
 
+// Forward declarations
 class DemoLightAndSound;
 class DemoShrek;
 class DemoPlane;

@@ -3,9 +3,12 @@
 #include <memory>
 #include <string>
 
+// Forward declarations
 class VKModel;
 
+// Macro pour le nettoyage de la liste des modèles
 #define MODEL_CLEAR ModelFactory::GetInstance().Clear()
+// Macro pour la création d'un modèle
 #define MODEL(path) ModelFactory::GetInstance().GetModel(path)
 
 /*

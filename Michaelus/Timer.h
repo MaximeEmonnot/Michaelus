@@ -2,8 +2,9 @@
 #include <memory>
 #include <chrono>
 
+// Macro pour la mise à jour du Timer
 #define TICKCLOCK Timer::GetInstance().Update()
-
+// Macro pour la récupération de la variable DeltaTime
 #define DELTATIME Timer::GetInstance().DeltaTime()
 
 /*

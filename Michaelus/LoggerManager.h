@@ -3,6 +3,7 @@
 #include "BaseLogger.h"
 #include "EngineException.h"
 
+// Macro pour l'écriture d'un message à un certain niveau de verbosité
 #define LOG(message, verbosity) LoggerManager::GetInstance().Log(message, verbosity);
 
 /*

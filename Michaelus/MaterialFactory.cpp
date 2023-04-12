@@ -1,6 +1,9 @@
 #include "MaterialFactory.h"
 
 #include "Material.h"
+#include "VKPipeLine.h"
+#include "VKDescriptor.h"
+#include "VKUniformBuffer.h"
 
 // VARIABLES STATIQUES
 std::unique_ptr<MaterialFactory> MaterialFactory::pInstance = nullptr;

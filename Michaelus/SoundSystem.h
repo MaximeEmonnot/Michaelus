@@ -10,8 +10,8 @@
 #include "CameraManager.h"
 #include "Vec3D.h"
 
+// Macro pour l'utilisation plus aisée de la classe SoundSystem
 #define SFX SoundSystem::GetInstance()
-
 
 /*
  * Classe d'un son, joué par la bibliothèque OpenAL

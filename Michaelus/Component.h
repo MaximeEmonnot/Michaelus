@@ -2,6 +2,8 @@
 #include <memory>
 
 #include "Transform.h"
+
+// Forward declarations
 class Actor;
 
 /*

@@ -2,12 +2,14 @@
 #include <memory>
 #include <vector>
 
+// Forward declarations
 class CameraComponent;
 
+// Macro pour l'utilisation plus aisée de la classe CameraManager
 #define CAMERA CameraManager::GetInstance()
 
 /*
- * Classe LoggerManager
+ * Classe CameraManager
  * Permet la gestion des différentes caméras présentes dans la scène (CameraComponent)
  */
 class CameraManager

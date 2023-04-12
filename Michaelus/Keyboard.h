@@ -5,6 +5,7 @@
 
 #include "WindowEventObserver.h"
 
+// Macro pour l'utilisation plus aisée de la classe Keyboard
 #define KBD Keyboard::GetInstance()
 
 /*

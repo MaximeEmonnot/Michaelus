@@ -3,9 +3,12 @@
 #include <memory>
 #include <string>
 
+// Forward declarations
 class VKTexture;
 
+// Macro pour le nettoyage de la liste des textures
 #define TEXTURE_CLEAR TextureFactory::GetInstance().Clear()
+// Macro pour la création d'une texture
 #define TEXTURE(path) TextureFactory::GetInstance().GetTexture(path)
 
 /*

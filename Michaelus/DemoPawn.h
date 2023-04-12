@@ -1,5 +1,7 @@
 #pragma once
 #include "Pawn.h"
+
+// Forward declarations
 class SceneComponent;
 class CameraComponent;
 

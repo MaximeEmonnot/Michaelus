@@ -3,14 +3,10 @@
 #include "SceneComponent.h"
 #include "CameraComponent.h"
 #include "CameraManager.h"
-#include "DemoControllerKeyboard.h"
 #include "DemoControllerMouse.h"
 #include "Keyboard.h"
-#include "LoggerManager.h"
-#include "Mouse.h"
 #include "SoundSystem.h"
-#include "Timer.h"
-#include "Window.h"
+
 
 // Constructeur définissant le nom du pion
 DemoPawn::DemoPawn(const std::string& name)

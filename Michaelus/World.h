@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+// Forward declarations
 class Actor;
 
 /*

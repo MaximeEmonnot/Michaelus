@@ -4,12 +4,11 @@
 
 #include "EngineException.h"
 
+// Macro pour l'utilisation plus aisée de la classe Engine
 #define ENGINE Engine::GetInstance()
 
+// Forward declarations
 class World;
-
-class DemoPawn;
-class DemoRat;
 
 /*
  * Classe Engine

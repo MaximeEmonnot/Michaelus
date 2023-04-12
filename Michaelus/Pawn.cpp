@@ -1,8 +1,6 @@
 #include "Pawn.h"
 #include "Controller.h"
 
-#include "EngineException.h"
-
 // Constructeur définissant le nom du pion
 Pawn::Pawn(const std::string& name)
 	:

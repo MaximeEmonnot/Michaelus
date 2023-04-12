@@ -5,7 +5,9 @@
 
 #include "Material.h"
 
+// Macro pour le nettoyage de la liste des matériaux
 #define MATERIAL_CLEAR MaterialFactory::GetInstance().Clear()
+// Macro pour la création d'un matériau
 #define MATERIAL(path, shading_model) MaterialFactory::GetInstance().GetMaterial(path, shading_model)
 
 /*
