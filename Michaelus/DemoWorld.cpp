@@ -9,6 +9,7 @@
 #include "DemoPawn.h"
 #include "DemoPlane.h"
 #include "DemoShrek.h"
+#include "LoggerManager.h"
 
 // Constructeur
 DemoWorld::DemoWorld()
@@ -37,6 +38,8 @@ DemoWorld::DemoWorld()
 // Méthode BeginPlay(), surchargée : On définit les différentes positions au démarrage de la scène
 void DemoWorld::BeginPlay()
 {
+    LOG("Démarrage DemoWorld", ELoggerVerbosity::Console)
+
     pTestRat1->SetActorLocation({ -2.f, 0.f, 0.f });
     pTestRat2->SetActorLocation({ 1.f, 1.f, 0.f });
     pTestRat3->SetActorLocation({ 1.f, -1.f, 0.f });
